@@ -1,12 +1,6 @@
 #Doc Holiday
 
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:tremho/docholiday.git
-git push -u origin main
-
+Take a break from disappointing documentation generation
 
 ### Goals
 - generates normalized JSDoc comment blocks from un-normalized
