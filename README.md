@@ -2,6 +2,8 @@
 
 Take a break from disappointing documentation generation
 
+A JSDoc source block re-generator targeting Typescript
+
 ### Goals
 - generates normalized JSDoc comment blocks from un-normalized
 source with some additional features
