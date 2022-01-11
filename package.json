@@ -1,0 +1,15 @@
+{
+  "name": "docholiday",
+  "version": "0.1.0-prerelease.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -fr build && tsc",
+    "go": "npm run build && node build/index.js $*",
+    "check": "npm run go && documentation build build/examples/** -f html -o doc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

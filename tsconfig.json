@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "allowJs": true,
+    "target": "es5",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "module": "commonjs",
+    "lib": ["es2016"],
+    "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types"],
+    "skipLibCheck": true,
+    "removeComments": false
+  },
+  "include": ["./**/*"],
+}
