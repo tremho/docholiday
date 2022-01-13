@@ -1,12 +1,16 @@
 # Doc Holiday
 
-Take a break from disappointing documentation generation
+O.K., corral your documentation backlog and 
+take a break from disappointing documentation generation
 
 A JSDoc source block re-generator targeting Typescript
 
 ### Goals
 - generates normalized JSDoc comment blocks from un-normalized
 source with some additional features
+- parse existing jsdoc or simple comment forms
+- parse typescript type info
+- support side-comments
 - produce analysis json detailing commented items and source details
 - produce stub-only output for documentation generation only
 - produce normalized version attached to original code
@@ -36,5 +40,27 @@ produces the following shortcomings:
 -----------------
 ##### Tasks
 
-- [ ] bring over processing bits from exposé
-- [ ] create json object
+- [X] bring over processing bits from exposé
+- [X] create json object
+- [X] produce comment blocks and stubs
+  - √ functions
+  - √ properties
+  - classes with properties, classes, and functions
+
+--------------
+##### Status
+
+###### Functions
+- functions parse with or without comment descriptions
+- /** /* or // are all treated equally
+- export == public, lack of export is private
+- optional and default parameters expressed in JSDoc form
+
+_do we want to process a split typescript declaration?_  
+Downside is awkward for recombining, but good as a stub pipeline.
+
+___YES___  
+_Now in progress..._  
+errors... 
+
+

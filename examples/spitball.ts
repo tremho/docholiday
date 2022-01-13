@@ -44,6 +44,13 @@ export enum BirdType {
     Crow,
     Raven,
     Starling,
-    Goldfinchz, /// State bird
+    Goldfinch, /// State bird
     Sparrow
 }
+
+/** This is a constant export */
+export const foobar:string = ''
+/** This is foo */
+export let foo
+/** This is bar */
+export let bar
