@@ -25,27 +25,24 @@ source with some additional features
 Intend to extend previous exposé work.
 
 -----------
-###### 0.0.1-pr.1
-Demonstration of case:  
-Raw documentation of spitball.js (from spitball.ts)
-produces the following shortcomings:
+###### 0.0.1-pr.2
+The 'focus' script task reads what we are working on
+in terms of example.
 
-- parameters are not typed (they assume `any`)
-- non-exported should default to private
-- ts-clear-classdoc needed for class
-- class properties should have table generated
-- general and constructor blocks should be merged
-- no detail on enum (generate a table / list)
+- functions in js and ts form, including side-comments
+- module properties
 
+__Will still want to do__  
+
+- write to file
+- class doc and recursion.
+- module header documentation (perhaps use namespace)
+- generate jsdoc by command option.
+- command option for private inclusion
 -----------------
 ##### Tasks
 
-- [X] bring over processing bits from exposé
-- [X] create json object
-- [X] produce comment blocks and stubs
-  - √ functions
-  - √ properties
-  - classes with properties, classes, and functions
+  - [ ] classes with properties, classes, and functions
 
 --------------
 ##### Status
