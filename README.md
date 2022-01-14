@@ -32,6 +32,13 @@ in terms of example.
 - functions in js and ts form, including side-comments
 - module properties
 
+###### Issues
+- [X] allow commented out sections
+- [X] auto-assign type on default, and fix parse
+
+- [ ] parsing of constraints
+- [ ] rendering of constraints
+
 __Will still want to do__  
 
 - write to file

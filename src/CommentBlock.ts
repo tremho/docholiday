@@ -40,7 +40,7 @@ function commentText(indent:number, inset:number, text:string=''):string {
     return out
 }
 
-function renderFunctionComment(fi:FunctionInfo, indent:number) : string {
+function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='') : string {
     let out = beginCommentBlock(indent)
     if(fi.scope.async) {
         out += commentLine(indent, '@async')
@@ -48,10 +48,12 @@ function renderFunctionComment(fi:FunctionInfo, indent:number) : string {
     if(fi.scope.static) {
         out += commentLine(indent,'@static')
     }
-    if(fi.scope.private || !fi.scope.public) {
+    if(fi.scope.private || (!forClass && !fi.scope.public)) {
         out += commentLine(indent,'@private')
     }
-    out += commentLine(indent, fi.name)
+    let name = fi.name
+    if(forClass && name === 'constructor') name = 'Constructor for '+forClass
+    out += commentLine(indent, name)
     if(fi.description) out += commentText(indent, 2, fi.description+'\n')
     for(let pi of fi.params) {
         let type = pi.type || '*'
@@ -72,8 +74,10 @@ function renderFunctionComment(fi:FunctionInfo, indent:number) : string {
     }
     if(fi.return) {
         let type = fi.return.type || '*'
-        out += commentLine(indent, '')
-        out += commentLine(indent, `@return {${type}} ${fi.return.description}`)
+        if(type !== 'void' && type !== 'undefined') {
+            out += commentLine(indent, '')
+            out += commentLine(indent, `@return {${type}} ${fi.return.description}`)
+        }
     }
     out += endCommentBlock(indent)
     return out
@@ -96,12 +100,49 @@ function renderPropertyComment(pi:PropertyInfo, indent:number) : string {
     return out
 }
 function renderClassComment(ci:ClassInfo, indent:number) : string {
-    let out = ''
-    out += JSON.stringify(ci, null, 2)
+    let out = beginCommentBlock(indent)
+    if(ci.scope.private || !ci.scope.public) {
+        out += commentLine(indent,'@private')
+    }
+    out += commentLine(indent, ci.name)
+    if(ci.extends) out += commentLine(indent, '@extends '+ci.extends)
+    out += commentText(indent, 2, ci.description)
+    if(ci.internals.properties.length) {
+        for(let pi of ci.internals.properties) {
+            if(!pi.scope.private) {
+                let {type,name}  = pi
+                if(pi.scope.optional) name = '['+name+']'
+                let pline = `@property {${type}} ${name} - ${pi.description}`
+                out += commentText(indent, 4, pline)
+            }
+        }
+    }
+    out += endCommentBlock(indent)
     return out
 }
 
-export function renderFunctionStub(fi:FunctionInfo, indent:number) {
+export function renderClassStub(ci:ClassInfo, indent:number) {
+    let out = ''
+    let spaces = (indent && ' '.repeat(indent)) || ''
+    out += spaces+'class '+ci.name+ ' {\n'
+
+    if(ci.internals.classes?.length) {
+        for(let cci of ci.internals.classes) {
+            out += renderClassComment(cci,indent+2)
+            out += renderClassStub(ci, indent+2)
+        }
+    }
+    if(ci.internals.functions?.length) {
+        for(let fi of ci.internals.functions) {
+            out += renderFunctionComment(fi,indent+2, ci.name)
+            out += renderFunctionStub(fi, indent+2, ci.name)
+        }
+    }
+    out += spaces+'}\n\n'
+    return out
+}
+
+export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:string='') {
     let type = fi.return?.type || ''
     let rv
     switch(type) {
@@ -125,9 +166,23 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number) {
             break;
     }
     let spaces = indent && ' '.repeat(indent) || ''
-    let out = spaces + '{\n'
-    out += spaces+'    return '+rv+'\n'
-    out += spaces+'}'
+    let fn = ''
+    // if(fi.scope.public) fn += 'export '
+    if(!forClass) fn += 'function '
+    fn += fi.name
+    fn += '('
+    let i = 0
+    for (let pi of fi.params) {
+        if(pi.name) {
+            fn += pi.name
+            if(++i < fi.params.length) fn += ', '
+        }
+    }
+    fn += ')'
+
+    let out = spaces + fn + ' { \n'
+    if(rv && rv !== 'undefined') out += spaces+'    return '+rv+'\n'
+    out += spaces+'}\n\n'
 
     return out
 }

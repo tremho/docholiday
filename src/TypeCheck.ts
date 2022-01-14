@@ -678,12 +678,11 @@ function checkTypeFromString(ctstr:string) : ElementCheckType {
     }
 }
 
-
-// New approach allows multiple types to be defined with constraints separated by " | "
+// parse constraints from what may be more than one type (e.g. string|number)
 export function parseConstraintsToMap(typeString:string, blockSet:string= ''): Map<string, TypeConstraint> {
     let map = new Map<string, TypeConstraint>()
     let types = typeString.split('|')
-    let blocks = blockSet.split(' | ')
+    let blocks = blockSet.split(',')
     let i = types.length;
     while(--i >=0 ) {
         let type = types[i] || ''
@@ -707,10 +706,7 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
     let constraint;
     if(!block || !type) return;
     let valueType = valueTypeFromString(type)
-    block.trim()
-    if(block.charAt(0) !== '-') return;
-
-    let cblock = block.substring(1).trim()
+    let cblock = block.trim()
     // another split hack. this one for check type parameters
     let fpi = cblock.indexOf(('('))
     if(fpi !== -1) {

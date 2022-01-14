@@ -60,6 +60,29 @@ export class SourceReader {
         let e = this.findWhite(str, b)
         return str.substring(b, e)
     }
+    skipImport() {
+        let qc = '"'
+        let q1 = this.text.indexOf(qc, this.pos)
+        if(q1 === -1) qc == "'"
+        q1 = this.text.indexOf(qc, this.pos)
+        let q2 = this.text.indexOf(qc, q1+1)
+        if(q2 === -1) throw ("missing quote in import statement")
+        let e = this.pos
+        while(e < q2) {
+            e = this.text.indexOf('\n', e)
+        }
+        this.pos = e
+    }
+    skipRequire() {
+        let p1 = this.text.indexOf('(', this.pos)
+        let p2 = this.text.indexOf(')', p1+1)
+        if(p2 === -1) throw ("unclosed parenthesis in require statement")
+        let e = this.pos
+        while(e < p2) {
+            e = this.text.indexOf('\n', e)
+        }
+        this.pos = e
+    }
     nextEnd() {
         // find end from here to end of line or start of comment
         let lnEnd = this.text.indexOf('\n', this.pos)
@@ -83,6 +106,8 @@ export class SourceReader {
     readSourceLine() {
         const rt = new SourceInfo()
         this.skipWhite()
+        if(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
+        if(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
         let n = this.nextEnd()
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
         rt.comStart = this.pos;
@@ -244,10 +269,7 @@ export class SourceReader {
             pdec = pdec.substring(0, oti)+ swap + pdec.substring(cti)
         }
 
-        // YOU ARE HERE
-        // piece parse pdec
-        // name:type, \n | comment,
-        // ++++[   ]*        *
+        // parameters
         while(pdec) {
             pdec = pdec.trim()
             let c = pdec.indexOf(':')
@@ -261,14 +283,24 @@ export class SourceReader {
             let m = pdec.indexOf('/', b)
             if(d === -1) d = m
             if (d === -1) d = pdec.length
-            let ntc = pdec.substring(0, d)
+            let ntc = pdec.substring(0, d).replace(/ /g, '')
+            if(ntc.indexOf('=') !== -1 ) {
+                type = ''
+                if(ntc.indexOf(':') === -1) {
+                    let es = ntc.split('=')
+                    let ltype = deriveTypeFromValue((es[1] || '').trim())
+                    ntc = es[0].trim() + ':' + ltype + '=' + es[1]
+                }
+            }
             let nt = ntc.split(':')
             const pi = new ParameterInfo()
             pi.name = nt[0].trim()
+            if(pi.name.charAt(pi.name.length-1) === '?') pi.name = pi.name.substring(0, pi.name.length-1)
             let td = (type || nt[1] || '').trim().split('=')
             pi.type = this.readTypeDef(td[0].trim(), 0)
             if(td[1]) {
                 pi.default = td[1].trim()
+                if(!pi.type) pi.type = deriveTypeFromValue(pi.default)
                 pi.optional = true
             }
 
@@ -354,10 +386,9 @@ export class SourceReader {
     }
 
 
-    getAPIInfo(fromPos=0, endPos=0):APIInfo {
+    getAPIInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
         const api:APIInfo = new APIInfo()
         let done = false
-        let inClass = fromPos > 0;
         this.pos = fromPos;
         if(!endPos) endPos = this.text.length;
         while (!done) {
@@ -374,12 +405,14 @@ export class SourceReader {
                         api.classes.push(ci)
                         this.pos = ci.bodyEnd + 1
                     } else {
-                        let pi = this.extractPropertyInfo(si);
-                        if(pi.name) {
-                            api.properties.push(pi)
-                            this.pos = pi.decEnd + 1
-                        } else {
-                            this.pos = si.decEnd + 1
+                        let pi = this.extractPropertyInfo(si, inClass);
+                        if(pi.decStart !== -1) {
+                            if (pi.name) {
+                                api.properties.push(pi)
+                                this.pos = pi.decEnd + 1
+                            } else {
+                                this.pos = si.decEnd + 1
+                            }
                         }
                     }
                 }
@@ -388,9 +421,12 @@ export class SourceReader {
         return api
     }
 
-    extractPropertyInfo(si:SourceInfo):PropertyInfo {
+    extractPropertyInfo(si:SourceInfo, inClass:boolean):PropertyInfo {
         const pi = new PropertyInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
+        if(text.charAt(0) === '/') return pi;
+        if(text.substring(0,6) === 'import') return pi;
+        if(text.substring(0.7) === 'require') return pi;
         let leftSide = ''
         let rightSide = '';
         let commentAfter = '';
@@ -408,19 +444,24 @@ export class SourceReader {
         } else {
             leftSide = text;
         }
+        leftSide = leftSide.replace(/\s+/g, ' ')
+        leftSide = leftSide.replace(': ', ':')
         if(leftSide == '}') return pi
 
         let type;
         let name = ''
         let p = leftSide.split(' ');
         let sm = new ScopeModifiers()
+        if(inClass) sm.public = true
         p.forEach(k => {
             switch(k.trim().toLowerCase()) {
                 case 'export':
                 case 'public':
                     sm.public = true;
+                    sm.private = false;
                     break;
                 case 'private':
+                    if(sm.public) sm.public = false;
                     sm.private = true;
                     break;
                 case 'static':
@@ -501,6 +542,15 @@ export class SourceReader {
     extractClassInfo(si:SourceInfo):ClassInfo {
         let ci:ClassInfo = new ClassInfo()
         const src = this.text.substring(si.decStart, si.decEnd)
+        if(src.charAt(0) === '/') return ci;
+        if(src.substring(0,6) === 'import') return ci;
+        if(src.substring(0.7) === 'require') return ci;
+
+        let scopeKey = this.readNextWord(src, 0)
+        let sm = new ScopeModifiers()
+        if(scopeKey === 'export') {
+            sm.public = true
+        }
         const name = this.getClassName(src)
         if(name) {
             Object.assign(ci, si)
@@ -514,6 +564,8 @@ export class SourceReader {
             let {mixins, base} = this.findMixins(rawExtends)
             if(base) ci.extends = base;
             ci.mixins = mixins
+
+            ci.scope = sm
 
             // read description
             let jsDocSignature =  (this.text.substring(ci.comStart, ci.comStart+3) === '/**')
@@ -531,8 +583,8 @@ export class SourceReader {
                 let {start, end} = this.findBracketBoundaries(si.decStart)
                 ci.bodyStart = start;
                 ci.bodyEnd = end;
-                // now we would hunt for methods and props
-                ci.internals = this.getAPIInfo(start+1, end)
+                // now we hunt for methods and props
+                ci.internals = this.getAPIInfo(start+1, end-1, true)
             }
         }
         return ci
@@ -540,10 +592,10 @@ export class SourceReader {
     getClassName(text:string):string  {
         let name = ''
         text = text.trim()
-        const keyword = 'class'
+        const keyword = 'class '
         let i = text.indexOf(keyword)
         if(i !== -1) {
-            i += keyword.length +1
+            i += keyword.length
             name = this.readNextWord(text, i)
             // check for an assignment form
             if(!name || name === '{' || name === 'extends') {
@@ -598,6 +650,7 @@ export class SourceReader {
             extDec = base
             opi = extDec.indexOf('(')
         }
+        if(!base) base = extDec
         return {mixins, base}
     }
 
@@ -620,125 +673,149 @@ export class SourceReader {
         let ri = this.text.indexOf('@return', n)
         if(ri >= fi.comEnd || ri === -1) ri = fi.comEnd;
         let pIndex = 0
-        if(!fi.params.length) {
-            while (n !== -1) {
-                let desc = '';
-                let pi = this.text.indexOf('@param', n)
-                if (pi >= fi.comEnd) pi = -1;
-                if (pi !== -1) {
-                    let pe = this.text.indexOf('\n', pi)
-                    let pd = this.text.substring(pi, pe)
-                    pd = pd.substring('@param'.length + 1)
-                    const pInfo = new ParameterInfo()
-                    // at this point, pi, pe are the locations of this param line
-                    // and pe -> next delimiter is block, but we do that below
 
-                    let fpi = fi.params[pIndex]
-                    // here we parse the gist of the param declaration
-                    // same template hack as in typescript parse above
-                    let oti = pd.indexOf('<')
-                    let ahi = pd.indexOf('{')
-                    if (oti === -1) oti = ahi
-                    if (oti !== -1) {
-                        // craziness if we have to handle a template
-                        let cti = pd.indexOf(ahi === -1 ? '>' : '}', oti)
-                        let swap = pd.substring(oti, cti).replace(' ', '')
-                        swap = swap.replace(',', ';;')
-                        pd = pd.substring(0, oti) + swap + pd.substring(cti)
+        while (n !== -1 && n < fi.comEnd) {
+            let desc = '';
+            let pi = this.text.indexOf('@param', n)
+            if (pi === -1 || pi >= fi.comEnd) pi = fi.comEnd
+            if (pi < fi.comEnd) {
+                let pe = this.text.indexOf('@', pi+1)
+                if(pe === -1) pe = fi.comEnd
+                let pd = this.readCommentBlock(this.text.substring(pi, pe))
+                pd = pd.substring('@param'.length + 1)
+                const pInfo = new ParameterInfo()
+                // at this point, pi, pe are the locations of this param line
+                // and pe -> next delimiter is block, but we do that below
+                n = pe
+
+                // parse out constraints here
+                let constraintDeclaration = ''
+                const cm = pd.match(/\<[\S|\s]+\>/g)
+                if(cm) {
+                    for(let m of cm) {
+                        let n = pd.indexOf(m)
+                        pd = pd.substring(0,n)+pd.substring(n+m.length)
+                        if(constraintDeclaration) constraintDeclaration += ', '
+                        constraintDeclaration += m.substring(1, m.length-1)
                     }
+                }
 
-                    let pp = pd.split(/\s+/)
-                    for (let i = 0; i < 2; i++) {
-                        let p = pp[i]
-                        if (p) {
-                            p = p.trim().replace(';;', ',') // template fix
-                            if (p === '-') {
-                                pp.splice(2, 0, '-')
-                                if (!pInfo.type) pInfo.type = fpi.type;
-                                if (!pInfo.name) pInfo.name = fpi.name;
+                let fpi = fi.params[pIndex]
+                // here we parse the gist of the param declaration
+                // same template hack as in typescript parse above
+                let oti = pd.indexOf('<')
+                let ahi = pd.indexOf('{')
+                if (oti === -1) oti = ahi
+                if (oti !== -1) {
+                    // craziness if we have to handle a template
+                    let cti = pd.indexOf(ahi === -1 ? '>' : '}', oti)
+                    let swap = pd.substring(oti, cti).replace(' ', '')
+                    swap = swap.replace(',', ';;')
+                    pd = pd.substring(0, oti) + swap + pd.substring(cti)
+                }
+
+                let pp = pd.split(/\s+/)
+                for (let i = 0; i < 2; i++) {
+                    let p = pp[i]
+                    if (p) {
+                        p = p.trim().replace(';;', ',') // template fix
+                        if (p === '-') {
+                            pp.splice(2, 0, '-')
+                            if (!pInfo.type) pInfo.type = fpi.type;
+                            if (!pInfo.name) pInfo.name = fpi.name;
+                            break;
+                        }
+                        if (p.charAt(0) == '{' && p.charAt(p.length - 1) == '}') {
+                            pInfo.type = p.substring(1, p.length - 1)
+                        } else if (p.charAt(0) == '[') {
+                            pInfo.name = p.substring(1, p.length - 1)
+                            pInfo.optional = true
+                            if (pp[i + 1] === '=') {
+                                pInfo.default = pp[i + 2]
+                                pp.splice(i + 1, 2)
                                 break;
                             }
-                            if (p.charAt(0) == '{' && p.charAt(p.length - 1) == '}') {
-                                pInfo.type = p.substring(1, p.length - 1)
-                            } else if (p.charAt(0) == '[') {
-                                pInfo.name = p.substring(1, p.length - 1)
-                                pInfo.optional = true
-                                if (pp[i + 1] === '=') {
-                                    pInfo.default = pp[i + 2]
-                                    pp.splice(i + 1, 2)
-                                    break;
-                                }
-                            } else {
-                                pInfo.name = p.trim();
-                            }
-                        }
-                    }
-                    // pick up remainder of line
-                    if (pp.length > 2) {
-                        desc = pp.slice(2).join(' ') // description on the same line
-                    }
-                    // reconcile to any parsed information from actual function declaration
-                    let agree = true
-                    if (fpi) {
-                        if (!fpi.type) fpi.type = pInfo.type
-                        if (!fpi.name) fpi.name = pInfo.name
-                        if (fpi.ordinal !== pIndex + 1) agree = false
-                        if (fpi.name !== pInfo.name) agree = false
-                        if (this.fileType === 'typescript') {
-                            if (fpi.type !== pInfo.type) agree = false;
-                            if (fpi.optional !== pInfo.optional) agree = false
-                        }
-                    } else {
-                        fpi = new ParameterInfo()
-                        fpi.name = pInfo.name;
-                        fpi.type = pInfo.type;
-                        fpi.status = SpecificationStatus.Mismatch;
-                        fpi.error = 'Parameter count mismatch'
-                    }
-                    if (!agree) {
-                        if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Mismatch
-                        fi.error = 'name or type mismatch with declared parameter'
-                    }
-                    // next line
-                    pi = pe + 1
-                    // continue reading the description and constraints
-                    desc.trim();
-                    let constraintDeclaration;
-                    if (desc.charAt(0) === '-') {
-                        constraintDeclaration = desc;
-                        desc = '';
-                    }
-                    let di = this.text.indexOf('@', pi)
-                    if (di === -1 || di > fi.comEnd) di = fi.comEnd
-                    let cb = this.readCommentBlock(this.text.substring(pi, di))
-                    if (cb) {
-                        if (cb.charAt(0) === '-') {
-                            constraintDeclaration = cb;
                         } else {
-                            if (desc) desc += '\n'
-                            desc += cb;
+                            pInfo.name = p.trim();
                         }
                     }
-                    if (desc) {
-                        fpi.description = desc;
-                    }
-                    try {
-                        // fpi.constraint = TypeCheck.parseConstraints(pInfo.type, constraintDeclaration)
-                        fpi.constraintMap = TypeCheck.parseConstraintsToMap(pInfo.type, constraintDeclaration)
-                        if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Okay
-                    } catch (e) {
-                        console.error(e)
-                        fi.error = e.message;
-                        if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.BadConstraint
-                    }
-                    // onward
-                    fi.params[pIndex++] = fpi;
-                    n = di
-                } else {
-                    break; // pi === -1; end while
                 }
-            } // keep reading parameters until we've seen a different directive or exhausted the comment block
-        }
+                // pick up remainder of line
+                if (pp.length > 2) {
+                    desc = pp.slice(2).join(' ') // description on the same line
+                }
+
+                // reconcile to any parsed information from actual function declaration
+                let agree = true
+                if (fpi) {
+                    if (!fpi.type) fpi.type = pInfo.type
+                    if (!fpi.name) fpi.name = pInfo.name
+                    if(!fpi.description) fpi.description = desc
+                    if (fpi.ordinal !== pIndex + 1) agree = false
+                    if (fpi.name !== pInfo.name) agree = false
+                    if (this.fileType === 'typescript') {
+                        if(fpi.description !== desc) agree = false;
+                        if (fpi.type && fpi.type !== pInfo.type) agree = false;
+                        if (fpi.name && fpi.name !== pInfo.name) agree = false;
+                        if (fpi.optional !== pInfo.optional) agree = false
+                    }
+                } else {
+                    fpi = new ParameterInfo()
+                    fpi.name = pInfo.name;
+                    fpi.type = pInfo.type;
+                    fpi.status = SpecificationStatus.Mismatch;
+                    fpi.error = 'Parameter count mismatch'
+                }
+                if (!agree) {
+                    if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Mismatch
+                    fi.error = 'name, type or description mismatch with declared parameter'
+                }
+                // let di = pd.indexOf('@', pi )
+                // // next line
+                // pi = pe + 1
+                // // continue reading the description and constraints
+                // desc.trim();
+                // let constraintDeclaration;
+                // if(desc.charAt(desc.length-1) === '*') {
+                //     desc = desc.substring(0,desc.length-1)
+                // }
+                // if (desc.charAt(0) === '-') {
+                //     desc = desc.substring(1).trim()
+                // }
+                // if (di === -1 || di > fi.comEnd) di = fi.comEnd
+                // let cb = this.readCommentBlock(this.text.substring(pi, di))
+                // if (cb) {
+                //     if (cb.charAt(0) === '-') {
+                //         cb = cb.substring(1).trim()
+                //     } else {
+                //         if (desc) desc += '\n'
+                //         desc += cb;
+                //     }
+                // }
+                // if (desc) {
+                //     let cm = desc.match(/\<[\S|\s]+\>/g)
+                //     if(cm) {
+                //
+                //     }
+                //     fpi.description = desc;
+                // }
+                try {
+                    if(constraintDeclaration) {
+                        fpi.constraintMap = TypeCheck.parseConstraintsToMap(pInfo.type, constraintDeclaration)
+                    }
+                    if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Okay
+                } catch (e) {
+                    console.error(e)
+                    fi.error = e.message;
+                    if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.BadConstraint
+                }
+                // onward
+                fi.params[pIndex++] = fpi;
+                // n += di-pi
+            } else {
+                break; // pi === -1; end while
+            }
+        } // keep reading parameters until we've seen a different directive or exhausted the comment block
         // now read the return type
         let type, cbi, hasReturn = true;
         if(!fi.return) {
@@ -746,7 +823,7 @@ export class SourceReader {
             if (rt === '@returns') ri += '@returns '.length
             else if (rt === '@return ') ri += '@return '.length - 1
             else {
-                // no return statement
+                // no jsdoc return declaration
                 hasReturn = false
                 cbi = ri
                 type = ''
@@ -758,51 +835,12 @@ export class SourceReader {
                     type = this.text.substring(obi, cbi)
                 } else {
                     cbi = ri
-                    type = 'any'
+                    type = ''
                 }
                 fi.return = new ReturnInfo()
                 fi.return.type = type;
             }
         }
-        /*
-        let cb = fi.description ? this.readCommentBlock(this.text.substring(cbi+1, fi.comEnd)) : ''
-        let desc = cb;
-        cbi++;
-        let rtConstDec;
-        desc.trim();
-        if(desc.charAt(0) === '-') {
-            let n = desc.indexOf('\n')
-            if(n === -1) n = desc.length
-            rtConstDec =  desc.substring(0, n);
-            desc = desc.substring(n+1)
-        } else {
-            let s = desc.indexOf('\n -')
-            if(s !== -1) {
-                let n = desc.indexOf('\n', s + 3)
-                if(n === -1) n = desc.length
-                rtConstDec = desc.substring(s + 2, n)
-                desc = desc.substring(0, s)
-            }
-        }
-        if(desc === "*") desc = ''
-
-        let retInfo = fi.return
-        if(retInfo) {
-            retInfo.description = desc;
-            if (rtConstDec) {
-                retInfo.constraintMap = TypeCheck.parseConstraintsToMap(type, rtConstDec)
-                // retInfo.constraint = TypeCheck.parseConstraints(type, rtConstDec)
-            }
-            retInfo.status = SpecificationStatus.Okay
-            if (this.fileType === 'typescript') {
-                if (retInfo.type && type !== retInfo.type) {
-                    retInfo.status = SpecificationStatus.Mismatch;
-                    let rtt = type ? 'No documented return type ' : `Doc return type '${type}'`
-                    fi.error = `${rtt} differs from '${retInfo.type}' declared with Typescript`
-                }
-            }
-        }
-        */
     }
     private readCommentBlock(rawBlock:string):string {
         return this.readCommentBlockForm1(rawBlock) || this.readCommentBlockForm2(rawBlock)
@@ -840,4 +878,21 @@ export class SourceReader {
         }
         return clean.join('\n').trim()
     }
+}
+function deriveTypeFromValue(value:string) {
+    if(!value) value = ''
+    value = value.trim()
+    if(value.length > 1 && value.charAt(0) == value.charAt(value.length-1)) {
+        const q = value.charAt(0)
+        if(q === '"' || q === "'" || q === '`') {
+            return "string"
+        }
+        if(q === '[') return 'array'
+        if(q === '{') return 'object'
+    }
+    if(isFinite(Number(value))) return 'number'
+    if(value === 'true' || value === 'false') return 'boolean'
+    if(value === 'null') return 'null'
+    if(value === 'undefined') return 'undefined'
+    return ''
 }
