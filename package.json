@@ -9,7 +9,7 @@
     "check": "npm run go && documentation build build/examples/** -f html -o doc",
     "focus": "npm run go examples/focus.ts",
     "focus-file": "npm run go examples/focus.ts stub=gen/test.js",
-    "focus-render": "npm run focus-file && documentation -f html -o doc gen/test.js",
+    "focus-render": "npm run focus-file && /Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen/test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

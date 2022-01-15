@@ -290,6 +290,9 @@ export class TypeConstraint {
     toString() {
         return `- No Constraint`
     }
+    describe() {
+        return 'No Constraint'
+    }
 }
 
 // /**
@@ -376,13 +379,25 @@ class NumberConstraint extends TypeConstraint {
     toString() {
         const keys:string[] = []
         if(this.isInteger) keys.push('Integer')
+        if(this.notZero) keys.push('Not Zero')
         if(this.isPositive) keys.push('Positive')
         if(this.isNegative) keys.push('Negative')
-        if(this.notZero) keys.push('Not Zero')
         if(this.min !== undefined) keys.push(`Min = ${this.min}`)
         if(this.max !== undefined) keys.push(`Max = ${this.max}`)
         if(this.maxx !== undefined) keys.push(`Maxx = ${this.maxx}`)
         return keys.length ? '- '+keys.join(',') : super.toString()
+    }
+    describe(): string {
+        const keys:string[] = []
+        if(this.isInteger) keys.push('number must be an integer')
+        if(this.notZero) keys.push('number must not be zero')
+        if(this.isPositive) keys.push('number must be positive')
+        if(this.isNegative) keys.push('number must be negative')
+        if(this.min !== undefined) keys.push(`Minimum value is ${this.min}`)
+        if(this.max !== undefined) keys.push(`Maximum value is ${this.max}`)
+        if(this.maxx !== undefined) keys.push(`Maximum value is less than ${this.maxx}`)
+        return keys.length ? keys.join('\n') : super.describe()
+
     }
 
 }
@@ -482,6 +497,20 @@ class StringConstraint extends TypeConstraint {
         if(this.notMatch) keys.push(`!Match = ${this.notMatch}`)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
+    describe() {
+        const keys:string[] = []
+        if(this.minLength) keys.push(`string must be at least ${this.minLength} characters long`)
+        if(this.maxLength) keys.push(`string must consist of less than ${this.maxLength} characters`)
+        if(this.startsWith) keys.push(`string must start with "${this.startsWith}"`)
+        if(this.notStartsWith) keys.push(`string must NOT start with "${this.startsWith}"`)
+        if(this.endsWith) keys.push(`string must end with "${this.endsWith}"`)
+        if(this.notEndsWith) keys.push(`string must NOT end with "${this.endsWith}"`)
+        if(this.contains) keys.push(`must contain substring "${this.contains}"`)
+        if(this.notContains) keys.push(`must NOT contain substring "${this.notContains}"`)
+        if(this.match) keys.push(`must match Regular Expression "${this.match}"`)
+        if(this.notMatch) keys.push(`must NOT match RegExp "${this.notMatch}"`)
+        return keys.length ? keys.join('\n') : super.describe()
+    }
 
 }
 
@@ -520,6 +549,20 @@ class ObjectConstraint extends TypeConstraint {
         if(this.noTruthyProps) keys.push(`No Truthy Props`)
         if(this.instanceOf) keys.push(`Instance Of = ${this.instanceOf}`)
         return keys.length ? '- '+keys.join(',') : super.toString()
+    }
+    describe() {
+        const keys:string[] = []
+        if(this.empty) keys.push(`object must be empty`)
+        if(this.notEmpty) keys.push(`object must not be empty`)
+        if(this.hasProperties) keys.push(`object must contain properties "${this.hasProperties.join(',')}"`)
+        if(this.notHasProperties) keys.push(`object must not contain properties "${this.notHasProperties.join(',')}"`)
+        if(this.notNested) keys.push(`object must not contain nested objects`)
+        if(this.noPrototype) keys.push(`object must not derive from a prototype`)
+        if(this.canSerialize) keys.push(`object can be serialized`)
+        if(this.noFalseyProps) keys.push(`object can contain no properties that evaluate as false`)
+        if(this.noTruthyProps) keys.push(`object can contain no properties that evaluate as true`)
+        if(this.instanceOf) keys.push(`object must be an instance of "${this.instanceOf}"`)
+        return keys.length ? keys.join('\n') : super.describe()
     }
 
 }
@@ -568,6 +611,17 @@ class ArrayConstraint extends TypeConstraint {
         if(this.elementCheckType) keys.push(`Check Type = ${checkTypeToString(this.elementCheckType, this.elementCheckParameter, this.elementCheckParameter2)}`)
         if(this.elementConstraints) keys.push(`Each = ${this.elementConstraints.toString().substring(2).replace(/,/g, '|')}`)
         return keys.length ? '- '+keys.join(',') : super.toString()
+    }
+    describe() {
+        const keys:string[] = []
+        if(this.minLength) keys.push(`array must contain at least ${this.minLength} elements`)
+        if(this.maxLength) keys.push(`array must contain no more than ${this.maxLength} elements`)
+        if(this.contains) keys.push(`array must contain element value "${this.contains}"`)
+        if(this.notContains) keys.push(`array must not contain an element value "${this.notContains}"`)
+        if(this.elementConstraints && this.elementConstraints.length) keys.push(`each element of the array has the following constraints: "${this.elementConstraints.toString().substring(2).replace(/,/g, ',')}`)
+        // if(this.elementCheckType) keys.push(`Check Type = ${checkTypeToString(this.elementCheckType, this.elementCheckParameter, this.elementCheckParameter2)}`)
+        if(this.elementCheckType) keys.push(`(elements will be tested using the ${checkTypeToString(this.elementCheckType)} method)`)
+        return keys.length ? keys.join('\n') : super.describe()
     }
 }
 
@@ -683,16 +737,12 @@ export function parseConstraintsToMap(typeString:string, blockSet:string= ''): M
     let map = new Map<string, TypeConstraint>()
     let types = typeString.split('|')
     let blocks = blockSet.split(',')
-    let i = types.length;
-    while(--i >=0 ) {
-        let type = types[i] || ''
-        let block = blocks[i] || ''
-        type.trim()
-        block.trim()
-        let constraint = parseConstraints(type,block) || new TypeConstraint()
+    for(let type of types) {
+        type = (type||'').trim()
+        let constraint = parseConstraints(type, blockSet) || new TypeConstraint()
         map.set(type, constraint)
     }
-    return map;
+    return map
 }
 
 /**
@@ -707,7 +757,7 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
     if(!block || !type) return;
     let valueType = valueTypeFromString(type)
     let cblock = block.trim()
-    // another split hack. this one for check type parameters
+    // get any constraint parameters
     let fpi = cblock.indexOf(('('))
     if(fpi !== -1) {
         let cpi = cblock.indexOf(')', fpi)
@@ -755,6 +805,7 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                         break;
                     case 'notzero':
                     case 'not zero':
+                    case 'nonzero':
                         constraint.notZero = true;
                         break;
                     case 'min':

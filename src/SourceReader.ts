@@ -15,6 +15,8 @@ import {TypeConstraint} from "./TypeCheck"
 import * as Parenthesis from "parenthesis"
 import {type} from "os";
 
+const constraintRE = /\<[\w|\d|=|,|"|'|\s]+\>/g
+
 export class SourceReader {
     private readonly text:string = ''; // text of the source
     private pos:number = 0; // current parse position
@@ -344,6 +346,29 @@ export class SourceReader {
                 } else {
                     fi.return.description = ''
                 }
+                // parse out constraints here
+                let ctext = fi.return.description
+                let constraintDeclaration = ''
+                const cm = ctext.match(constraintRE)
+                if(cm) {
+                    for(let m of cm) {
+                        let n = ctext.indexOf(m)
+                        ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
+                        if(constraintDeclaration) constraintDeclaration += ', '
+                        constraintDeclaration += m.substring(1, m.length-1)
+                    }
+                }
+                fi.return.description = ctext
+                try {
+                    if(constraintDeclaration) {
+                        fi.return.constraintMap = TypeCheck.parseConstraintsToMap(fi.return.type, constraintDeclaration)
+                    }
+                } catch (e) {
+                    console.error(e)
+                    // error = e.message;
+                    // status = SpecificationStatus.BadConstraint
+                }
+
             }
         }
         // Find body boundaries { }
@@ -525,6 +550,31 @@ export class SourceReader {
         pi.description = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
         if(pi.description && commentAfter) pi.description += '\n' +commentAfter
         else if(commentAfter) pi.description = commentAfter
+
+        // parse out constraints here
+        let ctext = pi.description
+        let constraintDeclaration = ''
+        const cm = ctext.match(constraintRE)
+        if(cm) {
+            for(let m of cm) {
+                let n = ctext.indexOf(m)
+                ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
+                if(constraintDeclaration) constraintDeclaration += ', '
+                constraintDeclaration += m.substring(1, m.length-1)
+            }
+        }
+        pi.description = ctext
+        try {
+            if(constraintDeclaration) {
+                pi.constraintMap = TypeCheck.parseConstraintsToMap(type, constraintDeclaration)
+            }
+        } catch (e) {
+            console.error(e)
+            // error = e.message;
+            // status = SpecificationStatus.BadConstraint
+        }
+
+
         pi.name = name;
         pi.scope = sm;
         pi.type = type;
@@ -690,7 +740,7 @@ export class SourceReader {
 
                 // parse out constraints here
                 let constraintDeclaration = ''
-                const cm = pd.match(/\<[\S|\s]+\>/g)
+                const cm = pd.match(constraintRE)
                 if(cm) {
                     for(let m of cm) {
                         let n = pd.indexOf(m)
@@ -770,35 +820,6 @@ export class SourceReader {
                     if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Mismatch
                     fi.error = 'name, type or description mismatch with declared parameter'
                 }
-                // let di = pd.indexOf('@', pi )
-                // // next line
-                // pi = pe + 1
-                // // continue reading the description and constraints
-                // desc.trim();
-                // let constraintDeclaration;
-                // if(desc.charAt(desc.length-1) === '*') {
-                //     desc = desc.substring(0,desc.length-1)
-                // }
-                // if (desc.charAt(0) === '-') {
-                //     desc = desc.substring(1).trim()
-                // }
-                // if (di === -1 || di > fi.comEnd) di = fi.comEnd
-                // let cb = this.readCommentBlock(this.text.substring(pi, di))
-                // if (cb) {
-                //     if (cb.charAt(0) === '-') {
-                //         cb = cb.substring(1).trim()
-                //     } else {
-                //         if (desc) desc += '\n'
-                //         desc += cb;
-                //     }
-                // }
-                // if (desc) {
-                //     let cm = desc.match(/\<[\S|\s]+\>/g)
-                //     if(cm) {
-                //
-                //     }
-                //     fpi.description = desc;
-                // }
                 try {
                     if(constraintDeclaration) {
                         fpi.constraintMap = TypeCheck.parseConstraintsToMap(pInfo.type, constraintDeclaration)

@@ -1,4 +1,5 @@
-import {ClassInfo, FunctionInfo, PropertyInfo} from "./types";
+import {ClassInfo, FunctionInfo, ParameterInfo, PropertyInfo, ReturnInfo} from "./types";
+import {TypeConstraint} from "./TypeCheck";
 
 
 export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInfo, indent:number) {
@@ -42,18 +43,20 @@ function commentText(indent:number, inset:number, text:string=''):string {
 
 function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='') : string {
     let out = beginCommentBlock(indent)
-    if(fi.scope.async) {
+    if (fi.scope.async) {
         out += commentLine(indent, '@async')
     }
-    if(fi.scope.static) {
-        out += commentLine(indent,'@static')
+    if (fi.scope.static) {
+        out += commentLine(indent, '@static')
     }
-    if(fi.scope.private || (!forClass && !fi.scope.public)) {
-        out += commentLine(indent,'@private')
+    if (fi.scope.private || (!forClass && !fi.scope.public)) {
+        out += commentLine(indent, '@private')
     }
     let name = fi.name
-    if(forClass && name === 'constructor') name = 'Constructor for '+forClass
-    out += commentLine(indent, name)
+    if (forClass) {
+        if (name === 'constructor') name = 'Constructor for ' + forClass
+        out += commentLine(indent, name)
+    }
     if(fi.description) out += commentText(indent, 2, fi.description+'\n')
     for(let pi of fi.params) {
         let type = pi.type || '*'
@@ -70,13 +73,15 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
             out += commentLine(indent, `@param {${type}} ${pi.name}`)
         }
         if(pi.description) out += commentText(indent, 8, pi.description)
-        // todo: constraints
+
+        out += formatConstraints(indent, pi)
     }
     if(fi.return) {
         let type = fi.return.type || '*'
         if(type !== 'void' && type !== 'undefined') {
             out += commentLine(indent, '')
             out += commentLine(indent, `@return {${type}} ${fi.return.description}`)
+            out += formatConstraints(indent, fi.return)
         }
     }
     out += endCommentBlock(indent)
@@ -96,6 +101,7 @@ function renderPropertyComment(pi:PropertyInfo, indent:number) : string {
     out += commentLine(indent, `${jsdocKey} {${type}} ${name}`)
     if(pi.description) out += commentText(indent, 2, pi.description)
     if(pi.default) out += commentLine(indent, `@default ${pi.default}`)
+    out += formatConstraints(indent, pi)
     out += endCommentBlock(indent)
     return out
 }
@@ -104,7 +110,7 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
     if(ci.scope.private || !ci.scope.public) {
         out += commentLine(indent,'@private')
     }
-    out += commentLine(indent, ci.name)
+    // out += commentLine(indent, ci.name)
     if(ci.extends) out += commentLine(indent, '@extends '+ci.extends)
     out += commentText(indent, 2, ci.description)
     if(ci.internals.properties.length) {
@@ -114,6 +120,7 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
                 if(pi.scope.optional) name = '['+name+']'
                 let pline = `@property {${type}} ${name} - ${pi.description}`
                 out += commentText(indent, 4, pline)
+                out += formatConstraints(indent, pi)
             }
         }
     }
@@ -194,6 +201,23 @@ export function renderPropertyStub(pi:PropertyInfo, indent:number) {
     }
     out += '\n'
 
+    return out
+
+}
+function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|ReturnInfo) {
+    let out = ''
+    let spaces = indent ? ' '.repeat(indent) : ''
+    if(info.constraintMap?.size) {
+        // block must not have more than 3 inset spaces or it will be treated as markdown literal
+        out += commentLine(indent, `   <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: ${indent*11}px">`)
+        info.constraintMap.forEach((value: TypeConstraint) => {
+            let clns = value.describe().split('\n')
+            for(let ln of clns) {
+                if(ln) out += spaces + ' *         <li>' + ln +'</li>\n'
+            }
+         })
+        out += commentLine(indent, '   </ul>')
+    }
     return out
 
 }

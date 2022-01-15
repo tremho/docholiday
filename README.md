@@ -49,10 +49,17 @@ __Will still want to do__
 -----------------
 ##### Tasks
 
-  - [ ] classes with properties, classes, and functions
-
+  - [X] classes with properties, classes, and functions
+  - [ ] constraint note=whatever for freeform constraint comment (no runtime)
+  - [ ] @docgen name option for extension (calls named function, passing the comment block via stdin)
+  - [ ] tests for everything I can think of
+    - functions descriptions, parameters, returns (constraints)
+    - properties (constraints)
+    - class functions, properties, subclasses
 --------------
 ##### Status
+ - classes are in place
+ - constraints are parsed and rendered
 
 ###### Functions
 - functions parse with or without comment descriptions
@@ -62,9 +69,7 @@ __Will still want to do__
 
 _do we want to process a split typescript declaration?_  
 Downside is awkward for recombining, but good as a stub pipeline.
-
-___YES___  
-_Now in progress..._  
-errors... 
-
-
+- answer is __yes__
+- if both doc types exist, the typescript comments will rule
+  - although we _could_ predicate an option for comment-block preference
+- errors are reported in apiInfo return

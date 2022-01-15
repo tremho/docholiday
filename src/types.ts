@@ -65,6 +65,7 @@ export class PropertyInfo extends SourceInfo {
     public description:string = ''
     public assignStart:number = -1
     public default:string = ''
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
 }
 
 /**
