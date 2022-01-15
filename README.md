@@ -36,8 +36,8 @@ in terms of example.
 - [X] allow commented out sections
 - [X] auto-assign type on default, and fix parse
 
-- [ ] parsing of constraints
-- [ ] rendering of constraints
+- [X] parsing of constraints
+- [X] rendering of constraints
 
 __Will still want to do__  
 
