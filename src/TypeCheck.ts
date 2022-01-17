@@ -29,43 +29,49 @@
  * The full constraint expression must be contained on the line it starts on.
  * e.g.```
  *      @param {number} ordinal  The ordinal value of this thing
- *      - Integer,Positive,NotZero
+ *      <Integer,Positive,NotZero>
  * ```
  * The example declares a parameter with conventional JSDoc style, but also provides constraint keywords that
  * will apply to this numeric type of value that specify the acceptable characteristics of that value.
  *
  * Syntactically, the order of description and constraint do not matter, so this is equivalent to the above:
  * ```
- *      @param ordinal {number} - Integer,Positive,NotZero
+ *      @param ordinal {number}  <Integer,Positive,NotZero>
  *      The ordinal value of this thing
  * ```
- * The output documentation may vary, between these style, however,
+ * The output JSDoc block will include embedded HTML to render the constraint block,
  * as the JSDoc renderer is unaware of the role of Constraint declarations themselves.
+ * The block is assigned the CSS class "doc-constraints" should you wish to provide additional styling to this block.
  *
  * Note that all the above syntax, including constraints, also applies to the JSDoc `@return` (or `@returns`) statement,
  * with the only difference being that the return value does not specify a name.
  *
  * #### Multiple type constraints
  * if there are multiple types (e.g. {string|number}) then the corresponding multiple constraint declarations may
- * be given separated by " | ".  Each declaration must start with '-'
- * Note the spaces on either side of the | is required as some constraint expressions may use the | character as an
- * item delimiter as well.
+ * be given.
  * example:
- * `@param {string|number} foo - minLength=3 | - Integer, min=100, max=999
+ * `@param {string|number} foo
+ *          <minLength=3>
+ *          <Integer, min=100, max=999>
  *
  * #### Constraint keywords and syntax
- * - Some keywords accept a value parameter, such as `min=5` or `endsWith = .png`
- * - Values may be quoted or not, but must not contain a comma or a | delimiter within the value itself, regardless of quoting.  // todo
- * but others are implicitly boolean, such as `Integer` or `NotZero` and take no assignment.
+ * - a constraint declaration is specified between < and > brackets.
+ * - There may be multiple constraint declarations in a single comment block
+ * - there may be multiple constraint expressions within a declaration.
+ * - each constraint expression (keyword[=value]) within a declaration is separated by a comma
+ * - Some keywords accept a value parameter, such as `min=5` or `endsWith = ".png"`
+ * - Values may be quoted or not, but must not contain a comma within the value itself, regardless of quoting.
+ *  Other keywords are implicitly boolean, such as `integer` or `nonzero` and take no assignment.
  * - Some keywords have a 'not' complement that is noted by a preceding ! character.  For example,
  * `contains` and `!contains` both accept a value that is either required to exist or to not exist, depending upon
  * the presence or absence of the ! prefix.
- * - A few keywords accept a list of values.  Such values are given using the | character as a delimiter, as in
- * `|one|two|three|four`. Take care when using with multiple type and mind spacing, as noted under *Multiple type constraints*
- * - Each keyword in the declaration is separated by the comma (,) character.
+ * - A few keywords accept a list of values.  Such values are given using the a comma a delimiter, as in
+ * `"one,two,three,four"`.
  *
- * - Specifying conflicting or redundant constraints (e.g. `startsWith = "ab"` and `!startsWith="cd") will result
- * in and error.
+ * - Keywords are case insensitive
+ *
+ * - Specifying conflicting or redundant constraints (e.g. `startsWith = "ab"` and `!startsWith="cd")
+ *   will result in an error.
  *
  * - Unrecognized keywords or improper expression syntax will result in an error
  *
@@ -116,22 +122,33 @@
  * the primitive type of the constraint (e.g. 'number'), and each expression must be separated by a | character.
  * for example: `each = string|minLength=10|endsWith=.png`
  *
+ * #### The `note` keyword
+ * The expression such as note="your comment here" allows a constraint comment to be generated specifying a constraint
+ * that should be noted. example:
+ *
+ *      @param {number} prime <integer, nonzero, note="must be a prime number">
+ *
+ *  Although no runtime checking is available for a `note` constraint, the note will appear as part of
+ *  the constraint comment documentation.
  *
  * #### Consistency with Typescript
  *
  * Typescript has in-code syntax for declaring parameter types and returns.  These are recognized by the TypeCheck
- * parser and reconciled with the JSDoc equivalents.  Discrepancies are flagged and reported as errors.
- * (Re)generated comment blocks will have JSDoc output to match the prevailing specification so that all declarations
- * are in agreement and documentation will reflect this accordingly.
+ * parser and reconciled with the JSDoc equivalents.  Discrepancies are flagged and reported as errors in the status.
  *
- * #### Interpretation of JSDoc Types
+ * Typescript declared parameters and returns may be commented as 'side-comments' after the declaration, as in this
+ * example:
  *
- * The {type} descriptor in a @param or @return statement is taken as-is if it defines a basic type (i.e. one that
- * will represent the typeof operator for that value).
- * Other derivations are made from the following forms:
- * - {string[]} - will describe an array of the given type (in this case, a string array).
- * - {FooBar} - will describe an object that is an instance of the given class or prototype (in this case FooBar).
- * The basic type will be 'object' and a constraint will be registered for instanceOf = FooBar automatically.
+ *      function example(param1:string, // comment for param1
+ *                       param2:number, // comment for param2
+ *      ) : number // comment for return value
+ *      {
+ *          // body of function
+ *      }
+ *
+ * Values that come from typescript will override any conflicts found in the JSDoc block.
+ * JSDoc specified values, if present, will be used only if not specified in the typescript area.
+ *
  */
 
 /**
@@ -275,7 +292,10 @@ class ConstraintConflictError extends ConstraintError {
  * Defines the base type and the test method.
  */
 export class TypeConstraint {
+    /** The type this constraint applies to */
     public readonly type:string;
+    /** a freeform note that appears in comments. No runtime verification. */
+    public note?:string
 
     constructor(typeString:string = '') {
         this.type = typeString.trim().toLowerCase()
@@ -288,9 +308,11 @@ export class TypeConstraint {
     }
 
     toString() {
+        if(this.note) return this.note;
         return `- No Constraint`
     }
     describe() {
+        if(this.note) return this.note;
         return 'No Constraint'
     }
 }
@@ -385,6 +407,7 @@ class NumberConstraint extends TypeConstraint {
         if(this.min !== undefined) keys.push(`Min = ${this.min}`)
         if(this.max !== undefined) keys.push(`Max = ${this.max}`)
         if(this.maxx !== undefined) keys.push(`Maxx = ${this.maxx}`)
+        if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
     describe(): string {
@@ -396,6 +419,7 @@ class NumberConstraint extends TypeConstraint {
         if(this.min !== undefined) keys.push(`Minimum value is ${this.min}`)
         if(this.max !== undefined) keys.push(`Maximum value is ${this.max}`)
         if(this.maxx !== undefined) keys.push(`Maximum value is less than ${this.maxx}`)
+        if(this.note) keys.push(this.note)
         return keys.length ? keys.join('\n') : super.describe()
 
     }
@@ -495,6 +519,7 @@ class StringConstraint extends TypeConstraint {
         if(this.notContains) keys.push(`!Contains = ${this.notContains}`)
         if(this.match) keys.push(`Match = ${this.match}`)
         if(this.notMatch) keys.push(`!Match = ${this.notMatch}`)
+        if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
     describe() {
@@ -509,6 +534,7 @@ class StringConstraint extends TypeConstraint {
         if(this.notContains) keys.push(`must NOT contain substring "${this.notContains}"`)
         if(this.match) keys.push(`must match Regular Expression "${this.match}"`)
         if(this.notMatch) keys.push(`must NOT match RegExp "${this.notMatch}"`)
+        if(this.note) keys.push(this.note)
         return keys.length ? keys.join('\n') : super.describe()
     }
 
@@ -540,7 +566,7 @@ class ObjectConstraint extends TypeConstraint {
         const keys:string[] = []
         if(this.empty) keys.push(`Empty`)
         if(this.notEmpty) keys.push(`!Empty`)
-        if(this.hasProperties) keys.push(`Has Properties =${this.hasProperties.join('|')}`)
+        if(this.hasProperties) keys.push(`Has Properties =${this.hasProperties.join(',')}`)
         if(this.notHasProperties) keys.push(`!Has Properties =${this.notHasProperties}`)
         if(this.notNested) keys.push(`Not Nested`)
         if(this.noPrototype) keys.push(`No Prototype`)
@@ -548,6 +574,7 @@ class ObjectConstraint extends TypeConstraint {
         if(this.noFalseyProps) keys.push(`No Falsey Props`)
         if(this.noTruthyProps) keys.push(`No Truthy Props`)
         if(this.instanceOf) keys.push(`Instance Of = ${this.instanceOf}`)
+        if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
     describe() {
@@ -562,6 +589,7 @@ class ObjectConstraint extends TypeConstraint {
         if(this.noFalseyProps) keys.push(`object can contain no properties that evaluate as false`)
         if(this.noTruthyProps) keys.push(`object can contain no properties that evaluate as true`)
         if(this.instanceOf) keys.push(`object must be an instance of "${this.instanceOf}"`)
+        if(this.note) keys.push(this.note)
         return keys.length ? keys.join('\n') : super.describe()
     }
 
@@ -609,7 +637,8 @@ class ArrayConstraint extends TypeConstraint {
         if(this.notContains) keys.push(`!Contains = ${this.notContains}`)
         if(this.elementConstraints && this.elementConstraints.length) keys.push(`Each = ${this.elementConstraints}`)
         if(this.elementCheckType) keys.push(`Check Type = ${checkTypeToString(this.elementCheckType, this.elementCheckParameter, this.elementCheckParameter2)}`)
-        if(this.elementConstraints) keys.push(`Each = ${this.elementConstraints.toString().substring(2).replace(/,/g, '|')}`)
+        if(this.elementConstraints) keys.push(`Each = ${this.elementConstraints.toString().substring(2).replace(/,/g, ',')}`)
+        if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
     describe() {
@@ -619,8 +648,8 @@ class ArrayConstraint extends TypeConstraint {
         if(this.contains) keys.push(`array must contain element value "${this.contains}"`)
         if(this.notContains) keys.push(`array must not contain an element value "${this.notContains}"`)
         if(this.elementConstraints && this.elementConstraints.length) keys.push(`each element of the array has the following constraints: "${this.elementConstraints.toString().substring(2).replace(/,/g, ',')}`)
-        // if(this.elementCheckType) keys.push(`Check Type = ${checkTypeToString(this.elementCheckType, this.elementCheckParameter, this.elementCheckParameter2)}`)
         if(this.elementCheckType) keys.push(`(elements will be tested using the ${checkTypeToString(this.elementCheckType)} method)`)
+        if(this.note) keys.push(this.note)
         return keys.length ? keys.join('\n') : super.describe()
     }
 }
@@ -674,7 +703,7 @@ function constraintListParse(str = '') {
         str = str.substring(1, str.length-1)
     }
     if(str.indexOf('|') !== -1) {
-        return str.split('|') // return the split array
+        return str.split(',') // return the split array
     }
     if (isFinite(Number(str))) {
         return Number(str)
@@ -828,11 +857,15 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                     case 'no constraint':
                         return constraint; // early exit if we encounter "- No Constraint"
 
+                    case 'note':
+                        constraint.note = expVal
+                        break;
+
                     case 'minlength':
-                        constraint.minLength = expVal;
+                        constraint.minLength = expVal
                         break;
                     case 'maxlength':
-                        constraint.maxLength = expVal;
+                        constraint.maxLength = expVal
                         break;
                     case 'startswith':
                         not ? constraint.notStartsWith = expVal : constraint.startsWith = expVal

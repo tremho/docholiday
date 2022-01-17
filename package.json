@@ -1,24 +1,33 @@
 {
   "name": "docholiday",
-  "version": "0.1.0-prerelease.2",
+  "version": "0.1.0-prerelease.3",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "rm -fr build && tsc",
     "go": "npm run build && node build/index.js $*",
-    "check": "npm run go && documentation build build/examples/** -f html -o doc",
+    "examples": "npm run go examples/*.ts",
+    "examples-file": "rm -fr gen && npm run go examples/* stub=gen",
+    "examples-render": "npm run examples-file && /Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen/** && open -a \"Google Chrome\" doc/index.html",
     "focus": "npm run go examples/focus.ts",
-    "focus-file": "npm run go examples/focus.ts stub=gen/test.js",
-    "focus-render": "npm run focus-file && /Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "focus-file": "rm -fr gen && npm run go examples/* stub=gen",
+    "focus-render": "npm run focus-file && /Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen/focus.docstub.js && open -a \"Google Chrome\" doc/index.html",
+    "test": "npm run go examples/test-* stub=gen && tap build/test",
+    "test-direct": "npm run go examples/test-* stub=gen && node build/test/docholiday.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^17.0.8"
+    "@types/node": "^17.0.8",
+    "@types/picomatch": "^2.3.0",
+    "@types/tap": "^15.0.5",
+    "tap": "^15.1.6",
+    "tapjs": "^1.0.9"
   },
   "dependencies": {
-    "parenthesis": "^3.1.8"
+    "parenthesis": "^3.1.8",
+    "picomatch": "^2.3.1",
+    "plantuml-api": "^0.0.1"
   }
 }

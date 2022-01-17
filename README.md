@@ -13,63 +13,81 @@ source with some additional features
 - support side-comments
 - produce analysis json detailing commented items and source details
 - produce stub-only output for documentation generation only
-- produce normalized version attached to original code
-- can update source in-place or by copy
+- <del>produce normalized version attached to original code</del>
+- <del>can update source in-place or by copy</del>
 - designed to process Typescript, but also helps Javascript
 - normalize ts types into jsdoc parameters / return
 - support side-comments
-- support special block formatting (e.g. @attention)
+- support special block formatting (e.g. plantUML)
 
 ----------
 
 Intend to extend previous exposé work.
 
 -----------
-###### 0.0.1-pr.2
-The 'focus' script task reads what we are working on
-in terms of example.
-
-- functions in js and ts form, including side-comments
-- module properties
-
-###### Issues
-- [X] allow commented out sections
-- [X] auto-assign type on default, and fix parse
-
-- [X] parsing of constraints
-- [X] rendering of constraints
+###### 0.0.1-pr.3
+- basic functionality for most features in place.
+- generates plantUML diagrams now too.
+- most recent addition was enums.  Typedefs next.
+- globbing is working
 
 __Will still want to do__  
 
-- write to file
-- class doc and recursion.
-- module header documentation (perhaps use namespace)
-- generate jsdoc by command option.
-- command option for private inclusion
+- [ ] typedef
+- [ ] tests
+- [ ] validate test comps
+
+- document construction (doc-org.json)
+  - idea is to have a configuration that names source paths
+  - each block is generated into a separate api doc
+  - a block can reference some freeform content in markdown
+  - combine blocks into a single document
+  - generate a chapter index
+
+- basic config (docholiday.json)
+  - choose output script / engine
+  - declare engine options
+  - pass additional engine options
+  - choose doc output directory
+  - choose stub directory
+  - option to not clear stub directory
+  - construction section or reference
+
 -----------------
 ##### Tasks
 
   - [X] classes with properties, classes, and functions
-  - [ ] constraint note=whatever for freeform constraint comment (no runtime)
-  - [ ] @docgen name option for extension (calls named function, passing the comment block via stdin)
+  - [X] constraint note=whatever for freeform constraint comment (no runtime)
+  - [X] <<<name key1=value key2="value">>> option for extension (calls named function, passing the comment block via stdin)
+    - [X] basic parse and call, multiple
+    - [X] internal for jsdoc and plantUML
+    - [ ] invoke executable
+      - <span style="color:red">Unable to make async call in the processing of a commentText block</span>
+        - idea: _do at source read and add to a custom array in functionInfo_
+        - _replace `%%custom<index>%%` with custom array element on commentText render_
+        - _this would make extract--Info and getApiInfofunctions async_
+        - _which is okay because getApiInfo is called from processFiles_
+
+  - [X] implement globber for file list  
+  - [ ] enums
+  - [ ] typedefs
+
+
   - [ ] tests for everything I can think of
     - functions descriptions, parameters, returns (constraints)
     - properties (constraints)
     - class functions, properties, subclasses
+    - enums and typedefs
+
+  - [ ] main API
+  - [ ] command line reference / proper readme
+  - [ ] npm publish
 --------------
 ##### Status
  - classes are in place
  - constraints are parsed and rendered
 
-###### Functions
-- functions parse with or without comment descriptions
-- /** /* or // are all treated equally
-- export == public, lack of export is private
-- optional and default parameters expressed in JSDoc form
-
-_do we want to process a split typescript declaration?_  
-Downside is awkward for recombining, but good as a stub pipeline.
-- answer is __yes__
-- if both doc types exist, the typescript comments will rule
-  - although we _could_ predicate an option for comment-block preference
-- errors are reported in apiInfo return
+##### Issues
+- [ ] /* */ comment on return type (in arrow example) parse problem
+- [ ] generator function should set a scope modifier / does not render proper stub.
+- 

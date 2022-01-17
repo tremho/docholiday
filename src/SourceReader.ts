@@ -7,15 +7,19 @@ Next:
     - do a variant for typescript that reads parameter and return types from there
  */
 
-import {ScopeModifiers, SourceInfo,FunctionInfo, PropertyInfo, ClassInfo,
-        APIInfo, SpecificationStatus, ReturnInfo, ParameterInfo} from "./types";
+import {
+    ScopeModifiers, SpecificationStatus,
+    SourceInfo, APIInfo,
+    FunctionInfo, PropertyInfo, ClassInfo, EnumInfo,
+    ReturnInfo, ParameterInfo, EnumValueInfo,
+       } from "./types";
 
 import * as TypeCheck from "./TypeCheck"
 import {TypeConstraint} from "./TypeCheck"
 import * as Parenthesis from "parenthesis"
 import {type} from "os";
 
-const constraintRE = /\<[\w|\d|=|,|"|'|\s]+\>/g
+const constraintRE = /\<[\w|\d|=|,|"||!|'|\s]+\>/g
 
 export class SourceReader {
     private readonly text:string = ''; // text of the source
@@ -75,6 +79,14 @@ export class SourceReader {
         }
         this.pos = e
     }
+    skipExport() {
+        if(this.text.indexOf('{', this.pos) !== -1) {
+            let {end} = this.findBracketBoundaries(this.pos)
+            this.pos = end+1
+        } else {
+            this.pos = this.text.indexOf('\n', this.pos)
+        }
+    }
     skipRequire() {
         let p1 = this.text.indexOf('(', this.pos)
         let p2 = this.text.indexOf(')', p1+1)
@@ -109,6 +121,7 @@ export class SourceReader {
         const rt = new SourceInfo()
         this.skipWhite()
         if(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
+        if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
         if(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
         let n = this.nextEnd()
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
@@ -136,6 +149,11 @@ export class SourceReader {
         n = this.nextEnd()
         rt.decEnd = n;
         rt.decStart = this.pos;
+        if(this.text.substring(rt.decStart, rt.decEnd).trim() === '}') {
+            rt.decEnd = this.text.indexOf('\n', this.pos)
+            if(rt.decEnd === -1) rt.decEnd = this.text.length;
+            this.pos = rt.decEnd
+        }
         return rt;
     }
     readTypeDef(str, startIndex) {
@@ -324,6 +342,31 @@ export class SourceReader {
                     x = n + 2
                 }
             }
+            // constraints >>>
+            // parse out constraints here
+            let ctext = (pi.description?.replace(/;;/g, ',') || '')
+            let constraintDeclaration = ''
+            const cm = ctext.match(constraintRE)
+            if(cm) {
+                for(let m of cm) {
+                    let n = ctext.indexOf(m)
+                    ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
+                    if(constraintDeclaration) constraintDeclaration += ', '
+                    constraintDeclaration += m.substring(1, m.length-1)
+                }
+            }
+            pi.description = ctext
+            try {
+                if(constraintDeclaration) {
+                    pi.constraintMap = TypeCheck.parseConstraintsToMap(pi.type, constraintDeclaration)
+                }
+            } catch (e) {
+                console.error(e)
+                pi.error = e.message;
+                pi.status = SpecificationStatus.BadConstraint
+            }
+            // <<<
+
             fi.params.push(pi)
             pdec = pdec.substring(x)
         }
@@ -342,12 +385,17 @@ export class SourceReader {
                 n += fi.return.type.length
                 let m = this.text.indexOf('/', n+1)
                 if(m !== -1 && m < bs) {
-                    fi.return.description = this.text.substring(m+2, bs).trim() || ''
+                    e = bs
+                    if(this.text.charAt(m+1) === '*') e = this.text.indexOf('*/',m)
+                    if(e === -1) e = bs
+                    fi.return.description = this.text.substring(m+2, e).trim() || ''
                 } else {
                     fi.return.description = ''
                 }
                 // parse out constraints here
                 let ctext = fi.return.description
+                if(ctext.substring(ctext.length-2) === '*/') ctext = ctext.substring(0, ctext.length-2)
+                ctext = ctext.replace(/;;/g, ',')
                 let constraintDeclaration = ''
                 const cm = ctext.match(constraintRE)
                 if(cm) {
@@ -358,7 +406,7 @@ export class SourceReader {
                         constraintDeclaration += m.substring(1, m.length-1)
                     }
                 }
-                fi.return.description = ctext
+                fi.return.description = ctext.trim()
                 try {
                     if(constraintDeclaration) {
                         fi.return.constraintMap = TypeCheck.parseConstraintsToMap(fi.return.type, constraintDeclaration)
@@ -383,8 +431,10 @@ export class SourceReader {
     }
     extractFunctionInfo(inClass:boolean, si:SourceInfo):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
-        const src = this.text.substring(si.decStart, si.decEnd)
-        const name = this.getFunctionName(inClass, src)
+        // const src = this.text.substring(si.decStart, si.decEnd)
+        const n = this.text.indexOf('{', this.pos)
+        const fullsrc = this.text.substring(this.pos, n)
+        const name = this.getFunctionName(inClass, fullsrc)
         if (name) {
             fi = this.extractMethodInfo(name, si)
         }
@@ -430,13 +480,19 @@ export class SourceReader {
                         api.classes.push(ci)
                         this.pos = ci.bodyEnd + 1
                     } else {
-                        let pi = this.extractPropertyInfo(si, inClass);
-                        if(pi.decStart !== -1) {
-                            if (pi.name) {
-                                api.properties.push(pi)
-                                this.pos = pi.decEnd + 1
-                            } else {
-                                this.pos = si.decEnd + 1
+                        let ei = this.extractEnumInfo(si)
+                        if (ei.decStart !== -1) {
+                            api.enums.push(ei)
+                            this.pos = ei.bodyEnd + 1
+                        } else {
+                            let pi = this.extractPropertyInfo(si, inClass);
+                            if (pi.decStart !== -1) {
+                                if (pi.name) {
+                                    api.properties.push(pi)
+                                    this.pos = pi.decEnd + 1
+                                } else {
+                                    this.pos = si.decEnd + 1
+                                }
                             }
                         }
                     }
@@ -451,6 +507,7 @@ export class SourceReader {
         let text = this.text.substring(si.decStart, si.decEnd).trim()
         if(text.charAt(0) === '/') return pi;
         if(text.substring(0,6) === 'import') return pi;
+        if(text.substring(0,6) === 'export') return pi;
         if(text.substring(0.7) === 'require') return pi;
         let leftSide = ''
         let rightSide = '';
@@ -704,6 +761,107 @@ export class SourceReader {
         return {mixins, base}
     }
 
+    extractEnumInfo(si:SourceInfo):EnumInfo {
+        const ei = new EnumInfo()
+        let text = this.text.substring(si.decStart, si.decEnd).trim()
+        if(text.charAt(0) === '/') return ei;
+        if(text.substring(0,6) === 'import') return ei;
+        if(text.substring(0,6) === 'export') return ei;
+        if(text.substring(0.7) === 'require') return ei;
+
+        let n = text.indexOf('{')
+        if(n === -1) {
+            return ei
+        }
+        n = text.indexOf('enum ')
+        if(n !== -1) {
+            let leftSide = text.substring(0, n).trim()
+            let name = text.substring(n + 4).trim()
+            if(name.charAt(name.length-1) === '{') name = name.substring(0,name.length-1).trim()
+            let p = leftSide.split(' ');
+            let sm = new ScopeModifiers()
+            p.forEach(k => {
+                switch(k.trim().toLowerCase()) {
+                    case 'export':
+                        sm.public = true;
+                        sm.private = false;
+                        break;
+                    case 'const':
+                        sm.const = true;
+                        break;
+                }
+            })
+            Object.assign(ei, si)
+            ei.name = name
+            ei.scope = sm
+            ei.description = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
+            // read enum symbols and values
+            let obi = this.text.indexOf('{', si.decStart)
+            if(obi !== -1) {
+                ei.bodyStart = obi+1
+                ei.bodyEnd = this.text.indexOf('}', obi)
+            }
+            let body = this.text.substring(ei.bodyStart, ei.bodyEnd)
+            const lns = body.split('\n')
+            let preVal = -1
+            let preDesc = ''
+            for(let ln of lns) {
+                ln = ln.trim()
+                if(ln) {
+                    if(ln.charAt(0) === '/') {
+                        let cn = ln.length
+                        if(ln.charAt(1) === '*') cn = ln.indexOf('*/')
+                        preDesc = ln.substring(2, cn)
+                    }
+                    let ep = ln.split('=')
+                    const ev = new EnumValueInfo()
+                    let name = ep[0].trim()
+                    let ci = name.indexOf('//')
+                    if(ci === -1) ci = name.indexOf('/*')
+                    if(ci === -1) {
+                        ci = name.length
+                    }
+                    let di = name.indexOf(',')
+                    let e = Math.min(ci,di)
+                    if(e === -1) e = name.length
+                    if(ci !== -1) {
+                        let desc = name.substring(ci + 2)
+                        if (desc.substring(desc.length - 2) === '*/') desc = desc.substring(0, desc.length - 2).trim()
+                        ev.description = preDesc ? preDesc +'\n' + desc : desc
+                    }
+                    ev.name = name.substring(0,e).trim()
+                    if(ep[1]) {
+                        let ci = ep[1].indexOf('//')
+                        if(ci === -1) ci = ep[1].indexOf('/*')
+                        if(ci === -1) {
+                            ci = ep[1].length
+                        }
+                        let di = ep[1].indexOf(',')
+                        let e = Math.min(ci,di)
+                        ev.value = ep[1].substring(0, e).trim()
+                        if(isFinite(Number(ev.value))) ev.value = Number(ev.value)
+                        if(ci !== -1) {
+                            let desc = ep[1].substring(ci + 2)
+                            if (desc.substring(desc.length - 2) === '*/') desc = desc.substring(0, desc.length - 2).trim()
+                            ev.description = preDesc ? preDesc +'\n' + desc : desc
+                        }
+                    }
+                    if(ev.value === undefined) {
+                        ev.value = preVal + 1
+                    }
+                    if (isFinite(Number(ev.value))) {
+                        preVal = Number(ev.value)
+                    }
+                    ei.values.push(ev)
+                    preDesc = ''
+                }
+            }
+        }
+
+        return ei
+    }
+
+
     /**
      * Read comment block
      */
@@ -713,6 +871,10 @@ export class SourceReader {
         // we can only read the description from the comment block
         let n = fi.comStart;
         let nd = this.text.indexOf('@', n)
+        // skip any reserved in-comment pass-throughs
+        while(this.text.substring(nd, nd+7)=== '@public') {
+            nd = this.text.indexOf('@', nd+1)
+        }
         if(nd === -1 || nd > fi.comEnd) nd = fi.comEnd;
         fi.description = this.readCommentBlock(this.text.substring(n, nd))
         if(!jsDocSignature) {
@@ -720,6 +882,11 @@ export class SourceReader {
             fi.error = 'Comment block is not recognized as JSDoc form'
         }
         // Process the comment block as JSDOC even if it's not in that form.
+        let xi = this.text.indexOf('@public', n)
+        if(xi !== -1 && xi < fi.comEnd ) {
+            fi.scope.public = true
+        }
+
         let ri = this.text.indexOf('@return', n)
         if(ri >= fi.comEnd || ri === -1) ri = fi.comEnd;
         let pIndex = 0
@@ -767,7 +934,7 @@ export class SourceReader {
                 let pp = pd.split(/\s+/)
                 for (let i = 0; i < 2; i++) {
                     let p = pp[i]
-                    if (p) {
+                    if (p && p !== '//') {
                         p = p.trim().replace(';;', ',') // template fix
                         if (p === '-') {
                             pp.splice(2, 0, '-')

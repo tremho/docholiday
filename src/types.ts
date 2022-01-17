@@ -69,12 +69,35 @@ export class PropertyInfo extends SourceInfo {
 }
 
 /**
+ * Information about an enum
+ */
+export class EnumInfo extends SourceInfo{
+    public name:string
+    public scope:ScopeModifiers = new ScopeModifiers()
+    public description:string = ''
+    public values:EnumValueInfo[] = []
+    public bodyStart: number = -1;
+    public bodyEnd:number = -1;
+
+}
+
+/**
+ * Information about a single enum value
+ */
+export class EnumValueInfo {
+    public name:string
+    public value:string|number
+    public description:string
+}
+
+/**
  * Top-level collection of all functions, classes, and properties
  */
 export class APIInfo {
     public functions: FunctionInfo[] = []
     public classes: ClassInfo[] = []
     public properties: PropertyInfo[] = []
+    public enums: EnumInfo[] = []
 }
 
 /**
@@ -116,7 +139,6 @@ export class ReturnInfo {
     public description:string;
     public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
     public status: SpecificationStatus = SpecificationStatus.None;
-    // error is reported in function info, not here -- public error:string; // if defined, holds error detail. status is probably MISMATCH.
 }
 
 /**
@@ -133,6 +155,14 @@ export interface FICallback {
  */
 export interface PICallback {
     (pi:PropertyInfo, text?:string):void
+}
+
+/**
+ * Callback for source reader.
+ * Calls back with EnumInfo and associated text for each enum in source
+ */
+export interface EICallback {
+    (ei:EnumInfo, text?:string):void
 }
 
 /**

@@ -1,8 +1,11 @@
-import {ClassInfo, FunctionInfo, ParameterInfo, PropertyInfo, ReturnInfo} from "./types";
+import {ClassInfo, EnumInfo, FunctionInfo, ParameterInfo, PropertyInfo, ReturnInfo} from "./types";
 import {TypeConstraint} from "./TypeCheck";
+import {handleExternalCustom, handleInternalCustom} from "./CustomRender";
 
 
-export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInfo, indent:number) {
+const customRE =  /\<\<\<[\w|\d|=|,|"|'|\s]+\>\>\>/g
+
+export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInfo|EnumInfo, indent:number) {
     if(entityInfo instanceof FunctionInfo) {
         return renderFunctionComment(entityInfo, indent)
     }
@@ -11,6 +14,9 @@ export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInf
     }
     if(entityInfo instanceof PropertyInfo) {
         return renderPropertyComment(entityInfo, indent)
+    }
+    if(entityInfo instanceof EnumInfo) {
+        return renderEnumComment(entityInfo, indent)
     }
 }
 
@@ -33,6 +39,19 @@ function endCommentBlock(indent:number):string {
 
 function commentText(indent:number, inset:number, text:string=''):string {
     let out = ''
+    const cm = text.match(customRE)
+    if (cm) {
+        let post = ''
+        for (let m of cm) {
+            text += post
+            let n = text.indexOf(m)
+            if (n !== -1) {
+                post = text.substring(n+m.length)
+                let rendered = customGen(m, post)
+                text = text.substring(0,n) + rendered
+            }
+        }
+    }
     let spaces = inset ? ' '.repeat(inset) : ''
     let lines = text.split('\n')
     for(let ln of lines) {
@@ -57,7 +76,7 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
         if (name === 'constructor') name = 'Constructor for ' + forClass
         out += commentLine(indent, name)
     }
-    if(fi.description) out += commentText(indent, 2, fi.description+'\n')
+    if(fi.description) out += commentText(indent, 0, fi.description+'\n')
     for(let pi of fi.params) {
         let type = pi.type || '*'
         if(pi.optional) {
@@ -99,7 +118,7 @@ function renderPropertyComment(pi:PropertyInfo, indent:number) : string {
     let name = pi.name
     let jsdocKey = pi.scope.const ? '@constant' : '@member'
     out += commentLine(indent, `${jsdocKey} {${type}} ${name}`)
-    if(pi.description) out += commentText(indent, 2, pi.description)
+    if(pi.description) out += commentText(indent, 0, pi.description)
     if(pi.default) out += commentLine(indent, `@default ${pi.default}`)
     out += formatConstraints(indent, pi)
     out += endCommentBlock(indent)
@@ -112,7 +131,7 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
     }
     // out += commentLine(indent, ci.name)
     if(ci.extends) out += commentLine(indent, '@extends '+ci.extends)
-    out += commentText(indent, 2, ci.description)
+    out += commentText(indent, 0, ci.description)
     if(ci.internals.properties.length) {
         for(let pi of ci.internals.properties) {
             if(!pi.scope.private) {
@@ -126,6 +145,21 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
     }
     out += endCommentBlock(indent)
     return out
+}
+
+function renderEnumComment(ei:EnumInfo, indent:number) : string {
+    let out = beginCommentBlock(indent)
+
+    // determine type of enum
+    let etype = 'number'
+
+    out += commentText(indent, 0, ei.description)
+    out += commentLine(indent, `@enum ${etype}`)
+    out += commentLine(indent, `@readonly ${etype}`)
+
+    out += endCommentBlock(indent)
+    return out
+
 }
 
 export function renderClassStub(ci:ClassInfo, indent:number) {
@@ -202,8 +236,25 @@ export function renderPropertyStub(pi:PropertyInfo, indent:number) {
     out += '\n'
 
     return out
-
 }
+export function renderEnumStub(ei:EnumInfo, indent:number) {
+    const spaces = indent && ' '.repeat(indent) || ''
+    let out = spaces+`    var ${ei.name} = {`
+    for(let i=0; i<ei.values.length; i++) {
+        let v = ei.values[i]
+        if(i > 0) out += ','
+        out += '\n'
+        out += spaces+'        /** '
+        if(v.description) out += v.description+'\n'
+        if(v.value !== v.name) out += spaces+`         *  <b><i>(value = ${v.value})</i></b>\n`
+        out += spaces+'         */\n'
+        out += spaces+`        ${v.name}`
+    }
+    out += '\n'+spaces+'}\n\n'
+
+    return out
+}
+
 function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|ReturnInfo) {
     let out = ''
     let spaces = indent ? ' '.repeat(indent) : ''
@@ -219,5 +270,28 @@ function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|Retur
         out += commentLine(indent, '   </ul>')
     }
     return out
-
 }
+
+function customGen(block:string, text:string):string {
+    let out = ''
+    let args:string[] = block.substring(3, block.length-3).split(' ')
+    let name:string = (args?.shift() || '')
+    let argMap:any = {}
+    for(let arg of args) {
+        let kv = arg.split('=')
+        let key = kv[0].trim().toLowerCase()
+        let value = kv[1].trim()
+        if(value.charAt(0) === value.charAt(value.length-1)) {
+            let q = value.charAt(0)
+            if(q === '"' || q === "'" || q === '`') {
+                value = value.substring(1, value.length-1)
+            }
+            argMap[key] = value
+        }
+    }
+    out = handleInternalCustom(name, argMap, text)
+    // TODO: Can't call an async function from here. Text processing is inherently serial and synchronous
+    // if(!out) out = handleExternalCustom(name, args, text)
+    return out;
+}
+

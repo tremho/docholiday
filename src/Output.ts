@@ -6,17 +6,27 @@ process this with jsdoc or documentation.js
 
 import * as fs from 'fs'
 import * as path from 'path'
-import {ClassInfo, FunctionInfo, PropertyInfo, SourceInfo} from "./types";
-import {renderCommentBlock, renderFunctionStub, renderPropertyStub, renderClassStub} from "./CommentBlock";
+import {ClassInfo, EnumInfo, FunctionInfo, PropertyInfo, SourceInfo} from "./types";
+import {
+    renderCommentBlock,
+    renderFunctionStub,
+    renderPropertyStub,
+    renderClassStub,
+    renderEnumStub
+} from "./CommentBlock";
 
 class OrderedParts {
-    info:FunctionInfo|PropertyInfo|ClassInfo
+    info:FunctionInfo|PropertyInfo|ClassInfo|EnumInfo
     indent:number
     start:number
 }
 const recorded:OrderedParts[] = []
 
-export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo, source:string) {
+export function clearRecorded() {
+    recorded.splice(0,recorded.length)
+}
+
+export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo|EnumInfo, source:string) {
     const op = new OrderedParts()
     op.info = info
     op.indent = findSourceIndent(info, source)
@@ -48,6 +58,9 @@ export function stubOut():string {
         }
         else if(cb.info instanceof ClassInfo) {
             blktxt += renderClassStub(cb.info, cb.indent)
+        }
+        else if(cb.info instanceof EnumInfo) {
+            blktxt += renderEnumStub(cb.info, cb.indent)
         }
         out += blktxt
     }
