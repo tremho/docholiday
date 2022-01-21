@@ -1,5 +1,17 @@
-// this is as plain as it gets
-// a simple JS function
-function plainJane(a, b, c) {
 
-}
+
+// sort order test
+export function za() {}
+// sort order test
+export function zb() {}
+// sort order test
+export function zc() {}
+// sort order test
+export function xd() {}
+// sort order test
+export function xe() {}
+// sort order test
+export function xf() {}
+// sort order test
+export function xg() {}
+

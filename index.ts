@@ -1,21 +1,31 @@
 import * as path from "path"
-import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo} from './src/types'
+import * as fs from 'fs-extra'
+
+import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo, TypedefInfo} from './src/types'
 import { processSourceFile, processSource } from './src/ProcessFiles'
-import {renderCommentBlock, renderFunctionStub, renderPropertyStub} from "./src/CommentBlock";
 import {recordInfo, sortRecorded, clearRecorded, stubOut,writeStubFile} from "./src/Output";
-import {write} from "fs";
 import {getGlobbedFiles} from "./src/Globber";
+import {executeCommand} from "./src/execCmd";
+
+import * as hjson from 'hjson'
+import {exec} from "child_process";
+
 
 let files:string[] = []
-let opts:string[] = []
+let opts:any = {}
+let config:any = {}
 const args = process.argv.slice(2)
 let i = 0
 let f:string
 while((f = args[i])) {
-  if(f === 'stub') {
-      f += '='+(args[i+1] || '')
+  if(f === 'config') {
+    opts['config'] = args[i+1]
   }
-  if(f.substring(0,5) === 'stub=') opts.push(f)
+  if(f.substring(0,7) === 'config=') opts['config'] = f.substring(7)
+  if(f === '-c') {
+    opts['config'] = args[i+1]
+  }
+  if(f.substring(0,3) === '-c=') opts['config'] = f.substring(3)
   else {
     let gfs = getGlobbedFiles(f)
     for(let gf of gfs) {
@@ -25,42 +35,26 @@ while((f = args[i])) {
   i++
 }
 
-function outOption():string {
-  for(let o of opts) {
-    if(o.substring(0,5) === 'stub=') {
-      return o.substring(5)
-    }
-  }
-  return ''
-}
-
 if(files.length) {
-  console.log('Doc Holiday ', files)
-  let generator = processFileList(files, outOption())
+  // console.log('Doc Holiday ', files)
+  readConfiguration()
+  clean()
+  let generator = processFileList(files, config.intermediate)
   while(true) {
     let gen = generator.next()
-    let stub = gen.value
-    if(stub) console.log(stub)
+    // let stub = gen.value
+    // if(stub) console.log(stub)
     if(gen.done) break;
   }
-}
-
-/**
- * Sort option values
- */
-export enum SortType {
-  SourceOrder, // output stubs in the order of the original source (default)
-  NameAscending, // output stubs in order of name, alphabetically ascending
-  NameDescending // output stubs in order of name, alphabetically descending
+  execute()
 }
 
 /**
  * Options for stub generation
  */
 export class DocOptions {
-  sourceType:string = 'ts'
-  sortType:SortType = SortType.SourceOrder
-  stubExtension:string = '.docstub.txt'
+  sourceType:string = 'ts'  // either 'ts' (typescript) or 'js' (javascript)
+  stubExtension:string = '.docstub.js'
 }
 
 
@@ -86,22 +80,22 @@ export class DocOptions {
  *
  *     let outFile = processFileList(myFiles, myOutDir).next()
  *     // stub output will be in the file named by outFile
- *
+ *    ```
  */
 export function* processFileList(files:string[], outPath=''):Generator<string> {
 
-  console.log('processing files', files)
+  // console.log('processing files', files)
   let f = files.shift()
   while(f) {
     clearRecorded()
     let fp = path.normalize(f)
-    processSourceFile(fp, recordModuleFunc, recordProperty, recordClass, recordEnum)
+    processSourceFile(fp, recordModuleFunc, recordProperty, recordClass, recordEnum, recordTypedef)
     sortRecorded()
     if (outPath) {
       let bn = path.basename(f)
       bn = bn.substring(0, bn.lastIndexOf('.'))
-      let outFile = path.normalize(path.join(outPath, bn+'.docstub.js'))
-      writeStubFile(outFile)
+      let outFile = path.normalize(path.join(outPath, bn+'.docstub.js')) // todo: use options for stubExtension
+      writeStubFile(outFile, bn)
       yield outFile
     } else {
       yield stubOut()
@@ -118,8 +112,9 @@ export function* processFileList(files:string[], outPath=''):Generator<string> {
  * @param {DocOptions} options
  *          Options affecting stub creation
  */
-export function docstub(content:string, options:DocOptions) {
-  return processSource(content, options.sourceType, recordModuleFunc, recordProperty, recordClass, recordEnum)
+export function docstub(content:string, options?:DocOptions) {
+  if(!options) options = new DocOptions()
+  return processSource(content, options.sourceType, recordModuleFunc, recordProperty, recordClass, recordEnum, recordTypedef)
 }
 
 export {processSource}
@@ -140,4 +135,102 @@ function recordClass(ci: ClassInfo, source: string) {
 
 function recordEnum(ei:EnumInfo, source: string) {
   recordInfo(ei, source)
+}
+
+function recordTypedef(ti:TypedefInfo, source: string) {
+  recordInfo(ti, source)
+}
+
+function readConfiguration() {
+  let cf = opts.config || 'docholiday.conf'
+  cf = path.resolve(cf.trim())
+  if(!fs.existsSync(cf)) {
+    console.error('No config found or specified.  use -c to specify location of a docholiday.conf file if not in current directory')
+  }
+  let contents = fs.readFileSync(cf).toString()
+  config = hjson.parse(contents)
+  // console.log('read config', config)
+
+  // translate references
+  for(let key of Object.getOwnPropertyNames(config)) {
+    let value = config[key]
+    if(typeof value === 'string') {
+      let repl = '%'+key+'%'
+      while(contents.indexOf(repl) !== -1) contents = contents.replace(repl, value)
+    }
+  }
+  config = hjson.parse(contents)
+  // console.log('translated config', JSON.stringify(config, null, 2))
+
+}
+
+function clean() {
+  const gen = path.resolve(config.intermediate)
+  const md = path.resolve(config.markdown)
+  fs.removeSync(gen)
+  fs.removeSync(md)
+}
+
+async function execute() {
+  // now run the exec
+
+  // insure we have the intermediate directory we've specified
+  // (Should have been created by stub generation)
+  const gen = path.resolve(config.intermediate)
+  if(!fs.existsSync(gen)) {
+    console.error("Specified intermediate directory "+gen+" does not exist!")
+    throw Error()
+  }
+  if(config.engine === "jsdoc") {
+    // read in jsdoc config and add our own values
+    let jc = path.resolve(config.jsdocConfig)
+    if (!fs.existsSync(jc)) {
+      console.error('JSDOC config file ' + jc + ' does not exist')
+      throw Error()
+    }
+    let cjc: any = path.resolve('jsdoc-conf.json')
+    cjc = fs.readFileSync(cjc).toString()
+    // canonical json config
+    cjc = hjson.parse(cjc)
+    let ctemp: any = fs.readFileSync(jc).toString()
+    ctemp = hjson.parse(ctemp)
+    let jst = Object.assign(ctemp, cjc)
+    jst.opts = {
+      template: config.template || "templates/default",
+      sort: false
+    }
+    // console.log('resulting json config', jst)
+
+    // put our jsdoc config in intermediate director
+    fs.writeFileSync(path.join(gen, 'jsdoc.conf'), JSON.stringify(jst, null, 2))
+  }
+
+
+  let eng = config.engine
+  let fmts = config.format.split(',')
+  const execFmt = async (fmt:string) => {
+    if(fmt) {
+      let exec = config.execInfo[eng][fmt]['exec']
+      console.log('exec', exec)
+
+      const exp = exec.split(' ')
+      const cmd = exp.shift()
+      if (eng === 'jsdoc' && fmt=='html') {
+        let dhroot = path.resolve('.')
+        let dhIntercept = path.join(dhroot, 'templates')
+        exp.unshift(dhIntercept)
+        exp.unshift('-t')
+      }
+      return executeCommand(cmd, exp, '', true).then(rt => {
+        // console.log(rt)
+        return rt.retcode
+      })
+    }
+  }
+  let fmt
+  while((fmt = fmts.shift())) {
+    console.log('converting to '+fmt+'...')
+    let rt = await execFmt(fmt)
+    if(rt) break
+  }
 }

@@ -6,7 +6,7 @@ process this with jsdoc or documentation.js
 
 import * as fs from 'fs'
 import * as path from 'path'
-import {ClassInfo, EnumInfo, FunctionInfo, PropertyInfo, SourceInfo} from "./types";
+import {ClassInfo, EnumInfo, FunctionInfo, PropertyInfo, SourceInfo, TypedefInfo} from "./types";
 import {
     renderCommentBlock,
     renderFunctionStub,
@@ -16,7 +16,7 @@ import {
 } from "./CommentBlock";
 
 class OrderedParts {
-    info:FunctionInfo|PropertyInfo|ClassInfo|EnumInfo
+    info:FunctionInfo|PropertyInfo|ClassInfo|EnumInfo|TypedefInfo
     indent:number
     start:number
 }
@@ -26,7 +26,7 @@ export function clearRecorded() {
     recorded.splice(0,recorded.length)
 }
 
-export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo|EnumInfo, source:string) {
+export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|TypedefInfo, source:string) {
     const op = new OrderedParts()
     op.info = info
     op.indent = findSourceIndent(info, source)
@@ -49,29 +49,30 @@ export function sortRecorded() {
 export function stubOut():string {
     let out = ''
     for(let cb of recorded) {
-        let blktxt = renderCommentBlock(cb.info, cb.indent)
-        if(cb.info instanceof FunctionInfo) {
-            blktxt += renderFunctionStub(cb.info, cb.indent)
+        if(cb.start >=0) {
+            let blktxt = renderCommentBlock(cb.info, cb.indent)
+            if (cb.info instanceof FunctionInfo) {
+                blktxt += renderFunctionStub(cb.info, cb.indent)
+            } else if (cb.info instanceof PropertyInfo) {
+                blktxt += renderPropertyStub(cb.info, cb.indent)
+            } else if (cb.info instanceof ClassInfo) {
+                blktxt += renderClassStub(cb.info, cb.indent)
+            } else if (cb.info instanceof EnumInfo) {
+                blktxt += renderEnumStub(cb.info, cb.indent)
+            } else if (cb.info instanceof TypedefInfo) {
+                blktxt += '\n'
+            }
+            out += blktxt
         }
-        else if(cb.info instanceof PropertyInfo) {
-            blktxt += renderPropertyStub(cb.info, cb.indent)
-        }
-        else if(cb.info instanceof ClassInfo) {
-            blktxt += renderClassStub(cb.info, cb.indent)
-        }
-        else if(cb.info instanceof EnumInfo) {
-            blktxt += renderEnumStub(cb.info, cb.indent)
-        }
-        out += blktxt
     }
     return out
 }
-export function writeStubFile(filePath:string) {
+export function writeStubFile(filePath:string, moduleName:string) {
     try {
         let pn = path.normalize(filePath)
         let pd = path.dirname(pn)
         fs.mkdirSync(pd, {recursive: true})
-        let content = stubOut()
+        let content = `/** @module ${moduleName} */` + stubOut()
         fs.writeFileSync(pn, content)
     } catch(e) {
         console.error('Error', e)

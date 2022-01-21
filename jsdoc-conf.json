@@ -1,0 +1,35 @@
+{
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "recurseDepth": 10,
+  "source": {
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": false
+    }
+  },
+  // Comments like this are allowed in a JSDoc config file.
+  // Doc Holiday requires templates to be defined here in opts, not via the -t option
+  // in order to support control of the output sort.
+  // Doc Holiday invokes JSDOC with the -t option set to 'templates' so it can do it's interception.
+  // If you invoke with -t <your template path> it may work, but the sort option here is ignored.
+  "opts": {
+    "template": "better-docs",
+    "sort": false
+  }
+
+}

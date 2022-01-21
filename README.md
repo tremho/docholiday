@@ -1,6 +1,7 @@
 # Doc Holiday
 
-O.K., corral your documentation backlog and 
+If your documentation pipeline goes earp a bit too much,
+and you need to make it O.K., corral your documentation backlog and 
 take a break from disappointing documentation generation
 
 A JSDoc source block re-generator targeting Typescript
@@ -19,75 +20,84 @@ source with some additional features
 - normalize ts types into jsdoc parameters / return
 - support side-comments
 - support special block formatting (e.g. plantUML)
+- support documentation construction
 
 ----------
 
-Intend to extend previous exposé work.
+#### End game
+
+In the closing phase...(I think).... just need to finish the following:
+
+- [X] html,markdown both
+- [ ] Tests and approved comps
+- [ ] Manual test config options
+- [ ] @throw
+- [ ] tweaks from blog
+- [ ] self-document
 
 -----------
-###### 0.0.1-pr.3
-- basic functionality for most features in place.
-- generates plantUML diagrams now too.
-- most recent addition was enums.  Typedefs next.
-- globbing is working
 
-__Will still want to do__  
+### Issues 
 
-- [ ] typedef
-- [ ] tests
-- [ ] validate test comps
-
-- document construction (doc-org.json)
-  - idea is to have a configuration that names source paths
-  - each block is generated into a separate api doc
-  - a block can reference some freeform content in markdown
-  - combine blocks into a single document
-  - generate a chapter index
-
-- basic config (docholiday.json)
-  - choose output script / engine
-  - declare engine options
-  - pass additional engine options
-  - choose doc output directory
-  - choose stub directory
-  - option to not clear stub directory
-  - construction section or reference
-
------------------
-##### Tasks
-
-  - [X] classes with properties, classes, and functions
-  - [X] constraint note=whatever for freeform constraint comment (no runtime)
-  - [X] <<<name key1=value key2="value">>> option for extension (calls named function, passing the comment block via stdin)
-    - [X] basic parse and call, multiple
-    - [X] internal for jsdoc and plantUML
-    - [ ] invoke executable
-      - <span style="color:red">Unable to make async call in the processing of a commentText block</span>
-        - idea: _do at source read and add to a custom array in functionInfo_
-        - _replace `%%custom<index>%%` with custom array element on commentText render_
-        - _this would make extract--Info and getApiInfofunctions async_
-        - _which is okay because getApiInfo is called from processFiles_
-
-  - [X] implement globber for file list  
-  - [ ] enums
-  - [ ] typedefs
+###### If the template excludes private, like better-docs, it won't show
+We _could_ have an `--all-public` flag that generates stubs ignoring private  
+Defer this because this needs community input.
 
 
-  - [ ] tests for everything I can think of
-    - functions descriptions, parameters, returns (constraints)
-    - properties (constraints)
-    - class functions, properties, subclasses
-    - enums and typedefs
+------------
+##### Documentation types and test matrix
 
-  - [ ] main API
-  - [ ] command line reference / proper readme
-  - [ ] npm publish
---------------
-##### Status
- - classes are in place
- - constraints are parsed and rendered
+###### Enum
+    - [ ] implicit
+    - [ ] explicit
+    - [ ] mixed with explicit start after first
+    - [ ] explicit out of order
+    - [ ] strings
+    - [ ] strings with key==value
 
-##### Issues
-- [ ] /* */ comment on return type (in arrow example) parse problem
-- [ ] generator function should set a scope modifier / does not render proper stub.
-- 
+###### Functions
+    - [ ] basic javascript type
+    - [ ] separated lines
+    - [ ] typescript - one line and split
+    - [ ] assigned classic function - one line and split
+    - [ ] assigned arrow function - one line and split
+    - [ ] anonymous function
+    - [ ] generator function recognized by *
+    - [ ] async keyword
+
+###### Parameters
+    - [ ] name only, any time
+    - [ ] name only with comment
+    - [ ] name:type (typescript)
+    - [ ] name:type with comment
+    - [ ] name:{foo:string, bar:number} (ad-hoc type)
+    - [ ] name:{foo:string, bar:number} (ad-hoc type) with comment
+
+###### Returns
+    - [ ] void
+    - [ ] type
+    - [ ] Promise
+    - [ ] ad-hoc type
+    - [ ] w/wo comment
+
+- [ ] Throws
+
+###### module Properties
+    - var, let, const 
+    - w/wo assignment
+
+###### Classes
+    - [ ] Functions and parameters
+    - [ ] Properties 
+    - [ ] constructors
+    - [ ] inner classes
+    
+###### JSDOC meta
+    - [ ] params
+    - [ ] return
+
+###### Use of semicolons
+    - [ ] line endings
+    - [ ] within one line
+    - [ ] all element types
+

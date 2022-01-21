@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import {FICallback, CICallback, PICallback, EICallback, EnumInfo} from "./types"
+import {FICallback, CICallback, PICallback, EICallback, EnumInfo, TICallback, TypedefInfo} from "./types"
 import {SourceReader} from "./SourceReader";
 
 /**
@@ -19,11 +19,11 @@ import {SourceReader} from "./SourceReader";
  *
  * @return {string}
  */
-export function processSourceFile(srcPath:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback) {
+export function processSourceFile(srcPath:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback, tdcallback:TICallback) {
     const contents = fs.readFileSync(srcPath).toString()
 
     const ext = srcPath.substring(srcPath.lastIndexOf('.'))
-    return processSource(contents, ext, fncallback, prcallback, clscallback, encallback)
+    return processSource(contents, ext, fncallback, prcallback, clscallback, encallback, tdcallback)
 }
 
 /**
@@ -36,7 +36,7 @@ export function processSourceFile(srcPath:string, fncallback:FICallback, prcallb
  * @param clscallback function to call on each ClassInfo parse
  * @param encallback function to call on each EnumInfo parse
  */
-export function processSource(contents:string, ext:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback) {
+export function processSource(contents:string, ext:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback, tdcallback:TICallback) {
     const reader = new SourceReader(contents, ext)
     const apiResults = reader.getAPIInfo()
 
@@ -49,6 +49,10 @@ export function processSource(contents:string, ext:string, fncallback:FICallback
     apiResults.enums.forEach(si => {
         let ei = Object.assign(new EnumInfo(), si)
         encallback(ei, contents)
+    })
+    apiResults.typedefs.forEach(si => {
+        let ti = Object.assign(new TypedefInfo(), si)
+        tdcallback(ti, contents)
     })
 
     // console.log('---------- Class Parsing -----------')

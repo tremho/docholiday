@@ -43,6 +43,7 @@ export class FunctionInfo extends SourceInfo {
  */
 export class ClassInfo extends SourceInfo {
     public name:string = '';
+    public isInterface:boolean
     public extends:string = '';
     public scope:ScopeModifiers = new ScopeModifiers()
     public implements: string[] = []
@@ -71,14 +72,13 @@ export class PropertyInfo extends SourceInfo {
 /**
  * Information about an enum
  */
-export class EnumInfo extends SourceInfo{
+export class EnumInfo extends SourceInfo {
     public name:string
     public scope:ScopeModifiers = new ScopeModifiers()
     public description:string = ''
     public values:EnumValueInfo[] = []
     public bodyStart: number = -1;
     public bodyEnd:number = -1;
-
 }
 
 /**
@@ -86,8 +86,26 @@ export class EnumInfo extends SourceInfo{
  */
 export class EnumValueInfo {
     public name:string
+    public type:string
     public value:string|number
     public description:string
+}
+
+export enum TypedefForm {
+    Primitive,
+    Object,
+    Function,
+}
+
+export class TypedefInfo extends SourceInfo {
+    public name:string
+    public form:TypedefForm
+    public type:string
+    public description:string = ''
+    public declaration:FunctionInfo|ClassInfo
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
+    public bodyStart: number = -1;
+    public bodyEnd:number = -1;
 }
 
 /**
@@ -98,6 +116,7 @@ export class APIInfo {
     public classes: ClassInfo[] = []
     public properties: PropertyInfo[] = []
     public enums: EnumInfo[] = []
+    public typedefs:TypedefInfo[] = []
 }
 
 /**
@@ -163,6 +182,14 @@ export interface PICallback {
  */
 export interface EICallback {
     (ei:EnumInfo, text?:string):void
+}
+
+/**
+ * Callback for source reader.
+ * Calls back with TypedefInfo and associated text for each type definition in source
+ */
+export interface TICallback {
+    (ti:TypedefInfo, text?:string): void
 }
 
 /**
