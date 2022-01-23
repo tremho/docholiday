@@ -3,6 +3,7 @@ Working with enum
  */
 
 // Constants for direction
+// Explicit start
 enum Direction {
     Up = 1,     // vertical ascend
     Down,  // vertical descend
@@ -10,6 +11,7 @@ enum Direction {
     Right, // eastward if facing north
 }
 
+// Implicit values
 enum Direction2 {
     Up,
     Down,
@@ -17,6 +19,7 @@ enum Direction2 {
     Right,
 }
 
+// String values
 enum Direction3 {
     Up = "UP",
     Down = "DOWN",
@@ -24,9 +27,18 @@ enum Direction3 {
     Right = "RIGHT",
 }
 
+// String values = key
+// should not repeat value in description
+enum Direction3 {
+    UP = "UP",
+    DOWN = "DOWN",
+    LEFT = "LEFT",
+    RIGHT = "RIGHT",
+}
+
 enum BooleanLikeHeterogeneousEnum {
     No = 0,
-    Yes = "YES",
+    Yes = "YES"
 }
 
 enum LogLevel {
@@ -34,4 +46,42 @@ enum LogLevel {
     WARN,
     INFO,
     DEBUG,
+}
+
+// Explicit after implicit
+enum Jumper {
+    Zero,
+    One,
+    Two,
+    OneHundred = 100,
+    OneOhOne,
+    OneOhTwo
+}
+
+// Explicit non sequential
+enum Scattered {
+    Foo = 456,
+    Bar=  123,
+    Fubar = 42,
+}
+
+// Bug case: No comma on last element
+enum BugCase1 {
+    Foo = 456,
+    Bar=  123,
+    Fubar = 42
+}
+
+// Bug case explore: No comma on last element, comments
+enum BugCase1b {
+    Foo = 456, // this is foo
+    Bar=  123, // this is bar
+    Fubar = 42 // this is fubar
+}
+
+// Bug case explore: No comma on last element, string
+enum BugCase1c {
+    Foo = "Foo",
+    Bar=  "Bar",
+    Fubar = "Fubar"
 }

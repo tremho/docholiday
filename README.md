@@ -39,6 +39,25 @@ In the closing phase...(I think).... just need to finish the following:
 
 ### Issues 
 
+- [X] enum bug case lack of comma on last element fails to read value
+- [X] enum key strings redundant value comment 
+
+- [ ] assigned functions are marked private. need to commute modifiers before assignment
+- [ ] generators need * (and keyword?)
+- [ ] anonymous function not recognized - no stub
+
+- [ ] inline parameter comment fails if before comma
+- [ ] typescript form parameters fail if no space after comma
+- [ ] ad-hoc parameter type not represented in JSDOC stub (collapses to object)
+- [ ] nested ad-hoc parameters fail big time
+
+- [ ] ad-hoc return type not represented in JSDOC stub (collapses to object)
+- [ ] ad-hoc return type also produces a property declaration with part of the ad-hoc statement
+- [ ] void functions with return comments have no return tag or return comments
+- [ ] @throws tag is ignored
+- [ ] should be able to declare @throws in return comment space too.
+- 
+
 ###### If the template excludes private, like better-docs, it won't show
 We _could_ have an `--all-public` flag that generates stubs ignoring private  
 Defer this because this needs community input.
@@ -47,37 +66,39 @@ Defer this because this needs community input.
 ------------
 ##### Documentation types and test matrix
 
+<span style="color:darkgreen; font-weight: bolder; font-size:larger"> <== You Are Here</span>
+
 ###### Enum
-    - [ ] implicit
-    - [ ] explicit
-    - [ ] mixed with explicit start after first
-    - [ ] explicit out of order
-    - [ ] strings
-    - [ ] strings with key==value
+    - [X] implicit
+    - [X] explicit
+    - [X] mixed with explicit start after first
+    - [X] explicit out of order
+    - [X] strings
+    - [X] strings with key==value
 
 ###### Functions
-    - [ ] basic javascript type
-    - [ ] separated lines
-    - [ ] typescript - one line and split
-    - [ ] assigned classic function - one line and split
-    - [ ] assigned arrow function - one line and split
-    - [ ] anonymous function
-    - [ ] generator function recognized by *
-    - [ ] async keyword
+    - [X] basic javascript type
+    - [X] separated lines
+    - [X] typescript - one line and split
+    - [-] assigned classic function - one line and split
+    - [-] assigned arrow function - one line and split
+    - [-] anonymous function
+    - [-] generator function recognized by *
+    - [X] async keyword
 
 ###### Parameters
-    - [ ] name only, any time
-    - [ ] name only with comment
-    - [ ] name:type (typescript)
-    - [ ] name:type with comment
-    - [ ] name:{foo:string, bar:number} (ad-hoc type)
-    - [ ] name:{foo:string, bar:number} (ad-hoc type) with comment
+    - [X] name only, any type
+    - [X] name only with comment
+    - [-] name:type (typescript)
+    - [-] name:type with comment
+    - [X] name:{foo:string, bar:number} (ad-hoc type)
+    - [X] name:{foo:string, bar:number} (ad-hoc type) with comment
 
 ###### Returns
-    - [ ] void
+    - [-] void
     - [ ] type
     - [ ] Promise
-    - [ ] ad-hoc type
+    - [-] ad-hoc type
     - [ ] w/wo comment
 
 - [ ] Throws

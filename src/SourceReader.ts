@@ -70,7 +70,9 @@ export class SourceReader {
     }
     readNextWord(str, startIndex) {
         let b = this.pastWhite(str, startIndex)
+        let c = str.indexOf(',',startIndex)
         let e = this.findWhite(str, b)
+        if(c !== -1) e = Math.min(c, e)
         return str.substring(b, e)
     }
     skipImport() {
@@ -248,17 +250,20 @@ export class SourceReader {
         }
         return found
     }
-    extractMethodInfo(name, si:SourceInfo):FunctionInfo {
+    extractMethodInfo(name, si:SourceInfo, longsrc:string = ''):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
         Object.assign(fi, si)
 
-        let p = name.split(' ');
+        let modstr = longsrc || name
+        modstr = modstr.replace(/\n/g, ' ')
+        let p = modstr.split(' ');
         let sm = new ScopeModifiers()
         p.forEach(k => {
             switch(k.trim().toLowerCase()) {
                 case 'async':
                     sm.async = true;
                     break;
+                case 'export':
                 case 'public':
                     sm.public = true;
                     break;
@@ -267,6 +272,11 @@ export class SourceReader {
                     break;
                 case 'static':
                     sm.static = true;
+                    break;
+                case 'var':
+                case 'let':
+                case 'const':
+                case 'function':
                     break;
                 default:
                     if(k) name = k
@@ -297,7 +307,14 @@ export class SourceReader {
         }
 
         // parameters
-        while(pdec) {
+        let parent = '' // part of ad-hoc object handling
+        let pdecResume = '' // part of ad-hoc object handling
+        while(pdec || pdecResume) {
+            if(!pdec) {
+                pdec = pdecResume
+                pdecResume = ''
+                parent = ''
+            }
             pdec = pdec.trim()
             let c = pdec.indexOf(':')
             let type
@@ -321,7 +338,7 @@ export class SourceReader {
             }
             let nt = ntc.split(':')
             const pi = new ParameterInfo()
-            pi.name = nt[0].trim()
+            pi.name = parent ? parent+'.'+nt[0].trim() : nt[0].trim()
             if(pi.name.charAt(pi.name.length-1) === '?') {
                 pi.name = pi.name.substring(0, pi.name.length-1)
                 pi.optional = true
@@ -334,14 +351,15 @@ export class SourceReader {
                 pi.optional = true
             }
 
-            m = pdec.indexOf('/')
-            let x = pdec.indexOf(',')
-            if(x === -1) x = pdec.indexOf('\n')
+            let pt = Math.max(m, d)
+            m = pdec.indexOf('/',pt)
+            let x = pdec.indexOf(',', pt)
+            if(x === -1) x = pdec.indexOf('\n', pt)
             if (x === -1) x = pdec.length
             else x++
             if (m !== -1) {
                 if (pdec.charAt(m + 1) === '/') {
-                    let n = pdec.indexOf('\n')
+                    let n = pdec.indexOf('\n', m)
                     if (n === -1) n = pdec.length
                     pi.description = pdec.substring(m + 2, n).trim()
                     x = n + 1
@@ -377,8 +395,21 @@ export class SourceReader {
             }
             // <<<
 
+            let isAdHoc = false
+            if(pi.type.charAt(0) == '{') {
+                isAdHoc = true
+                pi.type = 'object'
+            }
             fi.params.push(pi)
-            pdec = pdec.substring(x)
+            if(isAdHoc) {
+                parent = pi.name
+                pdecResume = pdec.substring(x)
+                let i = pdec.indexOf('{')
+                let e = pdec.indexOf('}', i)
+                pdec = pdec.substring(i+1, e).replace(/;;/g, ',')
+            } else {
+                pdec = pdec.substring(x)
+            }
         }
         // typescript can provide return type
         let n = this.pastWhite(this.text, cpi + 1);
@@ -446,7 +477,8 @@ export class SourceReader {
         const fullsrc = this.text.substring(this.pos, n)
         const name = this.getFunctionName(inClass, fullsrc)
         if (name || (inClass && fullsrc.trim().charAt(0) === '(')) {
-            fi = this.extractMethodInfo(name, si)
+            let longSrc = fullsrc.trim().substring(0, fullsrc.indexOf(name))
+            fi = this.extractMethodInfo(name, si, longSrc)
         }
         return fi
     }
@@ -503,7 +535,9 @@ export class SourceReader {
                                 let pi = this.extractPropertyInfo(si, inClass);
                                 if (pi.decStart !== -1) {
                                     if (pi.name) {
-                                        api.properties.push(pi)
+                                        let c = pi.name.charAt(0)
+                                        if((c >= 'a' && c <= 'z') || (c >='A' && c<='Z'))  // skip if not valid
+                                            api.properties.push(pi)
                                         this.pos = pi.decEnd + 1
                                     } else {
                                         this.pos = si.decEnd + 1
@@ -649,14 +683,13 @@ export class SourceReader {
             // status = SpecificationStatus.BadConstraint
         }
 
-
         pi.name = name;
         pi.scope = sm;
         pi.type = type;
-        if(rightSide && !bracketed) {
+        if (rightSide && !bracketed) {
             pi.assignStart = this.text.indexOf(rightSide, pi.decStart)
-            if(pi.scope.const) {
-                if(type && type !== 'object' && type !== 'function') {
+            if (pi.scope.const) {
+                if (type && type !== 'object' && type !== 'function') {
                     pi.default = rightSide.trim()
                 }
             }
@@ -853,6 +886,7 @@ export class SourceReader {
                     }
                     let di = name.indexOf(',')
                     let e = Math.min(ci,di)
+                    if(e === -1) e = Math.max(ci,di)
                     if(e === -1) e = name.length
                     if(ci !== -1) {
                         let desc = name.substring(ci + 2)
@@ -868,7 +902,12 @@ export class SourceReader {
                         }
                         let di = ep[1].indexOf(',')
                         let e = Math.min(ci,di)
-                        ev.value = ep[1].substring(0, e).trim()
+                        if(e === -1) e = Math.max(ci,di)
+                        let v = ep[1].substring(0, e).trim()
+                        if(v.charAt(0) === v.charAt(v.length-1) && v.charAt(0)==='"') {
+                            v = v.substring(1, v.length-1)
+                        }
+                        ev.value = v
                         if(isFinite(Number(ev.value))) ev.value = Number(ev.value)
                         ev.type = typeof (ev.value)
                         if(ci !== -1) {

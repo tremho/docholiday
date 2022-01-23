@@ -1,12 +1,16 @@
-/** @module test-functions */ /**
+/** @module test-functions */
+
+ /**
   * this is as plain as it gets
   * a simple JS function
+  * marked as public so it will appear in output
+  * @public
   * 
   * @param {*} a
   * @param {*} b
   * @param {*} c
   * 
-  * @private
+  * @public
   */
  function plainJane(a, b, c) { 
  }
@@ -22,6 +26,7 @@
   * 
   * @return {string} 
   * 
+  * @public
   */
  function publicJane(a, b, c) { 
      return ''
@@ -36,31 +41,32 @@
   * 
   * @return {string} 
   * 
+  * @public
   */
  function separatedJane(a, b, c) { 
      return ''
  }
 
  /**
-  * assigned function
+  * assigned classic function
   * 
   * @param {*} a
   * @param {*} b
   * @param {*} c
   * 
-  * @private
+  * @public
   */
  function assJane(a, b, c) { 
  }
 
  /**
-  * separated assigned function, split
+  * classic assigned function, split
   * 
   * @param {*} a
   * @param {*} b
   * @param {*} c
   * 
-  * @private
+  * @public
   */
  function sassJane(a, b, c) { 
  }
@@ -73,7 +79,7 @@
   * 
   * @return {string} returns a value
   * 
-  * @private
+  * @public
   */
  function janeArrow(foo, bar) { 
      return ''
@@ -83,7 +89,7 @@
   * a generator function
   * 
   * 
-  * @private
+  * @public
   */
  function indexGenerator() { 
  }
@@ -94,7 +100,7 @@
   * 
   * @return {Generator<number>} generates numbers
   * 
-  * @private
+  * @public
   */
  function indexGeneratorTS() { 
  }
@@ -106,6 +112,7 @@
   * @param {number} b
   * @param {boolean} c
   * 
+  * @public
   */
  function typescript(a, b, c) { 
  }
@@ -122,6 +129,7 @@
   * 
   * @return {string} A value is returned
   * 
+  * @public
   */
  function splitscript(a, b, c) { 
      return ''
@@ -136,6 +144,7 @@
   * @return {Promise<string>} the body of the return
   * 
   * @async
+  * @public
   */
  function fetch(url) { 
  }

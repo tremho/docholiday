@@ -72,7 +72,7 @@ export function writeStubFile(filePath:string, moduleName:string) {
         let pn = path.normalize(filePath)
         let pd = path.dirname(pn)
         fs.mkdirSync(pd, {recursive: true})
-        let content = `/** @module ${moduleName} */` + stubOut()
+        let content = `/** @module ${moduleName} */\n\n` + stubOut()
         fs.writeFileSync(pn, content)
     } catch(e) {
         console.error('Error', e)

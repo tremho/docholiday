@@ -73,6 +73,17 @@ function commentText(indent:number, inset:number, text:string=''):string {
 }
 
 function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='') : string {
+
+
+    // function renderObjectProps(objectBlock:ParameterInfo[]) {
+    //     if(objectBlock.length) {
+    //         for(let ppi of objectBlock) {
+    //             out += commentLine(indent, `  @param {${ppi.type}} ${ppi.name}`)
+    //             if(ppi.description) out += commentText(indent, 10, ppi.description)
+    //         }
+    //     }
+    // }
+
     let out = beginCommentBlock(indent)
     let name = fi.name
     if (forClass) {
@@ -82,18 +93,22 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
     if(fi.description) out += commentText(indent, 0, fi.description+'\n')
     for(let pi of fi.params) {
         let type = pi.type || '*'
-        if(pi.optional) {
-            if(pi.default) {
+        // let objectBlock:ParameterInfo[] = getObjectProps(pi)
+        // if(objectBlock.length) type = 'object'
+        if (pi.optional) {
+            if (pi.default) {
                 out += commentLine(indent, `@param {${type}} [${pi.name} = ${pi.default}]`)
 
             } else {
                 out += commentLine(indent, `@param {${type}} [${pi.name}]`)
             }
+            // renderObjectProps(objectBlock)
 
         } else {
             out += commentLine(indent, `@param {${type}} ${pi.name}`)
+            // renderObjectProps(objectBlock)
         }
-        if(pi.description) out += commentText(indent, 8, pi.description)
+        if (pi.description) out += commentText(indent, 8, pi.description)
 
         out += formatConstraints(indent, pi)
     }
@@ -112,8 +127,10 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
     if (fi.scope.static) {
         out += commentLine(indent, '@static')
     }
-    if (fi.scope.private || (!forClass && !fi.scope.public)) {
-        out += commentLine(indent, '@private')
+    if(fi.scope.private || !fi.scope.public) {
+        out += commentLine(indent,'@private')
+    } else {
+        out += commentLine(indent, '@public')
     }
     out += endCommentBlock(indent)
     return out
@@ -133,10 +150,13 @@ function renderPropertyComment(pi:PropertyInfo, indent:number) : string {
     }
     if(pi.scope.private || !pi.scope.public) {
         out += commentLine(indent,'@private')
+    } else {
+        out += commentLine(indent, '@public')
     }
     out += endCommentBlock(indent)
     return out
 }
+
 function renderClassComment(ci:ClassInfo, indent:number) : string {
     let out = beginCommentBlock(indent)
     // out += commentLine(indent, ci.name)
@@ -195,6 +215,8 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
     out += commentLine(indent, '')
     if(ci.scope.private || !ci.scope.public) {
         out += commentLine(indent,'@private')
+    } else {
+        out += commentLine(indent,'@public')
     }
     out += commentLine(indent, '')
     if(ci.isInterface) out += commentLine(indent, '@interface')
@@ -324,7 +346,7 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:stri
     fn += '('
     let i = 0
     for (let pi of fi.params) {
-        if(pi.name) {
+        if(pi.name && pi.name.indexOf('.') === -1) {
             fn += pi.name
             if(++i < fi.params.length) fn += ', '
         }
@@ -354,13 +376,14 @@ export function renderEnumStub(ei:EnumInfo, indent:number) {
         let v = ei.values[i]
         if(i > 0) out += ','
         out += '\n'
-        out += spaces+'        /** '
-        if(v.description) out += v.description+'\n'
+        out += spaces+'        /** \n'
+        if(v.description) out += spaces+'        *  '+v.description+'\n'
         if(v.value !== v.name) {
-            out += spaces+`         *  <b><i>(value = ${v.value})</i></b>\n`
-            out += spaces+`         *  @type {${v.type || typeof(v.value)}}\n`
+            let q = typeof v.value === 'string' ? '"': ''
+            out += spaces + `        *  <b><i>(value = ${q}${v.value}${q})</i></b>\n`
         }
-        out += spaces+'         */\n'
+        out += spaces+`        *  @type {${v.type || typeof(v.value)}}\n`
+        out += spaces+'        */\n'
         out += spaces+`        ${v.name}`
     }
     out += '\n'+spaces+'}\n\n'
@@ -408,3 +431,32 @@ function customGen(block:string, text:string):string {
     return out;
 }
 
+// function getObjectProps(pi:ParameterInfo):ParameterInfo[] {
+//     let propsOut:ParameterInfo[] = []
+//     let type = pi.type.trim()
+//     if(type.charAt(0) === '{' && type.charAt(type.length-1) === '}') {
+//         let props = type.substring(1, type.length-1).split(',')
+//         for(let p of props) {
+//             const nt = p.split(':', 2)
+//             let ppi = new ParameterInfo()
+//             ppi.name = pi.name+'.'+nt[0].trim()
+//             let ci = ppi.name.indexOf('/')
+//             let e = ppi.name.length
+//             if(ci !== -1) {
+//                 if (ppi.name.charAt(ci + 1)) e = ppi.name.indexOf('*/')
+//                 ppi.description = ppi.name.substring(ci + 2, e)
+//                 ppi.name = ppi.name.substring(0, ci)
+//             }
+//             ppi.type = nt[1].trim()
+//             ci = ppi.type.indexOf('/');
+//             e = ppi.type.length
+//             if(ci !== -1) {
+//                 if(ppi.type.charAt(ci+1) === '*') e = ppi.type.indexOf('*/')
+//                 ppi.description = ppi.type.substring(ci+2, e)
+//                 ppi.type = ppi.type.substring(0, ci)
+//             }
+//             propsOut.push(ppi)
+//         }
+//     }
+//     return propsOut
+// }

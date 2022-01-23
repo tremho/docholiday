@@ -22,10 +22,16 @@ async function docTests(name:string) {
             const stubFile = path.join('gen', 'test-'+name+'.docstub.js')
             const stub = fs.readFileSync(stubFile).toString()
             const comp = fs.readFileSync(compPath).toString()
-            const same = stub === comp
-            t.ok(same, 'stub content matches comp')
+            const diff = compareLines(stub, comp)
+            if(diff) {
+                const csub = diff.cln.substr(diff.column, 8)
+                const ssub = diff.sln.substr(diff.column, 8)
+                t.ok(false, `Line ${diff.line+1} differs, at column ${diff.column+1}: "${ssub}" vs "${csub}"`)
+
+            }
+            t.ok(true, 'stub content matches comp')
         } catch(e) {
-            t.ok(false, 'stub content does not match comp')
+            t.ok(false, e)
         }
         t.end()
     })
@@ -34,5 +40,30 @@ async function docTests(name:string) {
 (async function () {
     await docTests('enum')
     await docTests('functions')
+    await docTests('parameters')
 })()
 
+
+function compareLines(src:string, cmp:string) {
+    const slines = src.split('\n')
+    const clines = cmp.split('\n')
+    let i = 0
+    let total = Math.max(slines.length, clines.length)
+    while(i < total) {
+        const sln = slines[i].trim() || ''
+        const cln = clines[i].trim() || ''
+        if(cln !== sln) {
+            let rs, re
+            let c = 0
+            let t = Math.max(cln.length, sln.length)
+            while(c < t) {
+                if(cln.charAt(c) !== sln.charAt(c)) {
+                    if(rs === undefined) rs = c
+                }
+                c++
+            }
+            return {line: i, column:rs, sln, cln}
+        }
+        i++
+    }
+}

@@ -1,19 +1,9 @@
 
-/*
-    plain javascript functions
-    async functions
-    functions assigned as variable
-     - with function keyword
-     - arrow function
-     anonymous function (function(){})
-     generator function function*
-    separated function / side comment
-    separated function keyword
-    separated assigment
- */
 
 // this is as plain as it gets
 // a simple JS function
+// marked as public so it will appear in output
+// @public
 function plainJane(a, b, c) {
 
 }
@@ -51,12 +41,12 @@ separatedJane(
 }
 
 
-// assigned function
+// assigned classic function
 export const assJane = function(a,b,c) {
     return ''
 }
 
-// separated assigned function, split
+// classic assigned function, split
 export
 const sassJane =
     function(
@@ -76,7 +66,7 @@ export const anonymous = (function (a,b,c) {})
 
 
 // a generator function
-function* indexGenerator(){
+export function* indexGenerator(){
     var index = 0;
     while(true) {
         yield index++;
@@ -84,7 +74,7 @@ function* indexGenerator(){
 }
 
 // a typescript generator function
-function* indexGeneratorTS() : Generator<number>/* generates numbers */ {
+export function* indexGeneratorTS() : Generator<number>/* generates numbers */ {
     var index = 0;
     while(true) {
         yield index++;
