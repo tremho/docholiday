@@ -91,7 +91,7 @@
   * 
   * @public
   */
- function indexGenerator() { 
+ function* indexGenerator() { 
  }
 
  /**
@@ -102,7 +102,7 @@
   * 
   * @public
   */
- function indexGeneratorTS() { 
+ function* indexGeneratorTS() { 
  }
 
  /**
@@ -146,6 +146,6 @@
   * @async
   * @public
   */
- function fetch(url) { 
+ function fetch(url) {
  }
 

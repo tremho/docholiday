@@ -210,8 +210,11 @@ export class SourceReader {
         // see if we start with the function keyword
         if(text.substring(0, kwLength) === keyword) {
             let n = text.indexOf('(', kwLength+1)
+            let gi = text.indexOf('*')
             if(n !== -1) {
+                let g = gi !== -1 && gi < n
                 let name = exported ? 'public ' : ''
+                if(g) name += 'generator '
                 if(async) name += 'async '
                 name += text.substring(kwLength+1, n).trim()
                 return name
@@ -260,6 +263,9 @@ export class SourceReader {
         let sm = new ScopeModifiers()
         p.forEach(k => {
             switch(k.trim().toLowerCase()) {
+                case 'generator':
+                    sm.generator = true
+                    break;
                 case 'async':
                     sm.async = true;
                     break;

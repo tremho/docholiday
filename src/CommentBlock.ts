@@ -341,7 +341,11 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:stri
     let spaces = indent && ' '.repeat(indent) || ''
     let fn = ''
     // if(fi.scope.public) fn += 'export '
-    if(!forClass) fn += 'function '
+    if(!forClass) {
+        fn += 'function'
+    }
+    if(fi.scope.generator) fn += '*'
+    fn += ' '
     fn += fi.name
     fn += '('
     let i = 0

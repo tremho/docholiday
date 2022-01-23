@@ -11,6 +11,7 @@ export class ScopeModifiers {
     public optional?:boolean;
     public const?:boolean;
     public async?:boolean;
+    public generator?:boolean;
 }
 
 /**

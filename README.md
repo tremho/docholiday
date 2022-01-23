@@ -42,13 +42,13 @@ In the closing phase...(I think).... just need to finish the following:
 - [X] enum bug case lack of comma on last element fails to read value
 - [X] enum key strings redundant value comment 
 
-- [ ] assigned functions are marked private. need to commute modifiers before assignment
-- [ ] generators need * (and keyword?)
+- [X] assigned functions are marked private. need to commute modifiers before assignment
+- [X] generators need * (and keyword?)
 - [ ] anonymous function not recognized - no stub
 
 - [ ] inline parameter comment fails if before comma
 - [ ] typescript form parameters fail if no space after comma
-- [ ] ad-hoc parameter type not represented in JSDOC stub (collapses to object)
+- [X] ad-hoc parameter type not represented in JSDOC stub (collapses to object)
 - [ ] nested ad-hoc parameters fail big time
 
 - [ ] ad-hoc return type not represented in JSDOC stub (collapses to object)
