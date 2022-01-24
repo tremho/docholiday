@@ -41,6 +41,12 @@ async function docTests(name:string) {
     await docTests('enum')
     await docTests('functions')
     await docTests('parameters')
+    await docTests('returns')
+    await docTests('classes')
+    await docTests('commentBlock')
+    await docTests('properties')
+    await docTests('publicExport')
+    await docTests('semicolons')
 })()
 
 

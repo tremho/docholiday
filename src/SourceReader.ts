@@ -340,6 +340,18 @@ export class SourceReader {
             let m = pdec.indexOf('/', b)
             if(d === -1) d = m
             if (d === -1) d = pdec.length
+            let ilc = ''
+            let isIlc = false
+            let pm = pdec.indexOf('/*')
+            if(pm !== -1 && pm < d) {
+                let pe = pdec.indexOf('*/', pm)
+                isIlc = true
+                ilc = pdec.substring(pm+2, pe).trim()
+                pdec = pdec.substring(0,pm)+pdec.substring(pe+2)
+                d = pdec.indexOf(',')
+                if (d === -1) d = pdec.length
+                m = -1
+            }
             let ntc = pdec.substring(0, d).replace(/ /g, '')
             if(ntc.indexOf('=') !== -1 ) {
                 type = ''
@@ -365,7 +377,7 @@ export class SourceReader {
             }
 
             let pt = Math.max(m, d)
-            m = pdec.indexOf('/',pt)
+            if(!isIlc) m = pdec.indexOf('/',pt)
             let x = pdec.indexOf(',', pt)
             if(x === -1) x = pdec.indexOf('\n', pt)
             if (x === -1) x = pdec.length
@@ -383,6 +395,7 @@ export class SourceReader {
                     x = n + 2
                 }
             }
+            if(ilc) pi.description = ilc
             // constraints >>>
             // parse out constraints here
             let ctext = (pi.description?.replace(/;;/g, ',') || '')
@@ -428,15 +441,25 @@ export class SourceReader {
         // if(opi2 !== -1) cpi = this.text.indexOf(')', cpi+1)
         let n = this.pastWhite(this.text, cpi + 1);
         if(this.fileType === 'typescript') {
+            fi.return = new ReturnInfo();
             if (this.text.charAt(n) === ':') {
-                fi.return = new ReturnInfo();
                 let bs = this.text.indexOf('{', n+1)
                 if(bs === -1) bs = this.text.length
+                let btwn = this.text.substring(n+1, bs).trim()
+                let aht = ''
+                if(!btwn) {
+                    let ahi = bs
+                    let {start, end} = this.findBracketBoundaries(ahi)
+                    let ahe = end
+                    aht = this.text.substring(ahi, ahe+1)
+                    bs = this.text.indexOf('{', ahe+1)
+                    if(bs === -1) bs = this.text.length
+                }
                 let c = this.text.indexOf('/', n+1)
                 let e = Math.min(bs, c)
                 if(e === -1) e = Math.max(bs, c)
                 let rt = this.text.substring(n+1, e)
-                fi.return.type = this.readTypeDef(rt, 0)
+                fi.return.type = aht || this.readTypeDef(rt, 0)
                 n += fi.return.type.length
                 let m = this.text.indexOf('/', n+1)
                 if(m !== -1 && m < bs) {
@@ -471,7 +494,16 @@ export class SourceReader {
                     // error = e.message;
                     // status = SpecificationStatus.BadConstraint
                 }
-
+            }
+            if(!fi.return.description) {
+                // last chance for a description: a // comment on the same line
+                let eol = this.text.indexOf('\n', n)
+                if(eol == -1) eol = this.text.length
+                if(!fi.return.type) fi.return.type = 'void'
+                let ci = this.text.indexOf('//', n)
+                if(ci !== -1 && ci < eol) {
+                    fi.return.description = this.text.substring(ci, eol).trim()
+                }
             }
         }
         // Find body boundaries { }
@@ -1091,8 +1123,11 @@ export class SourceReader {
         // we can only read the description from the comment block
         let n = fi.comStart;
         let nd = this.text.indexOf('@', n)
+
         // skip any reserved in-comment pass-throughs
-        while(this.text.substring(nd, nd+7)=== '@public') {
+        while(this.text.substring(nd, nd+7)=== '@public'
+            || this.text.substring(nd, nd+7)==='@throws'
+            || this.text.substring(nd, nd+7)==='@yields') {
             nd = this.text.indexOf('@', nd+1)
         }
         if(nd === -1 || nd > fi.comEnd) nd = fi.comEnd;

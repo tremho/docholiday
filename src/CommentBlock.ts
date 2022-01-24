@@ -113,11 +113,33 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
         out += formatConstraints(indent, pi)
     }
     if(fi.return) {
-        let type = fi.return.type || '*'
-        if(type !== 'void' && type !== 'undefined') {
-            out += commentLine(indent, '')
-            out += commentLine(indent, `@return {${type}} ${fi.return.description ||''}`)
-            out += formatConstraints(indent, fi.return)
+        let type = fi.return.type.trim() || '*'
+        if(fi.return.description || (type !== 'void' && type !== 'undefined')) {
+            if(type.charAt(0) === '{') {
+                // Output for ad-hoc type
+                out += commentLine(indent, '')
+                out += commentLine(indent, `@return {object} ${fi.return.description || ''}`)
+                out += commentLine(indent, '')
+                out += commentText(indent, 2, 'Object detail:')
+                out += commentText(indent, 4, type)
+                out += formatConstraints(indent, fi.return)
+            } else {
+                out += commentLine(indent, '')
+                out += commentLine(indent, `@return {${type}} ${fi.return.description || ''}`)
+                out += formatConstraints(indent, fi.return)
+            }
+        }
+        if(fi.scope.generator) {
+            let ti = type.indexOf('<')
+            if(ti !== -1) {
+                let te = type.indexOf('>', ti+1)
+                if(te !== -1) {
+                    let yieldType = type.substring(ti+1, te)
+                    if(yieldType) {
+                        out += commentLine(indent, `@yields {${yieldType}}`)
+                    }
+                }
+            }
         }
     }
     out += commentLine(indent, '')

@@ -44,20 +44,20 @@ In the closing phase...(I think).... just need to finish the following:
 
 - [X] assigned functions are marked private. need to commute modifiers before assignment
 - [X] generators need * (and keyword?)
-- [ ] generator should support @yields 
-- [ ] generator should produce @yields from Generator or Iterator returns.
+- [X] generator should support @yields 
+- [X] generator should produce @yields from Generator or Iterator returns.
 - [X] anonymous function not recognized - no stub
 
-- [ ] inline parameter comment fails if before comma
-- [ ] typescript form parameters fail if no space after comma
+- [X] inline parameter comment fails if before comma
+- [X] typescript form parameters fail if no space after comma
+- 
 - [X] ad-hoc parameter type not represented in JSDOC stub (collapses to object)
 - [ ] nested ad-hoc parameters fail big time
-
-- [ ] ad-hoc return type not represented in JSDOC stub (collapses to object)
-- [ ] ad-hoc return type also produces a property declaration with part of the ad-hoc statement
-- [ ] void functions with return comments have no return tag or return comments
-- [ ] @throws tag is ignored
-- [ ] should be able to declare @throws in return comment space too.
+- [X] ad-hoc return type not represented in JSDOC stub (collapses to object)
+- [X] ad-hoc return type also produces a property declaration with part of the ad-hoc statement
+- 
+- [X] void functions with return comments have no return tag or return comments
+- [X] @throws tag is ignored
 - 
 
 ###### If the template excludes private, like better-docs, it won't show
@@ -82,28 +82,28 @@ Defer this because this needs community input.
     - [X] basic javascript type
     - [X] separated lines
     - [X] typescript - one line and split
-    - [-] assigned classic function - one line and split
-    - [-] assigned arrow function - one line and split
-    - [-] anonymous function
-    - [-] generator function recognized by *
+    - [X] assigned classic function - one line and split
+    - [X] assigned arrow function - one line and split
+    - [X] anonymous function
+    - [X] generator function recognized by *
     - [X] async keyword
 
 ###### Parameters
     - [X] name only, any type
     - [X] name only with comment
-    - [-] name:type (typescript)
-    - [-] name:type with comment
+    - [X] name:type (typescript)
+    - [X] name:type with comment
     - [X] name:{foo:string, bar:number} (ad-hoc type)
     - [X] name:{foo:string, bar:number} (ad-hoc type) with comment
 
 ###### Returns
-    - [-] void
-    - [ ] type
-    - [ ] Promise
-    - [-] ad-hoc type
-    - [ ] w/wo comment
+    - [X] void
+    - [X] type
+    - [X] Promise
+    - [X] ad-hoc type
+    - [X] w/wo comment
 
-- [ ] Throws
+- [X] Throws
 
 ###### module Properties
     - var, let, const 

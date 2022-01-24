@@ -1,66 +1,80 @@
 /** @module test-returns */
 
-/**
- * void - implicit
- * 
- * 
- */
-function one() { 
-}
+ /**
+  * implicit void return should not document return type with no comment
+  * 
+  * 
+  * @public
+  */
+ function one() { 
+ }
 
  /**
-  * void - explicit
+  * explicit void return should not document return type with no comment
   * 
   * 
+  * @public
   */
  function two() { 
  }
 
  /**
-  * type
+  * implicit void return should document return type with a comment
+  * 
+  * 
+  * @return {void} // commented version
+  * 
+  * @public
+  */
+ function oneComment() { 
+ }
+
+ /**
+  * explicit void return should document return type with a comment
+  * 
+  * 
+  * @return {void} commented version
+  * 
+  * @public
+  */
+ function twoComment() { 
+ }
+
+ /**
+  * typed return should show return type
   * 
   * 
   * @return {string} 
   * 
+  * @public
   */
  function three() { 
      return ''
  }
 
  /**
-  * Promise
+  * Promise return should be represented properly
   * 
   * 
   * @return {Promise<string>} 
   * 
+  * @public
   */
  function four() { 
  }
 
  /**
-  * ad-hoc type
+  * An Ad-Hoc return type should document the object detail
   * 
   * 
-  * @return {{foo:string, bar:number}}
+  * @return {object} 
   * 
+  *   Object detail:
+  *     { foo:string, bar:number }
+  * 
+  * @public
   */
  function five() { 
- }
-
- /**
-  * void - implicit w/comment
-  * 
-  * @return {void} implicity returns void
-  */
- function six() { 
- }
-
- /**
-  * void - explicit  w/comment
-  *
-  * @return {void} explicity returns void
-  */
- function seven() { 
  }
 
  /**
@@ -69,35 +83,64 @@ function one() {
   * 
   * @return {string} returns a string
   * 
+  * @public
   */
  function eight() { 
      return ''
  }
 
  /**
-  * Promise
+  * Promise w/comment
   * 
   * 
   * @return {Promise<string>} returns a string promise
   * 
+  * @public
   */
  function nine() { 
  }
 
  /**
-  * ad-hoc type
+  * ad-hoc type w/comment
   * 
   * 
-  * @return {{foo:string, bar:number}}
+  * @return {object} returns ad-hoc
   * 
+  *   Object detail:
+  *     { foo:string, bar:number }
+  * 
+  * @public
   */
  function ten() { 
  }
 
  /**
-  * Throws
-  *
+  * a crazy ad-hoc return function
+  * 
+  * 
+  * @return {object} 
+  * 
+  *   Object detail:
+  *     {
+  *         foo:string,
+  *         crazy:{
+  *             fool:number,
+  *             train:string
+  *         },
+  *         bar:number
+  *     }
+  * 
+  * @public
+  */
+ function tenHoc() { 
+ }
+
+ /**
+  * Test of the throws tag
   * @throws {Fit} if she gets scared
+  * 
+  * 
+  * @public
   */
  function eleven() { 
  }

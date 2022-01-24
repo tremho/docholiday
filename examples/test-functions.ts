@@ -66,6 +66,7 @@ export const anonymous = (function (a,b,c) {})
 
 
 // a generator function
+// @yields {number} each call to next() returns the successive number
 export function* indexGenerator(){
     var index = 0;
     while(true) {
@@ -99,3 +100,16 @@ export async function fetch(url:string /* The url to fetch */): Promise<string> 
     return ''
 }
 
+// void functions do not document a return type
+export function simpleVoid() {}
+
+// typescript void functions do not document a return type
+export function simpleVoidTS():void {}
+
+// typescript with documented void return
+export function docVoid():void { // a void return
+}
+
+// javascript post-dec comments also documented as return type
+export function jsVoid() // nothing to see here
+{}

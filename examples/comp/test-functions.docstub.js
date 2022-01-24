@@ -24,12 +24,9 @@
   * @param {*} b
   * @param {*} c
   * 
-  * @return {string} 
-  * 
   * @public
   */
  function publicJane(a, b, c) { 
-     return ''
  }
 
  /**
@@ -39,12 +36,9 @@
   * @param {*} b
   * @param {*} c
   * 
-  * @return {string} 
-  * 
   * @public
   */
  function separatedJane(a, b, c) { 
-     return ''
  }
 
  /**
@@ -99,6 +93,7 @@
 
  /**
   * a generator function
+  * @yields {number} each call to next() returns the successive number
   * 
   * 
   * @public
@@ -111,6 +106,7 @@
   * 
   * 
   * @return {Generator<number>} generates numbers
+  * @yields {number}
   * 
   * @public
   */
@@ -159,5 +155,45 @@
   * @public
   */
  function fetch(url) { 
+ }
+
+ /**
+  * void functions do not document a return type
+  * 
+  * 
+  * @public
+  */
+ function simpleVoid() { 
+ }
+
+ /**
+  * typescript void functions do not document a return type
+  * 
+  * 
+  * @public
+  */
+ function simpleVoidTS() { 
+ }
+
+ /**
+  * typescript with documented void return
+  * 
+  * 
+  * @return {void} // a void return
+  * 
+  * @public
+  */
+ function docVoid() { 
+ }
+
+ /**
+  * javascript post-dec comments also documented as return type
+  * 
+  * 
+  * @return {void} // nothing to see here
+  * 
+  * @public
+  */
+ function jsVoid() { 
  }
 

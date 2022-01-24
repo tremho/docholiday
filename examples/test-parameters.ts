@@ -7,7 +7,7 @@ export function one(a,b,c) {
 }
 
 //  name only with comments
-export function two(a, /* inline */
+export function two(a /* inline */,
                     b, /* sidebar, multiple
                           lines and verbose
                        */
@@ -16,7 +16,7 @@ export function two(a, /* inline */
 }
 
 //  name:type (typescript)
-export function three(a:string, b:number, c:FooBar) {
+export function three(a:string,b:number,c:FooBar) {
 }
 
 //  name:type with comment
