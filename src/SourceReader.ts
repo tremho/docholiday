@@ -224,6 +224,9 @@ export class SourceReader {
         const ap = text.split('=')
         if(ap[1]) {
             let t = ap[1].trim()
+            if(t.charAt(0) === '(') { // anonymous
+                t = t.substring(1).trim()
+            }
             if (
                 (t.substring(0, kwLength) === keyword )  // function keyword on right of assignment
                 || (ap[2] && ap[2].charAt(0) === '>')   // arrow function notation on right of assignment
@@ -299,7 +302,11 @@ export class SourceReader {
         // index past name
         let opi = this.text.indexOf(name, si.decStart) + name.length;
         opi = this.text.indexOf('(', opi)
+        // let opi2 = this.text.substring(opi+1, si.decEnd).indexOf('(',)
+        // if(opi2 !== -1) opi += opi2+1
         let cpi = this.text.indexOf(')', opi)
+        let opi2 = this.text.indexOf('(', opi+1)
+        if(opi2 !== -1 && opi2 < cpi) opi = opi2
         let pdec = this.text.substring(opi+1, cpi)
         let oti = pdec.indexOf('<')
         let ahi = pdec.indexOf('{')
@@ -418,6 +425,7 @@ export class SourceReader {
             }
         }
         // typescript can provide return type
+        // if(opi2 !== -1) cpi = this.text.indexOf(')', cpi+1)
         let n = this.pastWhite(this.text, cpi + 1);
         if(this.fileType === 'typescript') {
             if (this.text.charAt(n) === ':') {
@@ -470,6 +478,7 @@ export class SourceReader {
         let {start, end} = this.findBracketBoundaries(n)
         fi.bodyStart = start;
         fi.bodyEnd = end;
+        // if(opi2 !== -1) fi.bodyEnd = opi2+1
         // let dbCheck = this.text.substring(fi.bodyStart, fi.bodyEnd)
         // console.log(dbCheck)
         this.gatherCommentMeta(fi)

@@ -44,7 +44,9 @@ In the closing phase...(I think).... just need to finish the following:
 
 - [X] assigned functions are marked private. need to commute modifiers before assignment
 - [X] generators need * (and keyword?)
-- [ ] anonymous function not recognized - no stub
+- [ ] generator should support @yields 
+- [ ] generator should produce @yields from Generator or Iterator returns.
+- [X] anonymous function not recognized - no stub
 
 - [ ] inline parameter comment fails if before comma
 - [ ] typescript form parameters fail if no space after comma

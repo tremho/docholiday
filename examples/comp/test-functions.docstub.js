@@ -86,6 +86,18 @@
  }
 
  /**
+  * an anonymous function
+  * 
+  * @param {*} a
+  * @param {*} b
+  * @param {*} c
+  * 
+  * @public
+  */
+ function anonymous(a, b, c) { 
+ }
+
+ /**
   * a generator function
   * 
   * 
@@ -146,6 +158,6 @@
   * @async
   * @public
   */
- function fetch(url) {
+ function fetch(url) { 
  }
 
