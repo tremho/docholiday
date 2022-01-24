@@ -105,9 +105,13 @@ Defer this because this needs community input.
 
 - [X] Throws
 
+- [ ] Developed problem running test.  test-direct is okay, but test hangs. Generation is okay.
+
 ###### module Properties
     - var, let, const 
     - w/wo assignment
+    - top and side comments
+    - declared public
 
 ###### Classes
     - [ ] Functions and parameters

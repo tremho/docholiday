@@ -25,6 +25,7 @@ import {
 
 import * as TypeCheck from "./TypeCheck"
 import * as Parenthesis from "parenthesis"
+import {endAll} from "tap";
 
 const constraintRE = /\<[\w|\d|=|,|"||!|'|\s]+\>/g
 
@@ -121,10 +122,10 @@ export class SourceReader {
                 }
             }
         }
-        if(nd === this.text.length -1) {
+        if(nd === -1 || nd === this.text.length -1) {
             nd = lnEnd
         }
-        return nd;
+        return nd || this.text.length
     }
     readSourceLine() {
         const rt = new SourceInfo()
@@ -140,6 +141,7 @@ export class SourceReader {
                 let p = this.pos;
                 while(this.text.substring(p, p+2) === '//') {
                     let n = this.text.indexOf('\n', p)
+                    if(n === -1) n = this.text.length
                     p = n+1;
                 }
                 rt.comEnd = p-1;
@@ -153,7 +155,8 @@ export class SourceReader {
         }
 
         if(rt.comEnd < rt.comStart) rt.comEnd = rt.comStart; // no comment
-        this.pos = n;
+        if(n < rt.comEnd) n = rt.comEnd+1
+        this.pos = n
         this.skipWhite()
         n = this.nextEnd()
         rt.decEnd = n;
@@ -604,12 +607,21 @@ export class SourceReader {
         let text = this.text.substring(si.decStart, si.decEnd).trim()
         if (text.charAt(0) === '/') return pi;
         if (text.substring(0, 6) === 'import') return pi;
-        if (text.substring(0, 6) === 'export') return pi;
-        if (text.substring(0.7) === 'require') return pi;
+        // if (text.substring(0, 6) === 'export') return pi;
+        if (text.substring(0, 7) === 'require') return pi;
+        const allowedPrefixes = ['var', 'let', 'const', 'export', 'public', 'private', 'static']
+        let ok = false
+        for(let pfx of allowedPrefixes) {
+            let pl = pfx.length
+            if(text.substring(0, pl) === pfx) ok = true
+        }
+        if(!ok) return pi
+
         let leftSide = ''
         let rightSide = '';
         let commentAfter = '';
-        let ci = text.indexOf('/')
+        let ci = text.indexOf('//')
+        if(ci === -1) ci = text.indexOf('/*')
         let cc = ''
         if (ci !== -1) cc = text.charAt(ci + 1)
         if (cc === '/' || cc === '*') {
@@ -649,6 +661,9 @@ export class SourceReader {
                 case 'const':
                     sm.const = true;
                     break;
+                case 'var':
+                case 'let':
+                    break;
                 default:
                     if (k) name = k
                     break;
@@ -667,6 +682,7 @@ export class SourceReader {
         name = name.trim()
         if (name.charAt(name.length - 1) === ';') name = name.substring(0, name.length - 1)
 
+        if(!type) type = deriveTypeFromValue(rightSide)
         if (!type) if (rightSide.indexOf('{') !== -1) type = ''
         else if (!type) if (rightSide.indexOf('[') !== -1) type = ''
         else if (!type) if (rightSide.indexOf('function') !== -1) type = 'function'
@@ -707,8 +723,9 @@ export class SourceReader {
         if(pi.description && commentAfter) pi.description += '\n' +commentAfter
         else if(commentAfter) pi.description = commentAfter
 
+
         // parse out constraints here
-        let ctext = pi.description
+        let ctext = pi.description.trim()
         let constraintDeclaration = ''
         const cm = ctext.match(constraintRE)
         if(cm) {
@@ -1335,10 +1352,8 @@ function deriveTypeFromValue(value:string) {
         if(q === '[') return 'array'
         if(q === '{') return 'object'
     }
+    if(value === '') return 'string'
     if(isFinite(Number(value))) return 'number'
-    if(value === 'true' || value === 'false') return 'boolean'
-    if(value === 'null') return 'null'
-    if(value === 'undefined') return 'undefined'
-    return ''
+    return typeof value
 }
 
