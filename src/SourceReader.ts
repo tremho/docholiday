@@ -151,7 +151,15 @@ export class SourceReader {
             }
         } else {
             // not a comment
-            n = rt.comStart = rt.comEnd = this.pos
+            // check for a distended body
+            if(this.text.charAt(this.pos) == '{') {
+                let {start, end} = this.findBracketBoundaries(this.pos)
+                if(end !== -1) n = end
+            } else {
+                // not a distended body
+                n = rt.comStart = rt.comEnd = this.pos
+            }
+
         }
 
         if(rt.comEnd < rt.comStart) rt.comEnd = rt.comStart; // no comment

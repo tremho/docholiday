@@ -107,6 +107,10 @@ Defer this because this needs community input.
 
 - [ ] Developed problem running test.  test-direct is okay, but test hangs. Generation is okay.
 
+_not sure what's going on, but it seems to be at the 'returns' test.
+docstub call may be what's failing.  
+Hard to trace._
+
 ###### module Properties
     - var, let, const 
     - w/wo assignment

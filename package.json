@@ -12,7 +12,7 @@
     "focus": "npm run go examples/focus.ts",
     "focus-file": "rm -fr gen && npm run go examples/focus.ts",
     "focus-render": "npm run focus-file && npm run docgen",
-    "test": "npm run go examples/test-* && tap --reporter spec --no-coverage --no-timeout build/test",
+    "test": "npm run go examples/test-* && tap --reporter spec --no-coverage build/test",
     "test-direct": "npm run go examples/test-* && node build/test/docholiday.test.js",
     "docgen": "rm -fr doc && npm run docgen-jsdoc && open -a \"Google Chrome\" doc/index.html",
     "docgen-docjs": "/Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen",

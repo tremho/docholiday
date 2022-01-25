@@ -42,8 +42,9 @@ if(files.length) {
   let generator = processFileList(files, config.intermediate)
   while(true) {
     let gen = generator.next()
-    // let stub = gen.value
-    // if(stub) console.log(stub)
+    let stub = gen.value
+    if(!stub) break;
+    if(stub) console.log(stub)
     if(gen.done) break;
   }
   execute()
