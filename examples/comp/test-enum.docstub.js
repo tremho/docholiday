@@ -3,7 +3,7 @@
  /**
   * Constants for direction
   * Explicit start
-  * @enum number
+  * @enum
   * @readonly
   */
      var Direction = {
@@ -35,7 +35,7 @@
 
  /**
   * Implicit values
-  * @enum number
+  * @enum
   * @readonly
   */
      var Direction2 = {
@@ -63,7 +63,7 @@
 
  /**
   * String values
-  * @enum number
+  * @enum
   * @readonly
   */
      var Direction3 = {
@@ -92,7 +92,7 @@
  /**
   * String values = key
   * should not repeat value in description
-  * @enum number
+  * @enum
   * @readonly
   */
      var Direction3 = {
@@ -116,7 +116,7 @@
 
  /**
   * 
-  * @enum number
+  * @enum
   * @readonly
   */
      var BooleanLikeHeterogeneousEnum = {
@@ -134,7 +134,7 @@
 
  /**
   * 
-  * @enum number
+  * @enum
   * @readonly
   */
      var LogLevel = {
@@ -162,7 +162,7 @@
 
  /**
   * Explicit after implicit
-  * @enum number
+  * @enum
   * @readonly
   */
      var Jumper = {
@@ -200,7 +200,7 @@
 
  /**
   * Explicit non sequential
-  * @enum number
+  * @enum
   * @readonly
   */
      var Scattered = {
@@ -223,7 +223,7 @@
 
  /**
   * Bug case: No comma on last element
-  * @enum number
+  * @enum
   * @readonly
   */
      var BugCase1 = {
@@ -246,7 +246,7 @@
 
  /**
   * Bug case explore: No comma on last element, comments
-  * @enum number
+  * @enum
   * @readonly
   */
      var BugCase1b = {
@@ -272,7 +272,7 @@
 
  /**
   * Bug case explore: No comma on last element, string
-  * @enum number
+  * @enum
   * @readonly
   */
      var BugCase1c = {

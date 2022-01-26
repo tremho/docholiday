@@ -78,6 +78,8 @@ Defer this because this needs community input.
     - [X] strings
     - [X] strings with key==value
 
+- [ ] Do enums need to be scoped? Currently they are not.
+
 ###### Functions
     - [X] basic javascript type
     - [X] separated lines
@@ -127,25 +129,18 @@ _It was source reader not advancing pos past a distended body.
     - [X] inner classes
 
 ---
-_this seems to be the best stubbing I can get for an inner class_  
-so we need to enumerate the internals as property emitters
-if we are in a forClass, we can use decorated name 
-```
- class Container {
-   /**
-    * this class is a public property of Container
-    *     @property {string} [name] -
-    *     @property {method} constructor - documentation for constructor
-    *     @property {method} foobar - This is a public function of Insider
-    *
-    * @private
-    * 
-    * @class
-    * @public
-    */
-   Insider = class {}
- }
-```
+- Inner class doc by listing props instead of creating stubs seems to work
+- Findng other issues that are now in my way
+- Can't verify items marked -
+- [-] comments that do not start at column zero may not be getting skipped
+- [-] Second property definition in class is screwy
+- [-] a split method param list gives us an extra empty param
+- [X] class prop without type is a problem
+- [X] (above) was case of 'type' keyword initiated a bogus typedef parse
+- [ ] should show default value on initialized class prop
+- [ ] show modifiers on properties
+
+
     
 ###### JSDOC meta
     - [ ] params

@@ -112,14 +112,15 @@ export const AssigmentClass = class {
 // Test of having an inner class
 export class Container {
     // this class is a public property of Container
-    public Insider = class {
-        name?:string
+    public static Insider = class {
+        name?:string // a name property
 
+        // Everyone needs a foobar function
         public foobar():void {
 
         }
 
-        // declare the constructor to make it public outside of Container
+        // construct an Insider with `new Container.Insider()`
         public constructor() {
             this.name = 'Insider'
         }

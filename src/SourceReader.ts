@@ -606,7 +606,7 @@ export class SourceReader {
                                 if (pi.decStart !== -1) {
                                     if (pi.name) {
                                         let c = pi.name.charAt(0)
-                                        if((c >= 'a' && c <= 'z') || (c >='A' && c<='Z'))  // skip if not valid
+                                        if((c >= 'a' && c <= 'z') || (c >='A' && c<='Z') || c === '_')  // skip if not valid
                                             api.properties.push(pi)
                                         this.pos = pi.decEnd
                                     } else {
@@ -630,7 +630,7 @@ export class SourceReader {
         // if (text.substring(0, 6) === 'export') return pi;
         if (text.substring(0, 7) === 'require') return pi;
         let ok = inClass // anything goes for class props
-        const allowedPrefixes = ['var', 'let', 'const', 'export', 'public', 'private', 'static']
+        const allowedPrefixes = ['var', 'let', 'const', 'export', 'public', 'readonly', 'private', 'static']
         for (let pfx of allowedPrefixes) {
             let pl = pfx.length
             if (text.substring(0, pl) === pfx) ok = true
@@ -679,6 +679,7 @@ export class SourceReader {
                     sm.static = true;
                     break;
                 case 'const':
+                case 'readonly':
                     sm.const = true;
                     break;
                 case 'var':
@@ -772,11 +773,11 @@ export class SourceReader {
         pi.type = type;
         if (rightSide && !bracketed) {
             pi.assignStart = this.text.indexOf(rightSide, pi.decStart)
-            if (pi.scope.const) {
+            // if (pi.scope.const) {
                 if (type && type !== 'object' && type !== 'function') {
                     pi.default = rightSide.trim()
                 }
-            }
+            // }
         }
         return pi;
     }
@@ -1028,6 +1029,7 @@ export class SourceReader {
             let e = text.indexOf('=')
             if(e === -1) e = text.length;
             let name = text.substring(n + 4, e).trim()
+            if(!name) return ti
             if (name.charAt(name.length - 1) === '{') name = name.substring(0, name.length - 1).trim()
             Object.assign(ti, si)
             ti.name = name

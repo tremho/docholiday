@@ -6,8 +6,8 @@
   *     @property {string} type - 
   * 
   * @public
-  * 
   * @class
+  * 
   */
  class BaseExample {
    /**
@@ -17,7 +17,7 @@
     * 
     * @public
     */
-    display() { 
+   display() { 
    }
 
  }
@@ -28,9 +28,9 @@
   *     @property {string} unit - 
   * 
   * @public
-  * 
   * @class
   * @extends BaseExample
+  * 
   */
  class PricedExample extends BaseExample{
    /**
@@ -40,7 +40,7 @@
     * 
     * @public
     */
-    display() { 
+   display() { 
    }
 
  }
@@ -48,11 +48,12 @@
  /**
   * We declare a thing without a price
   *     @property {string} name - 
+  * @property {ti.type} Thing1. - 
   * 
   * @public
-  * 
   * @class
   * @extends BaseExample
+  * 
   */
  class Thing1 extends BaseExample{
  }
@@ -60,11 +61,12 @@
  /**
   * We declare a thing with a price
   *     @property {string} name - 
+  * @property {ti.type} Thing2. - 
   * 
   * @public
-  * 
   * @class
   * @extends PricedExample
+  * 
   */
  class Thing2 extends PricedExample{
  }
@@ -76,8 +78,8 @@
   *     @property {any} [other] - other stuff, optional
   * 
   * @public
-  * 
   * @class
+  * 
   */
  class Construction {
    /**
@@ -89,7 +91,7 @@
     * 
     * @public
     */
-    constructor(name, place) { 
+   constructor(name, place) { 
    }
 
    /**
@@ -99,7 +101,7 @@
     * 
     * @public
     */
-    plan() { 
+   plan() { 
    }
 
    /**
@@ -109,7 +111,7 @@
     * 
     * @public
     */
-    * milestone() { 
+   * milestone() { 
    }
 
    /**
@@ -127,7 +129,7 @@
     * 
     * @public
     */
-    finish(timeSpent, timeEstimated, notes) { 
+   finish(timeSpent, timeEstimated, notes) { 
        return ''
    }
 
@@ -143,14 +145,14 @@
     * 
     * @public
     */
-    jsdocStyleFunction(a) { 
+   jsdocStyleFunction(a) { 
    }
 
  }
 
  /**
   * 
-  * @enum number
+  * @enum
   * @readonly
   */
      var PrinterOrientation = {
@@ -168,10 +170,9 @@
 
  /**
   * 
-  * 
   * @private
-  * 
   * @interface
+  * 
   */
  class PrintAction {
    /**
@@ -184,7 +185,7 @@
     * 
     * @public
     */
-    print(device, orientation, pages) { 
+   print(device, orientation, pages) { 
        return true
    }
 
@@ -192,10 +193,9 @@
 
  /**
   * 
-  * 
   * @private
-  * 
   * @interface
+  * 
   */
  class SaveAction {
    /**
@@ -207,7 +207,7 @@ export class PrintExample implements PrintAction, SaveAction
     * 
     * @public
     */
-    save(device) { 
+   save(device) { 
        return true
    }
 
@@ -217,10 +217,10 @@ export class PrintExample implements PrintAction, SaveAction
   * An example of implemented interfaces
   * 
   * @public
-  * 
   * @class
   * @implements PrintAction
   * @implements SaveAction
+  * 
   */
  class PrintExample {
    /**
@@ -234,7 +234,7 @@ export class PrintExample implements PrintAction, SaveAction
     * 
     * @public
     */
-    exmpleLocal(foo) { 
+   exmpleLocal(foo) { 
        return true
    }
 
@@ -250,7 +250,7 @@ export class PrintExample implements PrintAction, SaveAction
     * 
     * @public
     */
-    print(device, orientation, pages) { 
+   print(device, orientation, pages) { 
        return true
    }
 
@@ -264,7 +264,7 @@ export class PrintExample implements PrintAction, SaveAction
     * 
     * @public
     */
-    save(device) { 
+   save(device) { 
        return true
    }
 
@@ -274,8 +274,8 @@ export class PrintExample implements PrintAction, SaveAction
   * Test of an assignment class
   * 
   * @public
-  * 
   * @class
+  * 
   */
  class AssigmentClass {
    /**
@@ -287,7 +287,7 @@ export class PrintExample implements PrintAction, SaveAction
     * 
     * @public
     */
-    dubious() { 
+   dubious() { 
        return ''
    }
 
@@ -295,22 +295,16 @@ export class PrintExample implements PrintAction, SaveAction
 
  /**
   * Test of having an inner class
+  * @property {class} Container.Insider - this class is a public property of Container
+  * @property {string} Insider.Container.name - a name property
+  * @property {method} Insider.Container.foobar - Everyone needs a foobar function
+  * @property {method} Insider.Container.constructor - construct an Insider with `new Container.Insider()`
+  * 
   * 
   * @public
-  * 
   * @class
+  * 
   */
  class Container {
-   /**
-    * this class is a public property of Container
-    *     @property {string} [name] - 
-    * 
-    * @private
-    * 
-    * @class
-    */
-   Insider = class {
-   }
-
  }
 
