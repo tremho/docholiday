@@ -105,27 +105,54 @@ Defer this because this needs community input.
 
 - [X] Throws
 
-- [ ] Developed problem running test.  test-direct is okay, but test hangs. Generation is okay.
+- [X] Developed problem running test.  test-direct is okay, but test hangs. Generation is okay.
 
 _not sure what's going on, but it seems to be at the 'returns' test.
 docstub call may be what's failing.  
 Hard to trace._
 
+_It was source reader not advancing pos past a distended body.
+
 ###### module Properties
-    - var, let, const 
-    - w/wo assignment
-    - top and side comments
-    - declared public
+    - [X] var, let, const 
+    - [X] w/wo assignment
+    - [X] top and side comments
+    - [X] declared public
+    - [X] multi dec behavior and workaround
 
 ###### Classes
-    - [ ] Functions and parameters
-    - [ ] Properties 
-    - [ ] constructors
-    - [ ] inner classes
+    - [X] Functions and parameters
+    - [X] Properties 
+    - [X] constructors
+    - [X] inner classes
+
+---
+_this seems to be the best stubbing I can get for an inner class_  
+so we need to enumerate the internals as property emitters
+if we are in a forClass, we can use decorated name 
+```
+ class Container {
+   /**
+    * this class is a public property of Container
+    *     @property {string} [name] -
+    *     @property {method} constructor - documentation for constructor
+    *     @property {method} foobar - This is a public function of Insider
+    *
+    * @private
+    * 
+    * @class
+    * @public
+    */
+   Insider = class {}
+ }
+```
     
 ###### JSDOC meta
     - [ ] params
     - [ ] return
+    - [ ] {{{ }}} custom
+        - [ ] jsdoc tag
+        - [ ] plant UML
 
 ###### Use of semicolons
     - [ ] line endings

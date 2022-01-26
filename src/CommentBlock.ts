@@ -12,7 +12,7 @@ import {TypeConstraint} from "./TypeCheck";
 import {handleInternalCustom} from "./CustomRender";
 
 
-const customRE =  /\<\<\<[\w|\d|=|,|"|'|\s]+\>\>\>/g
+const customRE =  /{{{[\w|\d|=|,|"|'|\s]+}}}/g
 
 export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInfo|EnumInfo|TypedefInfo, indent:number) {
     if(entityInfo instanceof FunctionInfo) {
@@ -154,6 +154,9 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
     } else {
         out += commentLine(indent, '@public')
     }
+    if(forClass.indexOf('#')!==-1) {
+        out += commentLine(indent, '@memberOf '+forClass)
+    }
     out += endCommentBlock(indent)
     return out
 }
@@ -175,14 +178,14 @@ function renderPropertyComment(pi:PropertyInfo, indent:number) : string {
     } else {
         out += commentLine(indent, '@public')
     }
+
     out += endCommentBlock(indent)
     return out
 }
 
-function renderClassComment(ci:ClassInfo, indent:number) : string {
+function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string {
     let out = beginCommentBlock(indent)
     // out += commentLine(indent, ci.name)
-    if(ci.extends) out += commentLine(indent, '@extends '+ci.extends)
     if(ci.mixins.length) {
         for(let mi of ci.mixins) {
             out += commentLine(indent, `   @implements ${mi}`)
@@ -200,6 +203,18 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
             }
         }
     }
+    /*
+     -- Don't do this enmeration here.  It belongs in the stub
+
+     -- okay, maybe we do want to, but as property statements with forClass decorations and recursions
+     = we've done regualr propertiss
+     (typedefs and enums)
+     - now do functions (methods)
+     - then inner classes with a forClass
+
+     forClass renders skip the comment block and just do a top-level property and then this block, and
+     none of what's below.
+
     if(ci.internals.functions.length) {
         for(let fi of ci.internals.functions) {
             if(!fi.scope.private) {
@@ -230,10 +245,12 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
                     }
                 }
 
-
             }
         }
     }
+    ---
+    */
+
     out += commentLine(indent, '')
     if(ci.scope.private || !ci.scope.public) {
         out += commentLine(indent,'@private')
@@ -243,6 +260,17 @@ function renderClassComment(ci:ClassInfo, indent:number) : string {
     out += commentLine(indent, '')
     if(ci.isInterface) out += commentLine(indent, '@interface')
     else               out += commentLine(indent, '@class')
+    if(ci.extends) {
+        out += commentLine(indent, '@extends '+ci.extends)
+    }
+    if(ci.implements.length) {
+        for(let imp of ci.implements) {
+            if(imp.trim()) out += commentLine(indent, '@implements '+imp)
+        }
+    }
+    if(forClass) {
+        out += commentLine(indent, '@memberOf '+forClass)
+    }
     out += endCommentBlock(indent)
     return out
 }
@@ -315,25 +343,37 @@ function renderTypedefComment(ti:TypedefInfo, indent:number): string {
     return out
 }
 
-export function renderClassStub(ci:ClassInfo, indent:number) {
+export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
     let out = ''
     let spaces = (indent && ' '.repeat(indent)) || ''
 
-    out += spaces + `function ${ci.name}() {}\n`
+    let extender = ' '
+    if(ci.extends) {
+        extender = ' extends '+ci.extends
+    }
 
-    // if(ci.internals.classes?.length) {
-    //     for(let cci of ci.internals.classes) {
-    //         out += renderClassComment(cci,indent+2)
-    //         out += renderClassStub(ci, indent+2)
-    //     }
-    // }
-    // if(ci.internals.functions?.length) {
-    //     for(let fi of ci.internals.functions) {
-    //         out += renderFunctionComment(fi,indent+2, ci.name)
-    //         out += renderFunctionStub(fi, indent+2, ci.name)
-    //     }
-    // }
-    // out += spaces+'}\n\n'
+    if(forClass) {
+        out += spaces + `${ci.name} = class${extender}{\n`
+
+    } else {
+        out += spaces + `class ${ci.name}${extender}{\n`
+    }
+
+    let decoratedForClass = forClass ? forClass+'#'+ci.name : ci.name
+
+    if(ci.internals.classes?.length) {
+        for(let cci of ci.internals.classes) {
+            out += renderClassComment(cci,indent+2, decoratedForClass)
+            out += renderClassStub(cci, indent+2, decoratedForClass)
+        }
+    }
+    if(ci.internals.functions?.length) {
+        for(let fi of ci.internals.functions) {
+            out += renderFunctionComment(fi,indent+2, decoratedForClass)
+            out += renderFunctionStub(fi, indent+2, decoratedForClass)
+        }
+    }
+    out += spaces+'}\n\n'
     return out
 }
 
@@ -370,6 +410,12 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:stri
     fn += ' '
     fn += fi.name
     fn += '('
+    // remove left-over name decorators that creea into inner classes
+    if(forClass) {
+        fn = fn.replace('public', '')
+        fn = fn.replace('private', '')
+    }
+    fn = fn.trim()
     let i = 0
     for (let pi of fi.params) {
         if(pi.name && pi.name.indexOf('.') === -1) {

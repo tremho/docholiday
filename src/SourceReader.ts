@@ -131,7 +131,7 @@ export class SourceReader {
         const rt = new SourceInfo()
         this.skipWhite()
         if(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
-        if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
+        // if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
         if(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
         let n = this.nextEnd()
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
@@ -530,12 +530,24 @@ export class SourceReader {
     }
     extractFunctionInfo(inClass:boolean, si:SourceInfo):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
-        // const src = this.text.substring(si.decStart, si.decEnd)
-        const n = this.text.indexOf('{', this.pos)
-        const fullsrc = this.text.substring(this.pos, n)
+        let fullsrc
+        if(inClass) {
+            const src = this.text.substring(si.decStart, si.decEnd)
+            const m = src.match(/[a-z|A-Z|_]+\(/)
+            if(m) {
+                const n = src.indexOf(m[0])
+                fullsrc = this.text.substring(this.pos, si.decEnd)
+            } else {
+                fullsrc = src
+            }
+        } else {
+            const n = this.text.indexOf('{', this.pos)
+            fullsrc = this.text.substring(this.pos, n)
+        }
         const name = this.getFunctionName(inClass, fullsrc)
         if (name || (inClass && fullsrc.trim().charAt(0) === '(')) {
             let longSrc = fullsrc.trim().substring(0, fullsrc.indexOf(name))
+            if(inClass) longSrc = 'public '+longSrc
             fi = this.extractMethodInfo(name, si, longSrc)
         }
         return fi
@@ -596,7 +608,7 @@ export class SourceReader {
                                         let c = pi.name.charAt(0)
                                         if((c >= 'a' && c <= 'z') || (c >='A' && c<='Z'))  // skip if not valid
                                             api.properties.push(pi)
-                                        this.pos = pi.decEnd + 1
+                                        this.pos = pi.decEnd
                                     } else {
                                         this.pos = si.decEnd + 1
                                     }
@@ -617,11 +629,11 @@ export class SourceReader {
         if (text.substring(0, 6) === 'import') return pi;
         // if (text.substring(0, 6) === 'export') return pi;
         if (text.substring(0, 7) === 'require') return pi;
+        let ok = inClass // anything goes for class props
         const allowedPrefixes = ['var', 'let', 'const', 'export', 'public', 'private', 'static']
-        let ok = false
-        for(let pfx of allowedPrefixes) {
+        for (let pfx of allowedPrefixes) {
             let pl = pfx.length
-            if(text.substring(0, pl) === pfx) ok = true
+            if (text.substring(0, pl) === pfx) ok = true
         }
         if(!ok) return pi
 
@@ -683,11 +695,11 @@ export class SourceReader {
             if (type.charAt(type.length - 1) == ';') type = type.substring(0, type.length - 1)
             name = name.substring(0, ci).trim()
         }
+        name = name.trim()
         if (name.charAt(name.length - 1) === '?') {
             sm.optional = true
             name = name.substring(0, name.length - 1)
         }
-        name = name.trim()
         if (name.charAt(name.length - 1) === ';') name = name.substring(0, name.length - 1)
 
         if(!type) type = deriveTypeFromValue(rightSide)

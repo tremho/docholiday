@@ -7,7 +7,7 @@ export function handleInternalCustom(name:string, argMap:any, text:string):strin
     name = name.trim().toLowerCase()
 
     // must be done to avoid processing subsequent custom declarations as part of custom body
-    let nc = text.indexOf('<<<')
+    let nc = text.indexOf('{{{')
     if(nc !== -1) text = text.substring(0, nc)
 
     if(name === 'jsdoc') {
