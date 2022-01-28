@@ -16,7 +16,12 @@
     "test-direct": "npm run go examples/test-* && node build/test/docholiday.test.js",
     "docgen": "rm -fr doc && npm run docgen-jsdoc && open -a \"Google Chrome\" doc/index.html",
     "docgen-docjs": "/Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen",
-    "docgen-jsdoc": "jsdoc -t templates -d doc -r -c jsdoc-conf.json -p gen"
+    "docgen-jsdoc": "jsdoc -t templates -d doc -r -c jsdoc-conf.json -p gen",
+
+    "docs:prepare": "echo 'Creating book'",
+    "docs:build": "npm run docs:prepare && cd ./booksrc && honkit build",
+    "docs:serve": "npm run docs:prepare && cd ./booksrc && honkit serve",
+    "docs:clean": "rm -fr _book"
   },
   "keywords": [],
   "author": "",

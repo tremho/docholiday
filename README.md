@@ -41,9 +41,11 @@ In the closing phase...(I think).... just need to finish the following:
   - [ ] remove tsdoc config options
 
 - [X] @throw
-- [ ] tweaks from blog to markdown
+- [ ] tweaks from blog to markdown (Kevin Bridges https://medium.com/@kevinast/integrate-gitbook-jsdoc-974be8df6fb3
+  )
 - [ ] attribution hack?
-- [ ] self-document
+- [ ] make cli and do npm private publish
+- [ ] use to self-document
 
 -----------
 
