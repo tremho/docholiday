@@ -130,6 +130,7 @@ export class SourceReader {
     readSourceLine() {
         const rt = new SourceInfo()
         this.skipWhite()
+        while(this.text.charAt(this.pos) === ';') this.pos++
         if(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
         // if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
         if(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
@@ -382,7 +383,7 @@ export class SourceReader {
             let td = (type || nt[1] || '').trim().split('=')
             pi.type = this.readTypeDef(td[0].trim(), 0)
             if(td[1]) {
-                pi.default = td[1].trim()
+                pi.default = td[1].trim().replace(';', '')
                 if(!pi.type) pi.type = deriveTypeFromValue(pi.default)
                 pi.optional = true
             }
@@ -496,6 +497,9 @@ export class SourceReader {
                     }
                 }
                 fi.return.description = ctext.trim()
+                if(fi.return.type.indexOf(';') !== -1) {
+                    fi.return.type = fi.return.type.replace(';', '')
+                }
                 try {
                     if(constraintDeclaration) {
                         fi.return.constraintMap = TypeCheck.parseConstraintsToMap(fi.return.type, constraintDeclaration)
@@ -544,9 +548,14 @@ export class SourceReader {
             const n = this.text.indexOf('{', this.pos)
             fullsrc = this.text.substring(this.pos, n)
         }
-        const name = this.getFunctionName(inClass, fullsrc)
+        let name = this.getFunctionName(inClass, fullsrc)
         if (name || (inClass && fullsrc.trim().charAt(0) === '(')) {
             let longSrc = fullsrc.trim().substring(0, fullsrc.indexOf(name))
+            let m = name.match(/\w+$/)
+            if(m) {
+                longSrc = name.trim().substring(0, name.indexOf(m[0])).replace('*', 'generator ')
+                name = m[0]
+            }
             if(inClass) longSrc = 'public '+longSrc
             fi = this.extractMethodInfo(name, si, longSrc)
         }
@@ -645,7 +654,12 @@ export class SourceReader {
         let cc = ''
         if (ci !== -1) cc = text.charAt(ci + 1)
         if (cc === '/' || cc === '*') {
-            commentAfter = text.substring(ci + 2)
+            let ce = text.length
+            if (cc == '*') {
+                ce = text.indexOf('*/')
+                if (ce === -1) ce = text.length
+            }
+            commentAfter = text.substring(ci + 2, ce)
             text = text.substring(0, ci)
         }
         let ai = text.indexOf('=')
@@ -775,7 +789,7 @@ export class SourceReader {
             pi.assignStart = this.text.indexOf(rightSide, pi.decStart)
             // if (pi.scope.const) {
                 if (type && type !== 'object' && type !== 'function') {
-                    pi.default = rightSide.trim()
+                    pi.default = rightSide.trim().replace(';', '')
                 }
             // }
         }
@@ -1027,9 +1041,10 @@ export class SourceReader {
         let n = text.indexOf('type ')
         if(n !== -1) {
             let e = text.indexOf('=')
+            if(e < n) return ti // = must be right of 'type ' for a typedef
             if(e === -1) e = text.length;
             let name = text.substring(n + 4, e).trim()
-            if(!name) return ti
+            if(!name) return ti // we must name a type
             if (name.charAt(name.length - 1) === '{') name = name.substring(0, name.length - 1).trim()
             Object.assign(ti, si)
             ti.name = name
@@ -1193,7 +1208,7 @@ export class SourceReader {
             if (pi === -1 || pi >= fi.comEnd) pi = fi.comEnd
             if (pi < fi.comEnd) {
                 let pe = this.text.indexOf('@', pi+1)
-                if(pe === -1) pe = fi.comEnd
+                if(pe === -1 || pe > fi.comEnd) pe = fi.comEnd
                 let pd = this.readCommentBlock(this.text.substring(pi, pe))
                 pd = pd.substring('@param'.length + 1)
                 const pInfo = new ParameterInfo()

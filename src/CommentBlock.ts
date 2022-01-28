@@ -10,7 +10,6 @@ import {
 } from "./types";
 import {TypeConstraint} from "./TypeCheck";
 import {handleInternalCustom} from "./CustomRender";
-import {comment} from "tap";
 
 
 const customRE =  /{{{[\w|\d|=|,|"|'|\s]+}}}/g
@@ -54,16 +53,23 @@ function commentText(indent:number, inset:number, text:string=''):string {
     let out = ''
     const cm = text.match(customRE)
     if (cm) {
-        let post = ''
+        let parts:string[] = []
+        let offset = 0
+        let lm = ''
         for (let m of cm) {
-            text += post
-            let n = text.indexOf(m)
+            let n = text.indexOf(m, offset)
             if (n !== -1) {
-                post = text.substring(n+m.length)
+                let pre = text.substring(offset,n)
+                if(lm && pre.substring(0, lm.length) === lm) pre = ''
+                let post = text.substring(n+m.length)
                 let rendered = customGen(m, post)
-                text = text.substring(0,n) + rendered
+                if(pre) parts.push(pre)
+                parts.push(rendered)
+                offset = n
+                lm = m
             }
         }
+        text = parts.join('\n')
     }
     let spaces = inset ? ' '.repeat(inset) : ''
     let lines = text.split('\n')
@@ -94,22 +100,19 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
 
     if (forClass) {
         if(forClass.indexOf('.') !== -1) { // todo ??
-            // remove left-over name decorators that creep into inner classes
-            name = name.replace(/public\s*/, '')
-            name = name.replace(/private\s*/, '')
 
             let desc = ''
-            if(fi.return && fi.return.type !== 'void') desc += `(\`returns {${fi.return.type || '*'}} ${fi.return.description || ''}\`) `
+            if(fi.scope.generator) desc += `(\`generator\`) `
             if(yieldType) desc += `(\`yields {${yieldType}}\`) `
             if(fi.scope.private) desc += `(\`private\`) `
             if(fi.scope.static) desc += `(\`static\`) `
             if(fi.scope.async) desc += `(\`async\`) `
+            if(fi.return && fi.return.type !== 'void') desc += `(\`returns {${fi.return.type || '*'}} ${fi.return.description || ''}\`) `
+            if(desc) desc += ' <br/>  '
             desc += fi.description || ''
 
             return commentLine(indent, `@property {method} ${forClass}.${name} - ${desc}`)
         }
-        // if (name === 'constructor') name = 'Constructor for ' + forClass
-        // out += commentLine(indent, name)
     }
     if(fi.description) out += commentText(indent, 0, fi.description+'\n')
     for(let pi of fi.params) {
@@ -166,9 +169,7 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
     } else {
         out += commentLine(indent, '@public')
     }
-    // if(forClass.indexOf('#')!==-1) {
-    //     out += commentLine(indent, '@memberOf '+forClass)
-    // }
+
     out += endCommentBlock(indent)
     return out
 }
@@ -223,7 +224,7 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
 
         let type = (ci.isInterface) ? 'interface' : 'class'
 
-        out = commentLine(indent, `@property {${type} ${forClass}.${ci.name} - ${desc}`)
+        out = commentLine(indent, `@property {${type}} ${forClass}.${ci.name} - ${desc}`)
         for(let pi of ci.internals.properties) {
             out += renderPropertyComment(pi, indent, ifc)
         }
@@ -253,18 +254,7 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
             }
         }
     }
-    /*
-     -- Don't do this enmeration here.  It belongs in the stub
 
-     -- okay, maybe we do want to, but as property statements with forClass decorations and recursions
-     = we've done regualr propertiss
-     (typedefs and enums)
-     - now do functions (methods)
-     - then inner classes with a forClass
-
-     forClass renders skip the comment block and just do a top-level property and then this block, and
-     none of what's below.
-    */
     for(let ti of ci.internals.typedefs) {
         out += renderTypedefComment(ti, indent, ifc)
     }
@@ -279,42 +269,6 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
     for(let cci of ci.internals.classes) {
         out += renderClassComment(cci, indent, ifc)
     }
-    /*
-    if(ci.internals.functions.length) {
-        for(let fi of ci.internals.functions) {
-            if(!fi.scope.private) {
-                let fn = fi.name || ''
-                if(fn) fn += ' ('
-                out += commentLine(indent,fn)
-                for(let pi of fi.params) {
-                    let type = pi.type || '*'
-                    if(pi.optional) {
-                        if(pi.default) {
-                            out += commentLine(indent, ` @param {${type}} [${pi.name} = ${pi.default}]`)
-                        } else {
-                            out += commentLine(indent, ` @param {${type}} [${pi.name}]`)
-                        }
-
-                    } else {
-                        out += commentLine(indent, ` @param {${type}} ${pi.name}`)
-                    }
-                    if(pi.description) out += commentText(indent, 8, pi.description)
-                    out += formatConstraints(indent, pi)
-                }
-                if(fi.return) {
-                    let type = fi.return.type || '*'
-                    if(type !== 'void' && type !== 'undefined') {
-                        out += commentLine(indent, '')
-                        out += commentLine(indent, ` @return {${type}} ${fi.return.description ||''}`)
-                        out += formatConstraints(indent, fi.return)
-                    }
-                }
-
-            }
-        }
-    }
-    ---
-    */
 
     out += commentLine(indent, '')
     if(forClass) {
@@ -349,9 +303,6 @@ function renderEnumComment(ei:EnumInfo, indent:number, forClass='') : string {
     if(forClass) {
         return commentLine(indent,`@property {enum} ${forClass}.${ei.name} - ${ei.description || ''}`)
     }
-
-    // determine type of enum
-    // let etype = 'number'
 
     out += commentText(indent, 0, ei.description || '')
     out += commentLine(indent, `@enum`)
@@ -433,12 +384,6 @@ export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
 
     let ifc = forClass ? forClass+'.'+ci.name : ci.name
 
-    // if(ci.internals.classes?.length) {
-    //     for(let cci of ci.internals.classes) {
-    //         out += renderClassComment(cci,indent+2, ifc)
-    //         out += renderClassStub(cci, indent+2, ifc)
-    //     }
-    // }
     if(ci.internals.functions?.length) {
         for(let fi of ci.internals.functions) {
             out += renderFunctionComment(fi,indent+2, ifc)
@@ -451,27 +396,7 @@ export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
 
 export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:string='') {
     let type = fi.return?.type || ''
-    let rv
-    switch(type) {
-        case 'string':
-            rv = "''"
-            break;
-        case 'number':
-            rv = "0"
-            break;
-        case 'boolean':
-            rv = 'true'
-            break;
-        case 'array':
-            rv = "[]"
-            break;
-        case 'object':
-            rv = "{}"
-            break;
-        case 'null':
-            rv = "null"
-            break;
-    }
+    let rv = returnValueFromType(type)
     let spaces = indent && ' '.repeat(indent) || ''
     let fn = ''
     // if(fi.scope.public) fn += 'export '
@@ -498,11 +423,15 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:stri
 
     return out
 }
+
 export function renderPropertyStub(pi:PropertyInfo, indent:number) {
     let spaces = indent && ' '.repeat(indent) || ''
     let out = spaces+'    var '+pi.name
     if(pi.default) {
         out += ' = '+pi.default
+    }
+    else if(pi.scope.const) {
+        out += ' = '+ returnValueFromType(pi.type)
     }
     out += '\n'
 
@@ -570,32 +499,27 @@ function customGen(block:string, text:string):string {
     return out;
 }
 
-// function getObjectProps(pi:ParameterInfo):ParameterInfo[] {
-//     let propsOut:ParameterInfo[] = []
-//     let type = pi.type.trim()
-//     if(type.charAt(0) === '{' && type.charAt(type.length-1) === '}') {
-//         let props = type.substring(1, type.length-1).split(',')
-//         for(let p of props) {
-//             const nt = p.split(':', 2)
-//             let ppi = new ParameterInfo()
-//             ppi.name = pi.name+'.'+nt[0].trim()
-//             let ci = ppi.name.indexOf('/')
-//             let e = ppi.name.length
-//             if(ci !== -1) {
-//                 if (ppi.name.charAt(ci + 1)) e = ppi.name.indexOf('*/')
-//                 ppi.description = ppi.name.substring(ci + 2, e)
-//                 ppi.name = ppi.name.substring(0, ci)
-//             }
-//             ppi.type = nt[1].trim()
-//             ci = ppi.type.indexOf('/');
-//             e = ppi.type.length
-//             if(ci !== -1) {
-//                 if(ppi.type.charAt(ci+1) === '*') e = ppi.type.indexOf('*/')
-//                 ppi.description = ppi.type.substring(ci+2, e)
-//                 ppi.type = ppi.type.substring(0, ci)
-//             }
-//             propsOut.push(ppi)
-//         }
-//     }
-//     return propsOut
-// }
+function returnValueFromType(type:string) {
+    let rv
+    switch(type) {
+        case 'string':
+            rv = "''"
+            break;
+        case 'number':
+            rv = "0"
+            break;
+        case 'boolean':
+            rv = 'true'
+            break;
+        case 'array':
+            rv = "[]"
+            break;
+        case 'object':
+            rv = "{}"
+            break;
+        case 'null':
+            rv = "null"
+            break;
+    }
+    return rv
+}

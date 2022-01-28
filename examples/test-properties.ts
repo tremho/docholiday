@@ -31,9 +31,9 @@ export let one = 1, two = 2, three = 3
 
 export const myArray = [1,2,3,4,5] // an array
 
-export const myObject = { foo: 1, bar: 2 } // an abjet
+export const myObject = { foo: 1, bar: 2 } // an abject
 
-// another object
+// another object, more complex
 export const another = {
     apples: "apples",
     oranges: "oranges",
@@ -57,6 +57,43 @@ const published = true
 //
 export let m = 1, n = 2, o = 3, p = 4
 
+// Explore class properties
+export class PropExplorer {
+    name = 'no type provided'
+    value = 10 // no type provided here either
+    commented = 'no type provided' // but I have a comment about it
+
+    unassigned:string
+    novalue:number      // also unassigned
+
+    anything:any    // unassigned any
+
+    justMe // undeclared and unassigned
+    noComment
+
+    private mysecret:string = 'adkf98adf'
+
+    static readonly Label:string = 'Foobar'
+
+    static readonly InnerClass = class {
+
+        // a chance to comment the inner constructor
+        constructor() {
+
+        }
+
+        // say hi
+        hello(a: string, b: number) {
+        }
+
+        // fetch a number
+        static async getNumber(): Promise<number> // resolves to the magic value
+        {
+            return 123
+        }
+    }
+
+}
 
 
 

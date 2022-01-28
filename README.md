@@ -29,15 +29,29 @@ source with some additional features
 In the closing phase...(I think).... just need to finish the following:
 
 - [X] html,markdown both
-- [ ] Tests and approved comps
+- [X] Tests and approved comps
 - [ ] Manual test config options
-- [ ] @throw
-- [ ] tweaks from blog
+  - [X] jsdoc, no template
+  - [X] jsdoc, with template
+  - [X] docjs 
+  - [ ] tsdoc (_still need to install_)
+- [X] @throw
+- [ ] tweaks from blog to markdown
+- [ ] attribution hack?
 - [ ] self-document
 
 -----------
 
-### Issues 
+### Issues
+
+----
+###### Can live with for now
+
+- [ ] (properties) multi-value assignment provides incorrect default and type
+
+-----------
+
+##### Fixed
 
 - [X] enum bug case lack of comma on last element fails to read value
 - [X] enum key strings redundant value comment 
@@ -64,46 +78,46 @@ In the closing phase...(I think).... just need to finish the following:
 We _could_ have an `--all-public` flag that generates stubs ignoring private  
 Defer this because this needs community input.
 
-
 ------------
 ##### Documentation types and test matrix
 
-<span style="color:darkgreen; font-weight: bolder; font-size:larger"> <== You Are Here</span>
+- [X] Complete for this stage 
 
 ###### Enum
-    - [X] implicit
-    - [X] explicit
-    - [X] mixed with explicit start after first
-    - [X] explicit out of order
-    - [X] strings
-    - [X] strings with key==value
+- [X] implicit
+- [X] explicit
+- [X] mixed with explicit start after first
+- [X] explicit out of order
+- [X] strings
+- [X] strings with key==value
 
-- [ ] Do enums need to be scoped? Currently they are not.
+- Do enums need to be scoped? Currently they are not.
+- [X] No, but allow and ignore 'const' modifier
 
 ###### Functions
-    - [X] basic javascript type
-    - [X] separated lines
-    - [X] typescript - one line and split
-    - [X] assigned classic function - one line and split
-    - [X] assigned arrow function - one line and split
-    - [X] anonymous function
-    - [X] generator function recognized by *
-    - [X] async keyword
+- [X] basic javascript type
+- [X] separated lines
+- [X] typescript - one line and split
+- [X] assigned classic function - one line and split
+- [X] assigned arrow function - one line and split
+- [X] anonymous function
+- [X] generator function recognized by *
+- [X] async keyword
 
 ###### Parameters
-    - [X] name only, any type
-    - [X] name only with comment
-    - [X] name:type (typescript)
-    - [X] name:type with comment
-    - [X] name:{foo:string, bar:number} (ad-hoc type)
-    - [X] name:{foo:string, bar:number} (ad-hoc type) with comment
+- [X] name only, any type
+- [X] name only with comment
+- [X] name:type (typescript)
+- [X] name:type with comment
+- [X] name:{foo:string, bar:number} (ad-hoc type)
+- [X] name:{foo:string, bar:number} (ad-hoc type) with comment
 
 ###### Returns
-    - [X] void
-    - [X] type
-    - [X] Promise
-    - [X] ad-hoc type
-    - [X] w/wo comment
+- [X] void
+- [X] type
+- [X] Promise
+- [X] ad-hoc type
+- [X] w/wo comment
 
 - [X] Throws
 
@@ -116,17 +130,17 @@ Hard to trace._
 _It was source reader not advancing pos past a distended body.
 
 ###### module Properties
-    - [X] var, let, const 
-    - [X] w/wo assignment
-    - [X] top and side comments
-    - [X] declared public
-    - [X] multi dec behavior and workaround
+- [X] var, let, const 
+- [X] w/wo assignment
+- [X] top and side comments
+- [X] declared public
+- [X] multi dec behavior and workaround
 
 ###### Classes
-    - [X] Functions and parameters
-    - [X] Properties 
-    - [X] constructors
-    - [X] inner classes
+- [X] Functions and parameters
+- [X] Properties 
+- [X] constructors
+- [X] inner classes
 
 ---
 - Inner class doc by listing props instead of creating stubs seems to work
@@ -137,20 +151,21 @@ _It was source reader not advancing pos past a distended body.
 - [-] a split method param list gives us an extra empty param
 - [X] class prop without type is a problem
 - [X] (above) was case of 'type' keyword initiated a bogus typedef parse
-- [ ] should show default value on initialized class prop
-- [ ] show modifiers on properties
+- [X] should show default value on initialized class prop
+- [X] show modifiers on properties
+
+√ _NEED TO WRITE TESTS FOR THESE ITEMS_
 
 
-    
 ###### JSDOC meta
-    - [ ] params
-    - [ ] return
-    - [ ] {{{ }}} custom
-        - [ ] jsdoc tag
-        - [ ] plant UML
+- [X] params
+- [X] return
+- [X] {{{ }}} custom
+    - [X] jsdoc tag
+    - [X] plant UML
 
 ###### Use of semicolons
-    - [ ] line endings
-    - [ ] within one line
-    - [ ] all element types
+- [X] line endings
+- [X] within one line
+- [x] all element types
 

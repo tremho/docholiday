@@ -10,6 +10,10 @@ export function handleInternalCustom(name:string, argMap:any, text:string):strin
     let nc = text.indexOf('{{{')
     if(nc !== -1) text = text.substring(0, nc)
 
+    if(name === 'text') {
+        out = text
+    }
+
     if(name === 'jsdoc') {
         let tag = argMap['tag']
         out = '@'+tag+ ' ' + text

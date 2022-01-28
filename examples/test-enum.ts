@@ -29,7 +29,7 @@ enum Direction3 {
 
 // String values = key
 // should not repeat value in description
-enum Direction3 {
+enum Direction4 {
     UP = "UP",
     DOWN = "DOWN",
     LEFT = "LEFT",
@@ -41,7 +41,8 @@ enum BooleanLikeHeterogeneousEnum {
     Yes = "YES"
 }
 
-enum LogLevel {
+// including an optional const modifier
+const enum LogLevel {
     ERROR,
     WARN,
     INFO,
