@@ -33,8 +33,13 @@ In the closing phase...(I think).... just need to finish the following:
 - [ ] Manual test config options
   - [X] jsdoc, no template
   - [X] jsdoc, with template
-  - [X] docjs 
-  - [ ] tsdoc (_still need to install_)
+  - [X] docjs
+  
+  - <del>- [ ] tsdoc (_still need to install_)</del>   
+  - Turns out ts-doc is not a cli app like jsdoc or docjs. It's a parser library
+  
+  - [ ] remove tsdoc config options
+
 - [X] @throw
 - [ ] tweaks from blog to markdown
 - [ ] attribution hack?
