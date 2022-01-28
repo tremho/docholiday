@@ -8,6 +8,5 @@ doc/
 gen/
 examples/comp/
 booksrc/_book/
-booksrc/API.md
 node_modules/
 package-lock.json
