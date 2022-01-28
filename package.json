@@ -1,14 +1,17 @@
 {
-  "name": "docholiday",
+  "name": "@tremho/doc-holiday",
   "version": "0.1.0-prerelease.4",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "doc-holiday": "build/index.js"
+  },
   "scripts": {
-    "build": "rm -fr build && tsc",
+    "build": "rm -fr build && tsc && chmod +x build/index.js",
     "go": "npm run build && node build/index.js $*",
     "examples": "npm run go examples/*.ts",
     "examples-file": "rm -fr gen && npm run go examples/*",
-    "examples-render": "npm run examples-file && npm run docgen",
+    "examples-render": "npm run examples-file #!/usr/bin/env node&& npm run docgen",
     "focus": "npm run go examples/focus.ts",
     "focus-file": "rm -fr gen && npm run go examples/focus.ts",
     "focus-render": "npm run focus-file && npm run docgen",
@@ -17,6 +20,8 @@
     "docgen": "rm -fr doc && npm run docgen-jsdoc && open -a \"Google Chrome\" doc/index.html",
     "docgen-docjs": "/Users/sohmert/.npm-global/bin/documentation build -f html -o doc gen",
     "docgen-jsdoc": "jsdoc -t templates -d doc -r -c jsdoc-conf.json -p gen",
+
+    "doc-holiday": "doc-holiday $*",
 
     "docs:prepare": "echo 'Creating book'",
     "docs:build": "npm run docs:prepare && cd ./booksrc && honkit build",
@@ -40,5 +45,10 @@
     "parenthesis": "^3.1.8",
     "picomatch": "^2.3.1",
     "plantuml-api": "^0.0.1"
-  }
+  },
+  "files": [
+    "build/**/*",
+    "package.json",
+    "README.md"
+  ]
 }

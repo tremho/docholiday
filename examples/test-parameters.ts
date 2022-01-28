@@ -1,5 +1,7 @@
+/*
+ *  Various modes of parameter declaration
+ */
 
-/* Various modes of parameter declaration */
 import {FooBar} from "./foobar";
 
 //  name only, any type

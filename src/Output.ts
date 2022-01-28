@@ -41,6 +41,35 @@ export function findSourceIndent(si:SourceInfo, source:string) {
     return at - pr
 }
 
+export function readModuleDescription(source:string) {
+    let description = ''
+    let reading = false
+    const lines = source.split('\n')
+    for(let ln of lines) {
+        ln = ln.trim()
+        if(ln.charAt(0) === '/') {
+            reading = true
+            ln = ln.substring(1)
+        }
+        if(reading) {
+            if(!ln) break;
+            if (ln.charAt(0) === '*') ln = ln.substring(1).trim()
+            let eol = ln.length
+            if (ln.charAt(1) === '*') {
+                eol = ln.indexOf('*/')
+                if(eol == -1) eol = ln.length
+            }
+            let dl = ln.substring(0, eol)
+            while(dl.charAt(0) === '/') dl = dl.substring(1)
+            while(dl.charAt(0) === '*') dl = dl.substring(1)
+            if(dl.charAt(0) === '/') break;
+            if(description) description += '\n * '
+            description += dl.trim()
+        }
+    }
+    return description
+}
+
 export function sortRecorded() {
     recorded.sort((a, b) => {
         return (a.start - b.start)
@@ -67,12 +96,12 @@ export function stubOut():string {
     }
     return out
 }
-export function writeStubFile(filePath:string, moduleName:string) {
+export function writeStubFile(filePath:string, moduleName:string, moduleDescription:string) {
     try {
         let pn = path.normalize(filePath)
         let pd = path.dirname(pn)
         fs.mkdirSync(pd, {recursive: true})
-        let content = `/** @module ${moduleName} */\n\n` + stubOut()
+        let content = `/** @module ${moduleName} \n * @description\n * #### ${moduleName} (Module)\n * ${moduleDescription}\n *\n*/\n\n` + stubOut()
         fs.writeFileSync(pn, content)
     } catch(e) {
         console.error('Error', e)

@@ -1,6 +1,4 @@
-/*
-Working with enum
- */
+// Working with enum
 
 // Constants for direction
 // Explicit start

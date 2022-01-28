@@ -38,14 +38,20 @@ In the closing phase...(I think).... just need to finish the following:
   - <del>- [ ] tsdoc (_still need to install_)</del>   
   - Turns out ts-doc is not a cli app like jsdoc or docjs. It's a parser library
   
-  - [ ] remove tsdoc config options
+  - [X] remove tsdoc config options
 
 - [X] @throw
-- [ ] tweaks from blog to markdown (Kevin Bridges https://medium.com/@kevinast/integrate-gitbook-jsdoc-974be8df6fb3
+- [X] tweaks from blog to markdown (Kevin Bridges https://medium.com/@kevinast/integrate-gitbook-jsdoc-974be8df6fb3
   )
-- [ ] attribution hack?
+- <del>[ ] attribution hack?</del>
+
+<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
+- 
 - [ ] make cli and do npm private publish
+- [ ] put to travi
 - [ ] use to self-document
+- [ ] add badges for readme
+- [ ] public publish to npm
 
 -----------
 

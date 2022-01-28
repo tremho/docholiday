@@ -1,3 +1,6 @@
+// Focus is a module used for development testing
+// designed to investigate issues spotted during development
+// in an isolated context
 
 
 // Explore class properties

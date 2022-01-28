@@ -1,4 +1,6 @@
-
+/*
+Checks syntax that includes semicolons
+ */
 
 // this is as plain as it gets
 // a simple JS function

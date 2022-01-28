@@ -38,5 +38,4 @@ The package.json file defines the following NPM style script actions:
 - __docgen__: generate the html with the chosen engine then invoke Chrome to view
 - __docgen-docjs__ : doc generation using Documentation JS
 - __docgen-jsdoc__ : doc generation using JSDOC
-- __docgen-tsdoc__ : doc generation using TSDOC
 

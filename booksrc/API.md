@@ -9,39 +9,52 @@
   <tbody>
 <tr>
     <td><a href="#module_test-classes">test-classes</a></td>
-    <td></td>
+    <td><h4>test-classes (Module)</h4>
+<p>This module checks the rendering of comments found in classes</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-commentBlock">test-commentBlock</a></td>
-    <td></td>
+    <td><h4>test-commentBlock (Module)</h4>
+<p>This module checks for parmeters and returns in jsdoc format
+insures they are secondary to typescript declarations
+and explores the {{{}}} Custom Render space, such as plantUML</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-enum">test-enum</a></td>
-    <td></td>
+    <td><h4>test-enum (Module)</h4>
+<p>Working with enum</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-functions">test-functions</a></td>
-    <td></td>
+    <td><h4>test-functions (Module)</h4>
+<p>Tests all forms of function declaration
+to see if we are properly documenting these</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-parameters">test-parameters</a></td>
-    <td></td>
+    <td><h4>test-parameters (Module)</h4>
+<p>Various modes of parameter declaration</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-properties">test-properties</a></td>
-    <td></td>
+    <td><h4>test-properties (Module)</h4>
+<p>Checking property declarations
+both at module scope and in classes</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-publicExport">test-publicExport</a></td>
-    <td></td>
+    <td><h4>test-publicExport (Module)</h4>
+<p>Meant to explore when/how to use @public and @private</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-returns">test-returns</a></td>
-    <td></td>
+    <td><h4>test-returns (Module)</h4>
+<p>Checks the rendering of return statements</p></td>
     </tr>
 <tr>
     <td><a href="#module_test-semicolons">test-semicolons</a></td>
-    <td></td>
+    <td><h4>test-semicolons (Module)</h4>
+<p>Checks syntax that includes semicolons</p></td>
     </tr>
 </tbody>
 </table>
@@ -55,6 +68,9 @@
     test-classes</h5>
 
 
+
+<h4>test-classes (Module)</h4>
+<p>This module checks the rendering of comments found in classes</p>
 
 
 * [test-classes](#module_test-classes)
@@ -473,6 +489,11 @@ But we'll let the param types and return be generated</p>
 
 
 
+<h4>test-commentBlock (Module)</h4>
+<p>This module checks for parmeters and returns in jsdoc format
+insures they are secondary to typescript declarations
+and explores the {{{}}} Custom Render space, such as plantUML</p>
+
 
 * [test-commentBlock](#module_test-commentBlock)
     * [~beast()](#module_test-commentBlock..beast)
@@ -731,6 +752,9 @@ A complex state diagram from plantUML examples</p>
     test-enum</h5>
 
 
+
+<h4>test-enum (Module)</h4>
+<p>Working with enum</p>
 
 
 * [test-enum](#module_test-enum)
@@ -1005,6 +1029,10 @@ should not repeat value in description</p>
 
 
 
+<h4>test-functions (Module)</h4>
+<p>Tests all forms of function declaration
+to see if we are properly documenting these</p>
+
 
 * [test-functions](#module_test-functions)
     * [~plainJane(a, b, c)](#module_test-functions..plainJane)
@@ -1247,6 +1275,9 @@ and using a JSDoc form comment block</p>
 
 
 
+<h4>test-parameters (Module)</h4>
+<p>Various modes of parameter declaration</p>
+
 
 * [test-parameters](#module_test-parameters)
     * [~one(a, b, c)](#module_test-parameters..one)
@@ -1395,6 +1426,10 @@ and using a JSDoc form comment block</p>
     test-properties</h5>
 
 
+
+<h4>test-properties (Module)</h4>
+<p>Checking property declarations
+both at module scope and in classes</p>
 
 
 * [test-properties](#module_test-properties)
@@ -1694,6 +1729,9 @@ a multiple declaration line</p>
 
 
 
+<h4>test-publicExport (Module)</h4>
+<p>Meant to explore when/how to use @public and @private</p>
+
 
 <hr/>
 
@@ -1703,6 +1741,9 @@ a multiple declaration line</p>
     test-returns</h5>
 
 
+
+<h4>test-returns (Module)</h4>
+<p>Checks the rendering of return statements</p>
 
 
 * [test-returns](#module_test-returns)
@@ -1918,6 +1959,9 @@ bar:number
     test-semicolons</h5>
 
 
+
+<h4>test-semicolons (Module)</h4>
+<p>Checks syntax that includes semicolons</p>
 
 
 * [test-semicolons](#module_test-semicolons)

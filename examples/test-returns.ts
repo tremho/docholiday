@@ -1,3 +1,6 @@
+/*
+Checks the rendering of return statements
+ */
 
 import {Fit} from "./foobar"
 

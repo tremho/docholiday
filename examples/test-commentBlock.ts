@@ -1,4 +1,8 @@
-
+/*
+This module checks for parmeters and returns in jsdoc format
+insures they are secondary to typescript declarations
+and explores the {{{}}} Custom Render space, such as plantUML
+ */
 
 /**
  * We should be able to document returns in jsdoc style

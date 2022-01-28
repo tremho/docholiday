@@ -1,4 +1,5 @@
-
+// Tests all forms of function declaration
+// to see if we are properly documenting these
 
 // this is as plain as it gets
 // a simple JS function

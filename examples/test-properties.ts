@@ -1,3 +1,5 @@
+// Checking property declarations
+// both at module scope and in classes
 
 
 // top commented var

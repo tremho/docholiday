@@ -1,3 +1,8 @@
+/**
+ * This module checks the rendering of comments found in classes
+ */
+
+
 
 // This is a base class test
 export class BaseExample {

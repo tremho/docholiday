@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 import * as path from "path"
 import * as fs from 'fs-extra'
 
 import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo, TypedefInfo} from './src/types'
 import { processSourceFile, processSource } from './src/ProcessFiles'
-import {recordInfo, sortRecorded, clearRecorded, stubOut,writeStubFile} from "./src/Output";
+import {recordInfo, sortRecorded, clearRecorded, stubOut, writeStubFile, readModuleDescription} from "./src/Output";
 import {getGlobbedFiles} from "./src/Globber";
 import {executeCommand} from "./src/execCmd";
 
@@ -14,6 +16,8 @@ import {exec} from "child_process";
 let files:string[] = []
 let opts:any = {}
 let config:any = {}
+
+// if invoked as a CLI, we will extract the args
 const args = process.argv.slice(2)
 let i = 0
 let f:string
@@ -35,6 +39,7 @@ while((f = args[i])) {
   i++
 }
 
+// if invoked as a CLI, we will process the files
 if(files.length) {
   // console.log('Doc Holiday ', files)
   readConfiguration()
@@ -49,6 +54,8 @@ if(files.length) {
   }
   execute()
 }
+
+// If used as a module, the rest of this file represents the exposed API
 
 /**
  * Options for stub generation
@@ -96,7 +103,11 @@ export function* processFileList(files:string[], outPath=''):Generator<string> {
       let bn = path.basename(f)
       bn = bn.substring(0, bn.lastIndexOf('.'))
       let outFile = path.normalize(path.join(outPath, bn+'.docstub.js')) // todo: use options for stubExtension
-      writeStubFile(outFile, bn)
+
+      let content = fs.readFileSync(fp).toString()
+      const desc = readModuleDescription(content)
+
+      writeStubFile(outFile, bn, desc)
       yield outFile
     } else {
       yield stubOut()
@@ -143,10 +154,10 @@ function recordTypedef(ti:TypedefInfo, source: string) {
 }
 
 function readConfiguration() {
-  let cf = opts.config || 'docholiday.conf'
+  let cf = opts.config || 'doc-holiday.conf'
   cf = path.resolve(cf.trim())
   if(!fs.existsSync(cf)) {
-    console.error('No config found or specified.  use -c to specify location of a docholiday.conf file if not in current directory')
+    console.error('No config found or specified.  use -c to specify location of a doc-holiday.conf file if not in current directory')
   }
   let contents = fs.readFileSync(cf).toString()
   config = hjson.parse(contents)
@@ -172,7 +183,12 @@ function clean() {
   fs.removeSync(md)
 }
 
-async function execute() {
+/**
+ * Executes the jsdoc or similar documentation generation according to the doc-holiday.conf file settings.
+ * In normal flow, this is called after docstub generation for all source files is complete, and the configuration
+ * is set to generate from the docstub .js files in the intermediate directory (gen).
+ */
+export async function execute() {
   // now run the exec
 
   // insure we have the intermediate directory we've specified
