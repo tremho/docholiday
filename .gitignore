@@ -1,7 +1,12 @@
 .idea/
+**/*.DS_Store
+.nyc_output/
+templates/static
+templates/tmpl
 build/
 doc/
 gen/
+examples/comp/
 booksrc/_book/
 booksrc/API.md
 node_modules/
