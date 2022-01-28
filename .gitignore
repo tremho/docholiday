@@ -4,7 +4,6 @@
 templates/static
 templates/tmpl
 build/
-doc/
 gen/
 examples/comp/
 booksrc/_book/
