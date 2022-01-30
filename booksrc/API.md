@@ -8,102 +8,53 @@
   </thead>
   <tbody>
 <tr>
-    <td><a href="#module_CommentBlock">CommentBlock</a></td>
-    <td><h4>CommentBlock (Module)</h4>
-<p>let objectBlock:ParameterInfo[] = getObjectProps(pi)
-if(objectBlock.length) type = 'object'
-if (pi.optional) {
-if (pi.default) {
-out += commentLine(indent, <code>@param {${type}} [${pi.name} = ${pi.default}]</code>)</p></td>
+    <td><a href="#module_test-classes">test-classes</a></td>
+    <td><h4>test-classes (Module)</h4>
+<p>This module checks the rendering of comments found in classes</p></td>
     </tr>
 <tr>
-    <td><a href="#module_CustomRender">CustomRender</a></td>
-    <td><h4>CustomRender (Module)</h4>
-<p>must be done to avoid processing subsequent custom declarations as part of custom body
-let nc = text.indexOf('{{{')
-if(nc !== -1) text = text.substring(0, nc)</p></td>
+    <td><a href="#module_test-commentBlock">test-commentBlock</a></td>
+    <td><h4>test-commentBlock (Module)</h4>
+<p>This module checks for parmeters and returns in jsdoc format
+insures they are secondary to typescript declarations
+and explores the {{{}}} Custom Render space, such as plantUML</p></td>
     </tr>
 <tr>
-    <td><a href="#module_execCmd">execCmd</a></td>
-    <td><h4>execCmd (Module)</h4>
-<p>console.log('executing ', cmdstr, 'at', cwd)
-const opts = {
-cwd:cwd,
-env: Object.assign(env, process.env)
-}
-const proc = exec(cmdstr, opts)
-if(proc.stdout) proc.stdout.on('data', data =&gt; {
-out.stdStr += data.toString()
-if(consolePass) console.log(data.toString().trim())
-})
-if(proc.stderr) proc.stderr.on('data', data =&gt; {
-out.errStr += data.toString()
-if(consolePass) console.error(data.toString().trim())
-})
-proc.on('error', error =&gt; {
-console.error(error)
-if(!out.errStr) out.errStr = error.message
-out.retcode = -1
-resolve(out)
-})
-proc.on('close', code =&gt; {
-out.retcode = code === null ? -1 : code
-resolve(out)
-})
-})
-}</p></td>
+    <td><a href="#module_test-enum">test-enum</a></td>
+    <td><h4>test-enum (Module)</h4>
+<p>Working with enum</p></td>
     </tr>
 <tr>
-    <td><a href="#module_Globber">Globber</a> ⇒ <code>Array.&lt;string&gt;</code></td>
-    <td><h4>Globber (Module)</h4>
-<p>Returns a list of files matching glob expression</p></td>
+    <td><a href="#module_test-functions">test-functions</a></td>
+    <td><h4>test-functions (Module)</h4>
+<p>Tests all forms of function declaration
+to see if we are properly documenting these</p></td>
     </tr>
 <tr>
-    <td><a href="#module_Output">Output</a></td>
-    <td><h4>Output (Module)</h4>
-<p>write ordered stubs out to a text file
-process this with jsdoc or documentation.js</p></td>
+    <td><a href="#module_test-parameters">test-parameters</a></td>
+    <td><h4>test-parameters (Module)</h4>
+<p>Various modes of parameter declaration</p></td>
     </tr>
 <tr>
-    <td><a href="#module_ProcessFiles">ProcessFiles</a> ⇒ <code>string</code></td>
-    <td><h4>ProcessFiles (Module)</h4>
-<p>read and parse the given source file and
-emit each instance of FunctionInfo via the given callback</p></td>
+    <td><a href="#module_test-properties">test-properties</a></td>
+    <td><h4>test-properties (Module)</h4>
+<p>Checking property declarations
+both at module scope and in classes</p></td>
     </tr>
 <tr>
-    <td><a href="#module_SourceReader">SourceReader</a></td>
-    <td><h4>SourceReader (Module)</h4>
-<p>Status:
-9/8 - identifies function declaration starts in example source file
-Next:</p>
-<ul>
-<li>parse out function name and parameters from declaration</li>
-<li>parse out parameter and return metadata from jsdoc</li>
-<li>do a variant for typescript that reads parameter and return types from there</li>
-</ul></td>
+    <td><a href="#module_test-publicExport">test-publicExport</a></td>
+    <td><h4>test-publicExport (Module)</h4>
+<p>Meant to explore when/how to use @public and @private</p></td>
     </tr>
 <tr>
-    <td><a href="#module_TypeCheck">TypeCheck</a></td>
-    <td><h4>TypeCheck (Module)</h4>
-<p>Topic Documentation for Constraint declarations</p>
-<p>A protocol for utilizing and extending JSDoc comment syntax to declare parameters and return values
-with their runtime constraints as well as their types.</p>
-<p>Declare parameters in traditional JSDoc style:</p>
-<pre class="prettyprint source"><code></code></pre></td>
+    <td><a href="#module_test-returns">test-returns</a></td>
+    <td><h4>test-returns (Module)</h4>
+<p>Checks the rendering of return statements</p></td>
     </tr>
 <tr>
-    <td><a href="#module_types">types</a></td>
-    <td><h4>types (Module)</h4>
-<p>Details about the scope of an entity</p>
-<p>export class ScopeModifiers {
-public static?:boolean;
-public public?:boolean;
-public private?:boolean;
-public optional?:boolean;
-public const?:boolean;
-public async?:boolean;
-public generator?:boolean;
-}</p></td>
+    <td><a href="#module_test-semicolons">test-semicolons</a></td>
+    <td><h4>test-semicolons (Module)</h4>
+<p>Checks syntax that includes semicolons</p></td>
     </tr>
 </tbody>
 </table>
@@ -111,1596 +62,2269 @@ public generator?:boolean;
 
 <hr/>
 
-<a name="module_CommentBlock" id="module_CommentBlock"></a>
+<a name="module_test-classes" id="module_test-classes"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock</h5>
+    test-classes</h5>
 
 
 
-<h4>CommentBlock (Module)</h4>
-<p>let objectBlock:ParameterInfo[] = getObjectProps(pi)
-if(objectBlock.length) type = 'object'
-if (pi.optional) {
-if (pi.default) {
-out += commentLine(indent, <code>@param {${type}} [${pi.name} = ${pi.default}]</code>)</p>
+<h4>test-classes (Module)</h4>
+<p>This module checks the rendering of comments found in classes</p>
 
 
-* [CommentBlock](#module_CommentBlock)
-    * [~renderCommentBlock(entityInfo, indent)](#module_CommentBlock..renderCommentBlock)
-    * [~renderClassStub(ci, indent, [forClass])](#module_CommentBlock..renderClassStub)
-    * [~renderFunctionStub(fi, indent, [forClass])](#module_CommentBlock..renderFunctionStub)
-    * [~renderPropertyStub(pi, indent)](#module_CommentBlock..renderPropertyStub)
-    * [~renderEnumStub(ei, indent)](#module_CommentBlock..renderEnumStub)
+* [test-classes](#module_test-classes)
+    * [~BaseExample](#module_test-classes..BaseExample)
+        * [.display()](#module_test-classes..BaseExample+display)
+    * [~PricedExample](#module_test-classes..PricedExample) ⇐ <code>BaseExample</code>
+        * [.display()](#module_test-classes..PricedExample+display)
+    * [~Thing1](#module_test-classes..Thing1) ⇐ <code>BaseExample</code>
+    * [~Thing2](#module_test-classes..Thing2) ⇐ <code>PricedExample</code>
+    * [~Construction](#module_test-classes..Construction)
+        * [new Construction([name], [place])](#new_module_test-classes..Construction_new)
+        * [.plan()](#module_test-classes..Construction+plan)
+        * [.milestone()](#module_test-classes..Construction+milestone)
+        * [.finish(timeSpent, timeEstimated, notes)](#module_test-classes..Construction+finish) ⇒ <code>string</code>
+        * [.jsdocStyleFunction(a)](#module_test-classes..Construction+jsdocStyleFunction) ⇒ <code>Promise.&lt;unknown&gt;</code>
 
 
 <hr/>
 
-<a name="module_CommentBlock..renderCommentBlock" id="module_CommentBlock..renderCommentBlock"></a>
+<a name="module_test-classes..BaseExample" id="module_test-classes..BaseExample"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock~renderCommentBlock(entityInfo, indent)</h5>
+    test-classes~BaseExample</h5>
 
 
 
-**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
-**Access**: public  
+<p>This is a base class test</p>
 
-| Param | Type |
-| --- | --- |
-| entityInfo | <code>FunctionInfo</code> \| <code>ClassInfo</code> \| <code>PropertyInfo</code> \| <code>EnumInfo</code> \| <code>TypedefInfo</code> | 
-| indent | <code>number</code> | 
-
-
-<hr/>
-
-<a name="module_CommentBlock..renderClassStub" id="module_CommentBlock..renderClassStub"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock~renderClassStub(ci, indent, [forClass])</h5>
-
-
-
-**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
-**Access**: public  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| ci | <code>ClassInfo</code> |  | 
-| indent | <code>number</code> |  | 
-| [forClass] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
-
-
-<hr/>
-
-<a name="module_CommentBlock..renderFunctionStub" id="module_CommentBlock..renderFunctionStub"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock~renderFunctionStub(fi, indent, [forClass])</h5>
-
-
-
-**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
-**Access**: public  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| fi | <code>FunctionInfo</code> |  | 
-| indent | <code>number</code> |  | 
-| [forClass] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
-
-
-<hr/>
-
-<a name="module_CommentBlock..renderPropertyStub" id="module_CommentBlock..renderPropertyStub"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock~renderPropertyStub(pi, indent)</h5>
-
-
-
-**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| pi | <code>PropertyInfo</code> | 
-| indent | <code>number</code> | 
-
-
-<hr/>
-
-<a name="module_CommentBlock..renderEnumStub" id="module_CommentBlock..renderEnumStub"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CommentBlock~renderEnumStub(ei, indent)</h5>
-
-
-
-**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| ei | <code>EnumInfo</code> | 
-| indent | <code>number</code> | 
-
-
-<hr/>
-
-<a name="module_CustomRender" id="module_CustomRender"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CustomRender</h5>
-
-
-
-<h4>CustomRender (Module)</h4>
-<p>must be done to avoid processing subsequent custom declarations as part of custom body
-let nc = text.indexOf('{{{')
-if(nc !== -1) text = text.substring(0, nc)</p>
-
-
-* [CustomRender](#module_CustomRender)
-    * [~handleInternalCustom(name, argMap, text)](#module_CustomRender..handleInternalCustom) ⇒ <code>string</code>
-    * [~handleExternalCustom(name, args, text)](#module_CustomRender..handleExternalCustom) ⇒ <code>Promise.&lt;string&gt;</code>
-
-
-<hr/>
-
-<a name="module_CustomRender..handleInternalCustom" id="module_CustomRender..handleInternalCustom"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CustomRender~handleInternalCustom(name, argMap, text) ⇒ <code>string</code></h5>
-
-
-
-**Kind**: inner method of [<code>CustomRender</code>](#module_CustomRender)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| name | <code>string</code> | 
-| argMap | <code>any</code> | 
-| text | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_CustomRender..handleExternalCustom" id="module_CustomRender..handleExternalCustom"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    CustomRender~handleExternalCustom(name, args, text) ⇒ <code>Promise.&lt;string&gt;</code></h5>
-
-
-
-**Kind**: inner method of [<code>CustomRender</code>](#module_CustomRender)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| name | <code>string</code> | 
-| args | <code>Array.&lt;string&gt;</code> | 
-| text | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_execCmd" id="module_execCmd"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    execCmd</h5>
-
-
-
-<h4>execCmd (Module)</h4>
-<p>console.log('executing ', cmdstr, 'at', cwd)
-const opts = {
-cwd:cwd,
-env: Object.assign(env, process.env)
-}
-const proc = exec(cmdstr, opts)
-if(proc.stdout) proc.stdout.on('data', data =&gt; {
-out.stdStr += data.toString()
-if(consolePass) console.log(data.toString().trim())
-})
-if(proc.stderr) proc.stderr.on('data', data =&gt; {
-out.errStr += data.toString()
-if(consolePass) console.error(data.toString().trim())
-})
-proc.on('error', error =&gt; {
-console.error(error)
-if(!out.errStr) out.errStr = error.message
-out.retcode = -1
-resolve(out)
-})
-proc.on('close', code =&gt; {
-out.retcode = code === null ? -1 : code
-resolve(out)
-})
-})
-}</p>
-
-
-<hr/>
-
-<a name="module_execCmd..executeCommand" id="module_execCmd..executeCommand"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    execCmd~executeCommand(cmd, args, [cwd]) ⇒ <code>Promise.&lt;any&gt;</code></h5>
-
-
-
-**Kind**: inner method of [<code>execCmd</code>](#module_execCmd)  
-**Access**: public  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| cmd | <code>object</code> |  | 
-| args | <code>object</code> |  | 
-| [cwd] | <code>any</code> | <code>&#x27;&#x27;,consolePass&#x3D;false,env &#x3D; {}</code> | 
-
-
-<hr/>
-
-<a name="module_Globber" id="module_Globber"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Globber ⇒ <code>Array.&lt;string&gt;</code></h5>
-
-
-
-<h4>Globber (Module)</h4>
-<p>Returns a list of files matching glob expression</p>
-
-**Returns**: <code>Array.&lt;string&gt;</code> - <p>array of paths that match</p>
-<p>export function getGlobbedFiles(globexp:string):string[] {</p>  
-
-| Param | Type |
-| --- | --- |
-| lobexp | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_Globber..getGlobbedFiles" id="module_Globber..getGlobbedFiles"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Globber~getGlobbedFiles(globexp) ⇒ <code>Array.&lt;string&gt;</code></h5>
-
-
-
-<p>Returns a list of files matching glob expression</p>
-
-**Kind**: inner method of [<code>Globber</code>](#module_Globber)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| globexp | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_Output" id="module_Output"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output</h5>
-
-
-
-<h4>Output (Module)</h4>
-<p>write ordered stubs out to a text file
-process this with jsdoc or documentation.js</p>
-
-
-* [Output](#module_Output)
-    * [~clearRecorded()](#module_Output..clearRecorded)
-    * [~recordInfo(info, source)](#module_Output..recordInfo)
-    * [~findSourceIndent(si, source)](#module_Output..findSourceIndent)
-    * [~readModuleDescription(source)](#module_Output..readModuleDescription)
-    * [~sortRecorded()](#module_Output..sortRecorded)
-    * [~stubOut()](#module_Output..stubOut) ⇒ <code>string</code>
-    * [~writeStubFile(filePath, moduleName, moduleDescription)](#module_Output..writeStubFile)
-
-
-<hr/>
-
-<a name="module_Output..clearRecorded" id="module_Output..clearRecorded"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~clearRecorded()</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_Output..recordInfo" id="module_Output..recordInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~recordInfo(info, source)</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| info | <code>ClassInfo</code> \| <code>FunctionInfo</code> \| <code>PropertyInfo</code> \| <code>EnumInfo</code> \| <code>TypedefInfo</code> | 
-| source | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_Output..findSourceIndent" id="module_Output..findSourceIndent"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~findSourceIndent(si, source)</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| si | <code>SourceInfo</code> | 
-| source | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_Output..readModuleDescription" id="module_Output..readModuleDescription"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~readModuleDescription(source)</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| source | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_Output..sortRecorded" id="module_Output..sortRecorded"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~sortRecorded()</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_Output..stubOut" id="module_Output..stubOut"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~stubOut() ⇒ <code>string</code></h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_Output..writeStubFile" id="module_Output..writeStubFile"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    Output~writeStubFile(filePath, moduleName, moduleDescription)</h5>
-
-
-
-**Kind**: inner method of [<code>Output</code>](#module_Output)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| filePath | <code>string</code> | 
-| moduleName | <code>string</code> | 
-| moduleDescription | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_ProcessFiles" id="module_ProcessFiles"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    ProcessFiles ⇒ <code>string</code></h5>
-
-
-
-<h4>ProcessFiles (Module)</h4>
-<p>read and parse the given source file and
-emit each instance of FunctionInfo via the given callback</p>
-
-**Returns**: <code>string</code> - <p>export function processSourceFile(srcPath:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback, tdcallback:TICallback) {
-const contents = fs.readFileSync(srcPath).toString()</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| srcPath | <code>string</code> | <p>The path to the source file to read</p> |
-| fncallback | <code>FICallback</code> | <p>the function that will receive the FunctionInfo instances emitted by the parse.</p> |
-| prcallback | <code>PICallback</code> | <p>the function that will receive the PropertyInfo instances emitted by the parse.</p> |
-| clscallback | <code>CICallback</code> | <p>the function that will receive the ClassInfo instances emitted by the parse.</p> |
-| encallback | <code>EICallback</code> | <p>the function that will receive the EnumInfo instances emitted by the parse.</p> |
-
-
-* [ProcessFiles](#module_ProcessFiles) ⇒ <code>string</code>
-    * [~processSourceFile(srcPath, fncallback, prcallback, clscallback, encallback, tdcallback)](#module_ProcessFiles..processSourceFile)
-    * [~processSource(contents, ext, fncallback, prcallback, clscallback, encallback, tdcallback)](#module_ProcessFiles..processSource)
-
-
-<hr/>
-
-<a name="module_ProcessFiles..processSourceFile" id="module_ProcessFiles..processSourceFile"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    ProcessFiles~processSourceFile(srcPath, fncallback, prcallback, clscallback, encallback, tdcallback)</h5>
-
-
-
-<p>read and parse the given source file and
-emit each instance of FunctionInfo via the given callback</p>
-
-**Kind**: inner method of [<code>ProcessFiles</code>](#module_ProcessFiles)  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| srcPath | <code>string</code> | <p>The path to the source file to read</p> |
-| fncallback | <code>FICallback</code> | <p>the function that will receive the FunctionInfo instances emitted by the parse.</p> |
-| prcallback | <code>PICallback</code> | <p>the function that will receive the PropertyInfo instances emitted by the parse.</p> |
-| clscallback | <code>CICallback</code> | <p>the function that will receive the ClassInfo instances emitted by the parse.</p> |
-| encallback | <code>EICallback</code> | <p>the function that will receive the EnumInfo instances emitted by the parse.</p> |
-| tdcallback | <code>TICallback</code> |  |
-
-
-<hr/>
-
-<a name="module_ProcessFiles..processSource" id="module_ProcessFiles..processSource"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    ProcessFiles~processSource(contents, ext, fncallback, prcallback, clscallback, encallback, tdcallback)</h5>
-
-
-
-<p>Process source as text</p>
-
-**Kind**: inner method of [<code>ProcessFiles</code>](#module_ProcessFiles)  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| contents | <code>string</code> | <p>to process</p> |
-| ext | <code>string</code> | <p>or 'ts' for javascript or typescript source</p> |
-| fncallback | <code>FICallback</code> | <p>to call on each FunctionInfo parse</p> |
-| prcallback | <code>PICallback</code> | <p>to call on each PropertyInfo parse</p> |
-| clscallback | <code>CICallback</code> | <p>to call on each ClassInfo parse</p> |
-| encallback | <code>EICallback</code> | <p>to call on each EnumInfo parse</p> |
-| tdcallback | <code>TICallback</code> |  |
-
-
-<hr/>
-
-<a name="module_SourceReader" id="module_SourceReader"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    SourceReader</h5>
-
-
-
-<h4>SourceReader (Module)</h4>
-<p>Status:
-9/8 - identifies function declaration starts in example source file
-Next:</p>
-<ul>
-<li>parse out function name and parameters from declaration</li>
-<li>parse out parameter and return metadata from jsdoc</li>
-<li>do a variant for typescript that reads parameter and return types from there</li>
-</ul>
-
-
-* [SourceReader](#module_SourceReader)
-    * [~SourceReader](#module_SourceReader..SourceReader)
-        * [new SourceReader(srcText, ext)](#new_module_SourceReader..SourceReader_new)
-        * [.skipTop()](#module_SourceReader..SourceReader+skipTop)
-        * [.skipWhite()](#module_SourceReader..SourceReader+skipWhite)
-        * [.findWhite(str, startIndex)](#module_SourceReader..SourceReader+findWhite)
-        * [.readNextWord(str, startIndex)](#module_SourceReader..SourceReader+readNextWord)
-        * [.skipImport()](#module_SourceReader..SourceReader+skipImport)
-        * [.skipExport()](#module_SourceReader..SourceReader+skipExport)
-        * [.skipRequire()](#module_SourceReader..SourceReader+skipRequire)
-        * [.nextEnd()](#module_SourceReader..SourceReader+nextEnd)
-        * [.readSourceLine()](#module_SourceReader..SourceReader+readSourceLine)
-        * [.readTypeDef(str, startIndex)](#module_SourceReader..SourceReader+readTypeDef)
-        * [.getFunctionName(inClass, text)](#module_SourceReader..SourceReader+getFunctionName) ⇒ <code>string</code>
-        * [.findFunctions()](#module_SourceReader..SourceReader+findFunctions) ⇒ <code>Array.&lt;FunctionInfo&gt;</code>
-        * [.extractFunctionInfo(inClass, si)](#module_SourceReader..SourceReader+extractFunctionInfo) ⇒ <code>FunctionInfo</code>
-        * [.getClassName(text)](#module_SourceReader..SourceReader+getClassName) ⇒ <code>string</code>
-        * [.getExtends(text)](#module_SourceReader..SourceReader+getExtends) ⇒ <code>string</code>
-        * [.getImplements(text)](#module_SourceReader..SourceReader+getImplements) ⇒ <code>Array.&lt;string&gt;</code>
-        * [.findMixins(extDec)](#module_SourceReader..SourceReader+findMixins)
-        * [.extractEnumInfo(si)](#module_SourceReader..SourceReader+extractEnumInfo) ⇒ <code>EnumInfo</code>
-        * [.extractTypedefInfo(si)](#module_SourceReader..SourceReader+extractTypedefInfo) ⇒ <code>TypedefInfo</code>
-        * [.gatherCommentMeta(fi)](#module_SourceReader..SourceReader+gatherCommentMeta)
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader" id="module_SourceReader..SourceReader"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    SourceReader~SourceReader</h5>
-
-
-
-**Kind**: inner class of [<code>SourceReader</code>](#module_SourceReader)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| startIndex | <code>number</code> | <ul> <li></li> </ul> |
-| longsrc | <code>string</code> | <ul> <li></li> </ul> |
-| bracket | <code>string</code> | <ul> <li></li> </ul> |
-| isType | <code>string</code> | <ul> <li></li> </ul> |
-
-
-* [~SourceReader](#module_SourceReader..SourceReader)
-    * [new SourceReader(srcText, ext)](#new_module_SourceReader..SourceReader_new)
-    * [.skipTop()](#module_SourceReader..SourceReader+skipTop)
-    * [.skipWhite()](#module_SourceReader..SourceReader+skipWhite)
-    * [.findWhite(str, startIndex)](#module_SourceReader..SourceReader+findWhite)
-    * [.readNextWord(str, startIndex)](#module_SourceReader..SourceReader+readNextWord)
-    * [.skipImport()](#module_SourceReader..SourceReader+skipImport)
-    * [.skipExport()](#module_SourceReader..SourceReader+skipExport)
-    * [.skipRequire()](#module_SourceReader..SourceReader+skipRequire)
-    * [.nextEnd()](#module_SourceReader..SourceReader+nextEnd)
-    * [.readSourceLine()](#module_SourceReader..SourceReader+readSourceLine)
-    * [.readTypeDef(str, startIndex)](#module_SourceReader..SourceReader+readTypeDef)
-    * [.getFunctionName(inClass, text)](#module_SourceReader..SourceReader+getFunctionName) ⇒ <code>string</code>
-    * [.findFunctions()](#module_SourceReader..SourceReader+findFunctions) ⇒ <code>Array.&lt;FunctionInfo&gt;</code>
-    * [.extractFunctionInfo(inClass, si)](#module_SourceReader..SourceReader+extractFunctionInfo) ⇒ <code>FunctionInfo</code>
-    * [.getClassName(text)](#module_SourceReader..SourceReader+getClassName) ⇒ <code>string</code>
-    * [.getExtends(text)](#module_SourceReader..SourceReader+getExtends) ⇒ <code>string</code>
-    * [.getImplements(text)](#module_SourceReader..SourceReader+getImplements) ⇒ <code>Array.&lt;string&gt;</code>
-    * [.findMixins(extDec)](#module_SourceReader..SourceReader+findMixins)
-    * [.extractEnumInfo(si)](#module_SourceReader..SourceReader+extractEnumInfo) ⇒ <code>EnumInfo</code>
-    * [.extractTypedefInfo(si)](#module_SourceReader..SourceReader+extractTypedefInfo) ⇒ <code>TypedefInfo</code>
-    * [.gatherCommentMeta(fi)](#module_SourceReader..SourceReader+gatherCommentMeta)
-
-
-<hr/>
-
-<a name="new_module_SourceReader..SourceReader_new" id="new_module_SourceReader..SourceReader_new"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    new SourceReader(srcText, ext)</h5>
-
-
-
-
-| Param | Type |
-| --- | --- |
-| srcText | <code>\*</code> | 
-| ext | <code>\*</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+skipTop" id="module_SourceReader..SourceReader+skipTop"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.skipTop()</h5>
-
-
-
-<p>Skip things line &quot;use strict&quot; at the top.</p>
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+skipWhite" id="module_SourceReader..SourceReader+skipWhite"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.skipWhite()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+findWhite" id="module_SourceReader..SourceReader+findWhite"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.findWhite(str, startIndex)</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| str | <code>\*</code> | 
-| startIndex | <code>\*</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+readNextWord" id="module_SourceReader..SourceReader+readNextWord"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.readNextWord(str, startIndex)</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| str | <code>\*</code> | 
-| startIndex | <code>\*</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+skipImport" id="module_SourceReader..SourceReader+skipImport"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.skipImport()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+skipExport" id="module_SourceReader..SourceReader+skipExport"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.skipExport()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+skipRequire" id="module_SourceReader..SourceReader+skipRequire"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.skipRequire()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+nextEnd" id="module_SourceReader..SourceReader+nextEnd"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.nextEnd()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+readSourceLine" id="module_SourceReader..SourceReader+readSourceLine"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.readSourceLine()</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+readTypeDef" id="module_SourceReader..SourceReader+readTypeDef"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.readTypeDef(str, startIndex)</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| str | <code>\*</code> | 
-| startIndex | <code>\*</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+getFunctionName" id="module_SourceReader..SourceReader+getFunctionName"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.getFunctionName(inClass, text) ⇒ <code>string</code></h5>
-
-
-
-<p>Determines if the source appears to be a function, and if so returns the function name.
-Otherwise an empty string ('') is returned.</p>
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| inClass | <code>boolean</code> | <p>if we are parsing a class</p> |
-| text | <code>string</code> |  |
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+findFunctions" id="module_SourceReader..SourceReader+findFunctions"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.findFunctions() ⇒ <code>Array.&lt;FunctionInfo&gt;</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+extractFunctionInfo" id="module_SourceReader..SourceReader+extractFunctionInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.extractFunctionInfo(inClass, si) ⇒ <code>FunctionInfo</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| inClass | <code>boolean</code> | 
-| si | <code>SourceInfo</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+getClassName" id="module_SourceReader..SourceReader+getClassName"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.getClassName(text) ⇒ <code>string</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| text | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+getExtends" id="module_SourceReader..SourceReader+getExtends"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.getExtends(text) ⇒ <code>string</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| text | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+getImplements" id="module_SourceReader..SourceReader+getImplements"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.getImplements(text) ⇒ <code>Array.&lt;string&gt;</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| text | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+findMixins" id="module_SourceReader..SourceReader+findMixins"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.findMixins(extDec)</h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| extDec | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+extractEnumInfo" id="module_SourceReader..SourceReader+extractEnumInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.extractEnumInfo(si) ⇒ <code>EnumInfo</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| si | <code>SourceInfo</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+extractTypedefInfo" id="module_SourceReader..SourceReader+extractTypedefInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.extractTypedefInfo(si) ⇒ <code>TypedefInfo</code></h5>
-
-
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| si | <code>SourceInfo</code> | 
-
-
-<hr/>
-
-<a name="module_SourceReader..SourceReader+gatherCommentMeta" id="module_SourceReader..SourceReader+gatherCommentMeta"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    sourceReader.gatherCommentMeta(fi)</h5>
-
-
-
-<p>Read comment block</p>
-
-**Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| fi | <code>FunctionInfo</code> | 
-
-
-<hr/>
-
-<a name="module_TypeCheck" id="module_TypeCheck"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck</h5>
-
-
-
-<h4>TypeCheck (Module)</h4>
-<p>Topic Documentation for Constraint declarations</p>
-<p>A protocol for utilizing and extending JSDoc comment syntax to declare parameters and return values
-with their runtime constraints as well as their types.</p>
-<p>Declare parameters in traditional JSDoc style:</p>
-<pre class="prettyprint source"><code></code></pre>
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>type</code> | <p>Description</p> <pre class="prettyprint source"><code>N.B. that reversing the order of {type} and name are allowed here, but that is not canonical JSDoc style. Also supported (and also canonical) is the use of [ ] brackets around the name to declare an optional parameter. e.g. ` @param {string} [foobar]  The foobar parameter is not required ` Descriptions may be on the same, line, or may start or continue on the lines below up until the next @param or other statement or end of comment block: </code></pre> |
-| [name] | <code>type</code> | <p>The description can go here as well as on the line above, or it can continue the line above if there is one. The description can run multiple lines, and if JSDoc is configured for it, can support <em>markdown</em> syntax, as well as inline html.</p> <pre class="prettyprint source"><code>#### Introducing Constraints Constraints are a formatted set of expressions that may either precede or follow the description, either starting on the first line or the line below. Constraint expressions start with a dash '-' character to distinguish them from the description comments and end with the next newline. The full constraint expression must be contained on the line it starts on. e.g.```</code></pre> |
-| ordinal | <code>number</code> | <p>The ordinal value of this thing &lt;Integer,Positive,NotZero&gt;</p> <pre class="prettyprint source"><code>The example declares a parameter with conventional JSDoc style, but also provides constraint keywords that will apply to this numeric type of value that specify the acceptable characteristics of that value. Syntactically, the order of description and constraint do not matter, so this is equivalent to the above: </code></pre> |
-| ordinal | <code>number</code> | <p>&lt;Integer,Positive,NotZero&gt; The ordinal value of this thing</p> <pre class="prettyprint source"><code>The output JSDoc block will include embedded HTML to render the constraint block, as the JSDoc renderer is unaware of the role of Constraint declarations themselves. The block is assigned the CSS class &quot;doc-constraints&quot; should you wish to provide additional styling to this block. Note that all the above syntax, including constraints, also applies to the JSDoc `@return` (or `@returns`) statement, with the only difference being that the return value does not specify a name. #### Multiple type constraints if there are multiple types (e.g. {string|number}) then the corresponding multiple constraint declarations may be given. example: `@param {string|number} foo &lt;minLength=3> &lt;Integer, min=100, max=999> #### Constraint keywords and syntax - a constraint declaration is specified between &lt; and > brackets. - There may be multiple constraint declarations in a single comment block - there may be multiple constraint expressions within a declaration. - each constraint expression (keyword[=value]) within a declaration is separated by a comma - Some keywords accept a value parameter, such as `min=5` or `endsWith = &quot;.png&quot;` - Values may be quoted or not, but must not contain a comma within the value itself, regardless of quoting. Other keywords are implicitly boolean, such as `integer` or `nonzero` and take no assignment. - Some keywords have a 'not' complement that is noted by a preceding ! character.  For example, `contains` and `!contains` both accept a value that is either required to exist or to not exist, depending upon the presence or absence of the ! prefix. - A few keywords accept a list of values.  Such values are given using the a comma a delimiter, as in `&quot;one,two,three,four&quot;`. - Keywords are case insensitive - Specifying conflicting or redundant constraints (e.g. `startsWith = &quot;ab&quot;` and `!startsWith=&quot;cd&quot;) will result in an error. - Unrecognized keywords or improper expression syntax will result in an error ##### constraints for `number` - `Integer` - If specified, number must be an integer.  If not specified, floating point values are allowed. - `Float ` -  Optional, ignored. Same as default. - `Positive` - If specified, number must be positive (not less than zero). - `Negative` - If specified, number must be negative (less than zero). - `NotZero`  - If specified, number must not be zero. - `min=&lt;val>` - Specifies the minimum allowed value (inclusive) - `max=&lt;val>` - Specifies the maximum allowed value (inclusive) (e.g. integer, min=0, max=9) - 'maxx=&lt;val>` - Specifies the first exclusive value outside the maximum. (e.g. float, min=0, maxx=10) ##### constraints for `string`</code></pre> |
-
-
-* [TypeCheck](#module_TypeCheck)
-    * [~TypeConstraint](#module_TypeCheck..TypeConstraint)
-        * [.test(value)](#module_TypeCheck..TypeConstraint+test)
-        * [.toString()](#module_TypeCheck..TypeConstraint+toString)
-        * [.describe()](#module_TypeCheck..TypeConstraint+describe)
-    * [~ValueType](#module_TypeCheck..ValueType)
-    * [~ElementCheckType](#module_TypeCheck..ElementCheckType)
-    * [~valueTypeFromString(str)](#module_TypeCheck..valueTypeFromString) ⇒ <code>ValueType</code>
-    * [~stringFromValueType(vt)](#module_TypeCheck..stringFromValueType) ⇒ <code>string</code>
-    * [~parseConstraintsToMap(typeString, [blockSet])](#module_TypeCheck..parseConstraintsToMap) ⇒ <code>Map.&lt;string, TypeConstraint&gt;</code>
-    * [~parseConstraints(type, block)](#module_TypeCheck..parseConstraints) ⇒ <code>TypeConstraint</code>
-
-
-<hr/>
-
-<a name="module_TypeCheck..TypeConstraint" id="module_TypeCheck..TypeConstraint"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~TypeConstraint</h5>
-
-
-
-<p>Base form of TypeConstraint.
-Defines the base type and the test method.</p>
-
-**Kind**: inner class of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| type | <code>string</code> | <p>The type this constraint applies to</p> |
-| [note] | <code>string</code> | <p>a freeform note that appears in comments. No runtime verification.</p> |
-| constructor(typeString | <code>string</code> | <ul> <li></li> </ul> |
-
-
-* [~TypeConstraint](#module_TypeCheck..TypeConstraint)
-    * [.test(value)](#module_TypeCheck..TypeConstraint+test)
-    * [.toString()](#module_TypeCheck..TypeConstraint+toString)
-    * [.describe()](#module_TypeCheck..TypeConstraint+describe)
-
-
-<hr/>
-
-<a name="module_TypeCheck..TypeConstraint+test" id="module_TypeCheck..TypeConstraint+test"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    typeConstraint.test(value)</h5>
-
-
-
-**Kind**: instance method of [<code>TypeConstraint</code>](#module_TypeCheck..TypeConstraint)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| value | <code>any</code> | 
-
-
-<hr/>
-
-<a name="module_TypeCheck..TypeConstraint+toString" id="module_TypeCheck..TypeConstraint+toString"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    typeConstraint.toString()</h5>
-
-
-
-**Kind**: instance method of [<code>TypeConstraint</code>](#module_TypeCheck..TypeConstraint)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_TypeCheck..TypeConstraint+describe" id="module_TypeCheck..TypeConstraint+describe"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    typeConstraint.describe()</h5>
-
-
-
-**Kind**: instance method of [<code>TypeConstraint</code>](#module_TypeCheck..TypeConstraint)  
-**Access**: public  
-
-<hr/>
-
-<a name="module_TypeCheck..ValueType" id="module_TypeCheck..ValueType"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~ValueType</h5>
-
-
-
-<p>Enumeration of basic types</p>
-
-**Kind**: inner enum of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Read only**: true  
-**See**
-
-- stringFromValueType
-- valueTypeFromString
-
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| none | <code>number</code> | <code>none</code> | <p><b><i>(value = 0)</i></b></p> |
-| number | <code>number</code> | <code>number</code> | <p><b><i>(value = 1)</i></b></p> |
-| string | <code>number</code> | <code>string</code> | <p><b><i>(value = 2)</i></b></p> |
-| boolean | <code>number</code> | <code>boolean</code> | <p><b><i>(value = 3)</i></b></p> |
-| object | <code>number</code> | <code>object</code> | <p><b><i>(value = 4)</i></b></p> |
-| array | <code>number</code> | <code>array</code> | <p><b><i>(value = 5)</i></b></p> |
-| regex | <code>number</code> | <code>regex</code> | <p><b><i>(value = 6)</i></b></p> |
-
-
-<hr/>
-
-<a name="module_TypeCheck..ElementCheckType" id="module_TypeCheck..ElementCheckType"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~ElementCheckType</h5>
-
-
-
-<p>Enumeration of checkType parsed results
-parameters (p1, p2) are parsed at same time, and meaning does vary per checkType.</p>
-
-**Kind**: inner enum of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Read only**: true  
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| none | <code>number</code> | <code>none</code> | <p>don't test the elements <b><i>(value = 0)</i></b></p> |
-| all | <code>number</code> | <code>all</code> | <p>test all the elements <b><i>(value = 1)</i></b></p> |
-| random | <code>number</code> | <code>random</code> | <p>test up to a given number (p1) of elements, randomly chosen <b><i>(value = 2)</i></b></p> |
-| step | <code>number</code> | <code>step</code> | <p>test every (p1) elements <b><i>(value = 3)</i></b></p> |
-| firstThenStep | <code>number</code> | <code>firstThenStep</code> | <p>test all up to (p1) elements, then every (p2) thereafter <b><i>(value = 4)</i></b></p> |
-| firstThenRandom | <code>number</code> | <code>firstThenRandom</code> | <p>test all up to (p1) elements, then up to (p2) of the remaining, chosen at random <b><i>(value = 5)</i></b></p> |
-
-
-<hr/>
-
-<a name="module_TypeCheck..valueTypeFromString" id="module_TypeCheck..valueTypeFromString"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~valueTypeFromString(str) ⇒ <code>ValueType</code></h5>
-
-
-
-<p>Translates a type string (number, string, boolean, object, array, regex) into the corresponding ValueType enum
-Note that strings beside none, array, and regex are synonymous with the <code>typeof</code> operator value</p>
-
-**Kind**: inner method of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| str | <code>string</code> | 
-
-
-<hr/>
-
-<a name="module_TypeCheck..stringFromValueType" id="module_TypeCheck..stringFromValueType"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~stringFromValueType(vt) ⇒ <code>string</code></h5>
-
-
-
-<p>Translates a ValueType enum value into the corresponding string.
-Note that strings beside none, array, and regex are synonymous with the <code>typeof</code> operator value</p>
-
-**Kind**: inner method of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Access**: public  
-
-| Param | Type |
-| --- | --- |
-| vt | <code>ValueType</code> | 
-
-
-<hr/>
-
-<a name="module_TypeCheck..parseConstraintsToMap" id="module_TypeCheck..parseConstraintsToMap"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~parseConstraintsToMap(typeString, [blockSet]) ⇒ <code>Map.&lt;string, TypeConstraint&gt;</code></h5>
-
-
-
-<p>parse constraints from what may be more than one type (e.g. string|number)</p>
-
-**Kind**: inner method of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Access**: public  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| typeString | <code>string</code> |  | 
-| [blockSet] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
-
-
-<hr/>
-
-<a name="module_TypeCheck..parseConstraints" id="module_TypeCheck..parseConstraints"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    TypeCheck~parseConstraints(type, block) ⇒ <code>TypeConstraint</code></h5>
-
-
-
-<p>Given a block of text, parse as constraints and return the set if this is a constraint declaration
-otherwise, return ConstraintStatus.NotConstraint  to signify this is a description block and not a constraint declaration</p>
-
-**Kind**: inner method of [<code>TypeCheck</code>](#module_TypeCheck)  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | <code>\*</code> | <ul> <li>the block of text to evaluate</li> </ul> |
-| block | <code>\*</code> | <ul> <li>the type parsed from the param or return declaration</li> </ul> |
-
-
-<hr/>
-
-<a name="module_types" id="module_types"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types</h5>
-
-
-
-<h4>types (Module)</h4>
-<p>Details about the scope of an entity</p>
-<p>export class ScopeModifiers {
-public static?:boolean;
-public public?:boolean;
-public private?:boolean;
-public optional?:boolean;
-public const?:boolean;
-public async?:boolean;
-public generator?:boolean;
-}</p>
-
-
-* [types](#module_types)
-    * [~ScopeModifiers](#module_types..ScopeModifiers)
-    * [~SourceInfo](#module_types..SourceInfo)
-    * [~FunctionInfo](#module_types..FunctionInfo) ⇐ <code>SourceInfo</code>
-    * [~ClassInfo](#module_types..ClassInfo) ⇐ <code>SourceInfo</code>
-    * [~PropertyInfo](#module_types..PropertyInfo) ⇐ <code>SourceInfo</code>
-    * [~EnumInfo](#module_types..EnumInfo) ⇐ <code>SourceInfo</code>
-    * [~EnumValueInfo](#module_types..EnumValueInfo)
-    * [~TypedefInfo](#module_types..TypedefInfo) ⇐ <code>SourceInfo</code>
-    * [~APIInfo](#module_types..APIInfo)
-    * [~ParameterInfo](#module_types..ParameterInfo)
-    * [~ReturnInfo](#module_types..ReturnInfo)
-    * [~FICallback](#module_types..FICallback)
-    * [~PICallback](#module_types..PICallback)
-    * [~EICallback](#module_types..EICallback)
-    * [~TICallback](#module_types..TICallback)
-    * [~CICallback](#module_types..CICallback)
-    * [~TypedefForm](#module_types..TypedefForm)
-    * [~SpecificationStatus](#module_types..SpecificationStatus)
-
-
-<hr/>
-
-<a name="module_types..ScopeModifiers" id="module_types..ScopeModifiers"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~ScopeModifiers</h5>
-
-
-
-<p>Details about the scope of an entity</p>
-
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| [static] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [public] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [private] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [optional] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [const] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [async] | <code>boolean</code> | <ul> <li></li> </ul> |
-| [generator] | <code>boolean</code> | <ul> <li></li> </ul> |
-
-
-<hr/>
-
-<a name="module_types..SourceInfo" id="module_types..SourceInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~SourceInfo</h5>
-
-
-
-<p>Information of where in the source file this entity exists</p>
-
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| decStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| decEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| comStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| comEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-
-
-<hr/>
-
-<a name="module_types..FunctionInfo" id="module_types..FunctionInfo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~FunctionInfo ⇐ <code>SourceInfo</code></h5>
-
-
-
-<p>Information about a function within the source</p>
-
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Extends**: <code>SourceInfo</code>  
+**Kind**: inner class of [<code>test-classes</code>](#module_test-classes)  
 **Access**: public  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| scope | <code>ScopeModifiers</code> | <code>new</code> | <p>ScopeModifiers() -</p> |
-| description | <code>string</code> |  | <ul> <li></li> </ul> |
-| params | <code>Array.&lt;ParameterInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| [return] | <code>ReturnInfo</code> |  | <ul> <li></li> </ul> |
-| bodyStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| bodyEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| status | <code>SpecificationStatus</code> | <code>SpecificationStatus.None</code> | <ul> <li></li> </ul> |
-| [error] | <code>string</code> |  | <p>if defined, holds error detail. status is probably MISMATCH.</p> |
+| type | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
 
 
 <hr/>
 
-<a name="module_types..ClassInfo" id="module_types..ClassInfo"></a>
+<a name="module_test-classes..BaseExample+display" id="module_test-classes..BaseExample+display"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~ClassInfo ⇐ <code>SourceInfo</code></h5>
+    baseExample.display()</h5>
 
 
 
-<p>Information about a class within the source</p>
+<p>Displays the values of the object</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Extends**: <code>SourceInfo</code>  
+**Kind**: instance method of [<code>BaseExample</code>](#module_test-classes..BaseExample)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-classes..PricedExample" id="module_test-classes..PricedExample"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-classes~PricedExample ⇐ <code>BaseExample</code></h5>
+
+
+
+<p>Another base class, but it inherits from BaseExample</p>
+
+**Kind**: inner class of [<code>test-classes</code>](#module_test-classes)  
+**Extends**: <code>BaseExample</code>  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| price | <code>number</code> | <code>0</code> | <ul> <li></li> </ul> |
+| unit | <code>string</code> | <code>&quot;&#x27;dollars&#x27;&quot;</code> | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+<a name="module_test-classes..PricedExample+display" id="module_test-classes..PricedExample+display"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    pricedExample.display()</h5>
+
+
+
+<p>Displays the values and price of the object</p>
+
+**Kind**: instance method of [<code>PricedExample</code>](#module_test-classes..PricedExample)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-classes..Thing1" id="module_test-classes..Thing1"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-classes~Thing1 ⇐ <code>BaseExample</code></h5>
+
+
+
+<p>We declare a thing without a price</p>
+
+**Kind**: inner class of [<code>test-classes</code>](#module_test-classes)  
+**Extends**: <code>BaseExample</code>  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> | <code>&quot;&#x27;Kepler&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| type | <code>string</code> | <code>&quot;&#x27;Dog&#x27;&quot;</code> | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+<a name="module_test-classes..Thing2" id="module_test-classes..Thing2"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-classes~Thing2 ⇐ <code>PricedExample</code></h5>
+
+
+
+<p>We declare a thing with a price</p>
+
+**Kind**: inner class of [<code>test-classes</code>](#module_test-classes)  
+**Extends**: <code>PricedExample</code>  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> | <code>&quot;&#x27;Jove&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| type | <code>string</code> | <code>&quot;&#x27;Framework&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| price | <code>number</code> | <code>49.95</code> | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+<a name="module_test-classes..Construction" id="module_test-classes..Construction"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-classes~Construction</h5>
+
+
+
+<p>We declare a working class</p>
+
+**Kind**: inner class of [<code>test-classes</code>](#module_test-classes)  
+**Access**: public  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [name] | <code>string</code> | <p>name of the work</p> |
+| [place] | <code>string</code> | <p>place of the work</p> |
+| [other] | <code>any</code> | <p>other stuff, optional</p> |
+| Construction.PrinterOrientation | <code>enum</code> | <ul> <li></li> </ul> |
+| Construction.PrintAction | <code>interface</code> | <ul> <li></li> </ul> |
+| PrintAction.Construction.print | <code>method</code> | <p>(<code>returns {boolean} </code>)  <br/></p> |
+| Construction.SaveAction | <code>interface</code> | <ul> <li></li> </ul> |
+| SaveAction.Construction.save | <code>method</code> | <p>(<code>returns {boolean} An example of implemented interfaces export class PrintExample implements PrintAction, SaveAction</code>)  <br/></p> |
+| Construction.PrintExample | <code>class</code> | <p>(<code>implements PrintAction, SaveAction</code>) An example of implemented interfaces</p> |
+| PrintExample.Construction.exmpleLocal | <code>method</code> | <p>(<code>returns {boolean} </code>)  <br/>  Local function to print Example.</p> |
+| PrintExample.Construction.print | <code>method</code> | <p>(<code>returns {boolean} </code>)  <br/>  implementation of primt</p> |
+| PrintExample.Construction.save | <code>method</code> | <p>(<code>returns {boolean} </code>)  <br/>  implementation of save</p> |
+| Construction.AssigmentClass | <code>class</code> | <p>Test of an assignment class</p> |
+| AssigmentClass.Construction.dubious | <code>method</code> | <p>(<code>returns {string} </code>)  <br/>  we have a method</p> |
+| Construction.Container | <code>class</code> | <p>Test of having an inner class</p> |
+| Container.Construction.Insider | <code>class</code> | <p>this class is a public property of Container</p> |
+| Insider.Container.Construction.name | <code>string</code> | <p>a name property</p> |
+| Insider.Container.Construction.foobar | <code>method</code> | <p>Everyone needs a foobar function</p> |
+| Insider.Container.Construction.constructor | <code>method</code> | <p>construct an Insider with <code>new Container.Insider()</code></p> |
+
+
+* [~Construction](#module_test-classes..Construction)
+    * [new Construction([name], [place])](#new_module_test-classes..Construction_new)
+    * [.plan()](#module_test-classes..Construction+plan)
+    * [.milestone()](#module_test-classes..Construction+milestone)
+    * [.finish(timeSpent, timeEstimated, notes)](#module_test-classes..Construction+finish) ⇒ <code>string</code>
+    * [.jsdocStyleFunction(a)](#module_test-classes..Construction+jsdocStyleFunction) ⇒ <code>Promise.&lt;unknown&gt;</code>
+
+
+<hr/>
+
+<a name="new_module_test-classes..Construction_new" id="new_module_test-classes..Construction_new"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    new Construction([name], [place])</h5>
+
+
+
+<p>creates a Construction instance</p>
+
+
+| Param | Type |
+| --- | --- |
+| [name] | <code>string</code> | 
+| [place] | <code>string</code> | 
+
+
+<hr/>
+
+<a name="module_test-classes..Construction+plan" id="module_test-classes..Construction+plan"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    construction.plan()</h5>
+
+
+
+<p>Plans the construction</p>
+
+**Kind**: instance method of [<code>Construction</code>](#module_test-classes..Construction)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-classes..Construction+milestone" id="module_test-classes..Construction+milestone"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    construction.milestone()</h5>
+
+
+
+<p>generates the next milestone</p>
+
+**Kind**: instance method of [<code>Construction</code>](#module_test-classes..Construction)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-classes..Construction+finish" id="module_test-classes..Construction+finish"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    construction.finish(timeSpent, timeEstimated, notes) ⇒ <code>string</code></h5>
+
+
+
+<p>complete building</p>
+
+**Kind**: instance method of [<code>Construction</code>](#module_test-classes..Construction)  
+**Returns**: <code>string</code> - <p>returns a report</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| timeSpent | <code>number</code> | <p>hours of actual work</p> |
+| timeEstimated | <code>number</code> | <p>hours estimated at start</p> |
+| notes | <code>string</code> | <p>notes about the work</p> |
+
+
+<hr/>
+
+<a name="module_test-classes..Construction+jsdocStyleFunction" id="module_test-classes..Construction+jsdocStyleFunction"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    construction.jsdocStyleFunction(a) ⇒ <code>Promise.&lt;unknown&gt;</code></h5>
+
+
+
+<p>A method documented in classic JSDoc style.  *
+But we'll let the param types and return be generated</p>
+
+**Kind**: instance method of [<code>Construction</code>](#module_test-classes..Construction)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>number</code> | <p>a number we pass in</p> |
+
+
+<hr/>
+
+<a name="module_test-commentBlock" id="module_test-commentBlock"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock</h5>
+
+
+
+<h4>test-commentBlock (Module)</h4>
+<p>This module checks for parmeters and returns in jsdoc format
+insures they are secondary to typescript declarations
+and explores the {{{}}} Custom Render space, such as plantUML</p>
+
+
+* [test-commentBlock](#module_test-commentBlock)
+    * [~beast()](#module_test-commentBlock..beast)
+    * [~withParams(a, b, c)](#module_test-commentBlock..withParams)
+    * [~typeParamsWin(a, b, c)](#module_test-commentBlock..typeParamsWin) ⇒ <code>any</code>
+    * [~jsdocTag()](#module_test-commentBlock..jsdocTag)
+    * [~plantSeq()](#module_test-commentBlock..plantSeq)
+    * [~plantSeq2()](#module_test-commentBlock..plantSeq2)
+    * [~plantUse()](#module_test-commentBlock..plantUse)
+    * [~plantClassObject()](#module_test-commentBlock..plantClassObject)
+    * [~plantActivity()](#module_test-commentBlock..plantActivity)
+    * [~plantComponent()](#module_test-commentBlock..plantComponent)
+    * [~plantDeployment()](#module_test-commentBlock..plantDeployment)
+    * [~plantState()](#module_test-commentBlock..plantState)
+    * [~plantTiming()](#module_test-commentBlock..plantTiming)
+    * [~plantPERT()](#module_test-commentBlock..plantPERT)
+
+
+<hr/>
+
+<a name="module_test-commentBlock..beast" id="module_test-commentBlock..beast"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~beast()</h5>
+
+
+
+<p>We should be able to document returns in jsdoc style</p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..withParams" id="module_test-commentBlock..withParams"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~withParams(a, b, c)</h5>
+
+
+
+<p>We should be able to type and comment our parameters in the jsdoc block</p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>string</code> | <ul> <li>A string that is 'a'</li> </ul> |
+| b | <code>string</code> | <ul> <li>A string that is b-like</li> </ul> |
+| c | <code>number</code> | <ul> <li>A number to see</li> </ul> |
+
+
+<hr/>
+
+<a name="module_test-commentBlock..typeParamsWin" id="module_test-commentBlock..typeParamsWin"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~typeParamsWin(a, b, c) ⇒ <code>any</code></h5>
+
+
+
+<p>If we have typescript-typed values, instead, they win</p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Returns**: <code>any</code> - <p>// typescript defined return</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>number</code> | <p>typescript says this is a number</p> |
+| b | <code>any</code> | <p>typescript says this is any</p> |
+| c | <code>number</code> | <p>typescript assigned no further type</p> |
+
+
+<hr/>
+
+<a name="module_test-commentBlock..jsdocTag" id="module_test-commentBlock..jsdocTag"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~jsdocTag()</h5>
+
+
+
+<p>We should be able to insert a jsdoc tag using our extended syntax.
+In this case: see www.tremho.com</p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+**See**: <p>https://www.tremho.com</p>
+<p>But note we can use markdown to do the same:  <a href="!https://wwww.tremho.com">www.tremho.com</a></p>
+<p>And even for doc links <a href="module-test-classes-PrintExample.html">PrintExample</a></p>  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantSeq" id="module_test-commentBlock..plantSeq"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantSeq()</h5>
+
+
+
+<p>We can insert plantUML diagrams.
+This one is a sequence diagram</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/u-9opCbCJbNGjLDmoa-oKd0iBSb8pIl9J4uioSpFKmXABInDBIxX0iefw0BLW1LZKLLSa9zNdCg5RbXUFb1TaK8YTaCXYcrqTGceXXeE0000" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantSeq2" id="module_test-commentBlock..plantSeq2"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantSeq2()</h5>
+
+
+
+<p>Same, but this comment should be at top
+and we should have more plain text at bottom</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/u-9opCbCJbNGjLDmoa-oKd0iBSb8pIl9J4uioSpFKmXABInDBIxX0iefw0BLW1LZKLLSa9zNdCg5RbXUFb1TaK8YTaCXYcrqTGceXXaE0000" alt="plantUML"></p>
+<p>More plain text at the bottom...</p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantUse" id="module_test-commentBlock..plantUse"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantUse()</h5>
+
+
+
+<p>We can use PlantUML for UseCase diagrams</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/u-BISCiiAYvHA2rEJKuiJjNaqd3Coo_9I2s2YoWa5YjeX3eRQN91HHH2dOtXR0sVnEAIc3nanQ7E9bm0" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantClassObject" id="module_test-commentBlock..plantClassObject"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantClassObject()</h5>
+
+
+
+<p>We can use PlantUML for Class and Object diagrams</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/LOz1YW8n44Nt_nJ1bGfp0H51NSnYn8s8k98onZ7QIIGf4H7lRaAdqzsrUxygBrMWOs1FaaMkXb4Qig8GX1ZqWm78MiV4sjdyiZ2azh9IebJD68v4h-hu42xEy-7il47-gvr8Z9Ccu-off9andVLzEUyAbMNDhtQavXW_JFTbOcZBofz9DeiN7WFkU5Nnz5NKn_ioxIXSjFtdDbaeN-b2Q_NSEty33Dt5akwQgLgcTTxO_ednpwpnRJVpY94xnb_b3TbNocCZYpz0begKTfoJIPJW2m00" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantActivity" id="module_test-commentBlock..plantActivity"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantActivity()</h5>
+
+
+
+<p>PlantUML Activity</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/JOuz3i8m38Ltdy9ZcoEq0oCSW14fYXgNMZ9EYKDGEJqUAxtfUpzwCDr8fE2tLCapJFUD3LsPLbRAM1ICEjKa688uiX1ci9Pg0-0LXsjD-zRvXwnEHIXVHcmRAGu7sGZJNij2PkZUGpEdPqqlcu7420SjfqHHEI16e_U7TA4OCMd66DFIk7Cx79pwlhM2Foax_040" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantComponent" id="module_test-commentBlock..plantComponent"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantComponent()</h5>
+
+
+
+<p>PlantUML Component
+this is the large example, including groups, etc</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/ROyz2y8m48Rt_8eZUmVHMH0nkeX2knM7sAIscEPgau95_E_cGsaL8SFbdjppvaZBYok_IA0fDXAs7VOjXGVPPTaH4iXPtHaBQsnQr5BR4ybN6cqbksdlIOX6uHo7G8B4U0kBabGMgCMNvTSBIR84zzox2eMzSDFvviwRLacOXGWYkELdRbpEVaXloWUKg8HBf5bL6t2d6I2sFCnPf7C_NdRSxKSPOaJXkl34g_zi5Nuq_SAaZcpKZ-MRVEml" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantDeployment" id="module_test-commentBlock..plantDeployment"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantDeployment()</h5>
+
+
+
+<p>PlantUML Deployment
+this is a use-case variant, and
+here we show the complex example from the plantUML site</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/PP11RiCW44NtSufHii6jY3nELrRbJOyHUO4nJYmvO26igbtux1t0JPf6GcB-Wvd_0K3fu3mEpj6zh21gV9UbR1wqA8jV0a9fAb1E9iF9326E89H-pCYFvyl63ilCxD3WCcUm9h16KEMktkMktdrQUaRicF8nPeQfPgRTTNRMs82ned-wIfhm9VQyRkWKjsFBpv5DWqczjG2TMsol_1TsSOeDtase2JesZ2bY_UGssc3yeBJ1ND7cjrzNSKDGNrrlA2MkSth-GKL_-LJ7RzkEQ88SCbbHYyn5oGllzAC5KU1D7h6GwSQE-tUFz-2alWrFsUVtigXQ-040" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantState" id="module_test-commentBlock..plantState"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantState()</h5>
+
+
+
+<p>PlantUML State
+A complex state diagram from plantUML examples</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/RP0z3u8m48Rt_eeB8manmiPWGeA6E1WY8s6evO8cV1ZQwc3yxxP0iOXBsxltdhlhIqZk5k3j81DKu9QC5tWcuqC8cMGCiSJILZKMGdJfUc44_ui5Qyp_Wt4j6E8rXKx4c6nahT_xjfFL5M8gg0EKGzsrrPOCfsfpb5m01O5SZDzG0-oAELQr9tmERImfxJk6dEkiAh16BHPEYX3Eo6M3v4scLHVsf5HoN3kG9wuYOyJxHF-osgC3lTN6eC0oQFOEDf3H1muRr69TQ9py0000" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantTiming" id="module_test-commentBlock..plantTiming"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantTiming()</h5>
+
+
+
+<p>PlantUML Timing</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/NSp13O0W44JH-rOnsGhWO0FIWGqOHOX4unh06BiNCLwy_SER8RAhs0K0coTwnQM71ADmXZnZTp78X4RzeVwW_a7inveST0FnFhaChMWCsn2licrhS5ssP6MpeLWsRt0zf2ZZaNBHNOrNTtG3" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-commentBlock..plantPERT" id="module_test-commentBlock..plantPERT"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-commentBlock~plantPERT()</h5>
+
+
+
+<p>A Pert example</p>
+<p><img src="http://www.plantuml.com/plantuml/svg/VSyz3u8m40RW_Nx5RIv2mjT2b8t4HAD4ZNk5efL2JRb9utyN2LOYXA5D-ZwNDrUGF2SaXLfSheIPq3mbeIgOuKffyL0LCObILBmEqRAYEIuigxsYPkJ4DOcqDz3wvqH0WYJ79DuVGqoqkZMzk6Kb1oZP7TSYBUnTdkCJNcr0h2viftaUY6d2POHnbVNDdJ1lmlm92uPc5cj--5qgn0qxSudEYBf6tH7rZ7hGbHdpeIluJxn1ul-Im3Jwy0O0" alt="plantUML"></p>
+
+**Kind**: inner method of [<code>test-commentBlock</code>](#module_test-commentBlock)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-enum" id="module_test-enum"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum</h5>
+
+
+
+<h4>test-enum (Module)</h4>
+<p>Working with enum</p>
+
+
+* [test-enum](#module_test-enum)
+    * [~Direction](#module_test-enum..Direction)
+    * [~Direction2](#module_test-enum..Direction2)
+    * [~Direction3](#module_test-enum..Direction3)
+    * [~Direction4](#module_test-enum..Direction4)
+    * [~BooleanLikeHeterogeneousEnum](#module_test-enum..BooleanLikeHeterogeneousEnum)
+    * [~LogLevel](#module_test-enum..LogLevel)
+    * [~Jumper](#module_test-enum..Jumper)
+    * [~Scattered](#module_test-enum..Scattered)
+    * [~BugCase1](#module_test-enum..BugCase1)
+    * [~BugCase1b](#module_test-enum..BugCase1b)
+    * [~BugCase1c](#module_test-enum..BugCase1c)
+
+
+<hr/>
+
+<a name="module_test-enum..Direction" id="module_test-enum..Direction"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Direction</h5>
+
+
+
+<p>Constants for direction
+Explicit start</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Up | <code>number</code> | <code>Up</code> | <p>vertical ascend <b><i>(value = 1)</i></b></p> |
+| Down | <code>number</code> | <code>Down</code> | <p>vertical descend <b><i>(value = 2)</i></b></p> |
+| Left | <code>number</code> | <code>Left</code> | <p>westward if facing north <b><i>(value = 3)</i></b></p> |
+| Right | <code>number</code> | <code>Right</code> | <p>eastward if facing north <b><i>(value = 4)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..Direction2" id="module_test-enum..Direction2"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Direction2</h5>
+
+
+
+<p>Implicit values</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Up | <code>number</code> | <code>Up</code> | <p><b><i>(value = 0)</i></b></p> |
+| Down | <code>number</code> | <code>Down</code> | <p><b><i>(value = 1)</i></b></p> |
+| Left | <code>number</code> | <code>Left</code> | <p><b><i>(value = 2)</i></b></p> |
+| Right | <code>number</code> | <code>Right</code> | <p><b><i>(value = 3)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..Direction3" id="module_test-enum..Direction3"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Direction3</h5>
+
+
+
+<p>String values</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Up | <code>string</code> | <code>&quot;Up&quot;</code> | <p><b><i>(value = &quot;UP&quot;)</i></b></p> |
+| Down | <code>string</code> | <code>&quot;Down&quot;</code> | <p><b><i>(value = &quot;DOWN&quot;)</i></b></p> |
+| Left | <code>string</code> | <code>&quot;Left&quot;</code> | <p><b><i>(value = &quot;LEFT&quot;)</i></b></p> |
+| Right | <code>string</code> | <code>&quot;Right&quot;</code> | <p><b><i>(value = &quot;RIGHT&quot;)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..Direction4" id="module_test-enum..Direction4"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Direction4</h5>
+
+
+
+<p>String values = key
+should not repeat value in description</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default |
+| --- | --- | --- |
+| UP | <code>string</code> | <code>&quot;UP&quot;</code> | 
+| DOWN | <code>string</code> | <code>&quot;DOWN&quot;</code> | 
+| LEFT | <code>string</code> | <code>&quot;LEFT&quot;</code> | 
+| RIGHT | <code>string</code> | <code>&quot;RIGHT&quot;</code> | 
+
+
+<hr/>
+
+<a name="module_test-enum..BooleanLikeHeterogeneousEnum" id="module_test-enum..BooleanLikeHeterogeneousEnum"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~BooleanLikeHeterogeneousEnum</h5>
+
+
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| No | <code>number</code> | <code>No</code> | <p><b><i>(value = 0)</i></b></p> |
+| Yes | <code>string</code> | <code>&quot;Yes&quot;</code> | <p><b><i>(value = &quot;YES&quot;)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..LogLevel" id="module_test-enum..LogLevel"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~LogLevel</h5>
+
+
+
+<p>including an optional const modifier</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| ERROR | <code>number</code> | <code>ERROR</code> | <p><b><i>(value = 0)</i></b></p> |
+| WARN | <code>number</code> | <code>WARN</code> | <p><b><i>(value = 1)</i></b></p> |
+| INFO | <code>number</code> | <code>INFO</code> | <p><b><i>(value = 2)</i></b></p> |
+| DEBUG | <code>number</code> | <code>DEBUG</code> | <p><b><i>(value = 3)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..Jumper" id="module_test-enum..Jumper"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Jumper</h5>
+
+
+
+<p>Explicit after implicit</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Zero | <code>number</code> | <code>Zero</code> | <p><b><i>(value = 0)</i></b></p> |
+| One | <code>number</code> | <code>One</code> | <p><b><i>(value = 1)</i></b></p> |
+| Two | <code>number</code> | <code>Two</code> | <p><b><i>(value = 2)</i></b></p> |
+| OneHundred | <code>number</code> | <code>OneHundred</code> | <p><b><i>(value = 100)</i></b></p> |
+| OneOhOne | <code>number</code> | <code>OneOhOne</code> | <p><b><i>(value = 101)</i></b></p> |
+| OneOhTwo | <code>number</code> | <code>OneOhTwo</code> | <p><b><i>(value = 102)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..Scattered" id="module_test-enum..Scattered"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~Scattered</h5>
+
+
+
+<p>Explicit non sequential</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Foo | <code>number</code> | <code>Foo</code> | <p><b><i>(value = 456)</i></b></p> |
+| Bar | <code>number</code> | <code>Bar</code> | <p><b><i>(value = 123)</i></b></p> |
+| Fubar | <code>number</code> | <code>Fubar</code> | <p><b><i>(value = 42)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..BugCase1" id="module_test-enum..BugCase1"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~BugCase1</h5>
+
+
+
+<p>Bug case: No comma on last element</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Foo | <code>number</code> | <code>Foo</code> | <p><b><i>(value = 456)</i></b></p> |
+| Bar | <code>number</code> | <code>Bar</code> | <p><b><i>(value = 123)</i></b></p> |
+| Fubar | <code>number</code> | <code>Fubar</code> | <p><b><i>(value = 42)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..BugCase1b" id="module_test-enum..BugCase1b"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~BugCase1b</h5>
+
+
+
+<p>Bug case explore: No comma on last element, comments</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Foo | <code>number</code> | <code>Foo</code> | <p>this is foo <b><i>(value = 456)</i></b></p> |
+| Bar | <code>number</code> | <code>Bar</code> | <p>this is bar <b><i>(value = 123)</i></b></p> |
+| Fubar | <code>number</code> | <code>Fubar</code> | <p>this is fubar <b><i>(value = 42)</i></b></p> |
+
+
+<hr/>
+
+<a name="module_test-enum..BugCase1c" id="module_test-enum..BugCase1c"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-enum~BugCase1c</h5>
+
+
+
+<p>Bug case explore: No comma on last element, string</p>
+
+**Kind**: inner enum of [<code>test-enum</code>](#module_test-enum)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default |
+| --- | --- | --- |
+| Foo | <code>string</code> | <code>&quot;Foo&quot;</code> | 
+| Bar | <code>string</code> | <code>&quot;Bar&quot;</code> | 
+| Fubar | <code>string</code> | <code>&quot;Fubar&quot;</code> | 
+
+
+<hr/>
+
+<a name="module_test-functions" id="module_test-functions"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions</h5>
+
+
+
+<h4>test-functions (Module)</h4>
+<p>Tests all forms of function declaration
+to see if we are properly documenting these</p>
+
+
+* [test-functions](#module_test-functions)
+    * [~plainJane(a, b, c)](#module_test-functions..plainJane)
+    * [~publicJane(a, b, c)](#module_test-functions..publicJane)
+    * [~separatedJane(a, b, c)](#module_test-functions..separatedJane)
+    * [~indexGenerator()](#module_test-functions..indexGenerator)
+    * [~indexGeneratorTS()](#module_test-functions..indexGeneratorTS) ⇒ <code>Generator.&lt;number&gt;</code>
+    * [~typescript(a, b, c)](#module_test-functions..typescript)
+    * [~splitscript(a, b, c)](#module_test-functions..splitscript) ⇒ <code>string</code>
+    * [~fetch(url)](#module_test-functions..fetch) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [~simpleVoid()](#module_test-functions..simpleVoid)
+    * [~simpleVoidTS()](#module_test-functions..simpleVoidTS)
+    * [~docVoid()](#module_test-functions..docVoid) ⇒ <code>void</code>
+    * [~jsVoid()](#module_test-functions..jsVoid) ⇒ <code>void</code>
+
+
+<hr/>
+
+<a name="module_test-functions..plainJane" id="module_test-functions..plainJane"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~plainJane(a, b, c)</h5>
+
+
+
+<p>this is as plain as it gets
+a simple JS function
+marked as public so it will appear in output</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
+
+
+<hr/>
+
+<a name="module_test-functions..publicJane" id="module_test-functions..publicJane"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~publicJane(a, b, c)</h5>
+
+
+
+<p>This is the same as plainJane, but
+in this case we are exporting it from the module
+and using a JSDoc form comment block</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
+
+
+<hr/>
+
+<a name="module_test-functions..separatedJane" id="module_test-functions..separatedJane"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~separatedJane(a, b, c)</h5>
+
+
+
+<p>All keywords are separated</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
+
+
+<hr/>
+
+<a name="module_test-functions..indexGenerator" id="module_test-functions..indexGenerator"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~indexGenerator()</h5>
+
+
+
+<p>a generator function</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-functions..indexGeneratorTS" id="module_test-functions..indexGeneratorTS"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~indexGeneratorTS() ⇒ <code>Generator.&lt;number&gt;</code></h5>
+
+
+
+<p>a typescript generator function</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Returns**: <code>Generator.&lt;number&gt;</code> - <p>generates numbers</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-functions..typescript" id="module_test-functions..typescript"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~typescript(a, b, c)</h5>
+
+
+
+<p>a typescript example</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>string</code> | 
+| b | <code>number</code> | 
+| c | <code>boolean</code> | 
+
+
+<hr/>
+
+<a name="module_test-functions..splitscript" id="module_test-functions..splitscript"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~splitscript(a, b, c) ⇒ <code>string</code></h5>
+
+
+
+<p>separated typescript</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Returns**: <code>string</code> - <p>A value is returned</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>string</code> | <p>the a parameter</p> |
+| b | <code>number</code> | <p>the b parameter</p> |
+| c | <code>boolean</code> | <p>the c parameter</p> |
+
+
+<hr/>
+
+<a name="module_test-functions..fetch" id="module_test-functions..fetch"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~fetch(url) ⇒ <code>Promise.&lt;string&gt;</code></h5>
+
+
+
+<p>example of an async function</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - <p>the body of the return</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | <p>The url to fetch</p> |
+
+
+<hr/>
+
+<a name="module_test-functions..simpleVoid" id="module_test-functions..simpleVoid"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~simpleVoid()</h5>
+
+
+
+<p>void functions do not document a return type</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-functions..simpleVoidTS" id="module_test-functions..simpleVoidTS"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~simpleVoidTS()</h5>
+
+
+
+<p>typescript void functions do not document a return type</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-functions..docVoid" id="module_test-functions..docVoid"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~docVoid() ⇒ <code>void</code></h5>
+
+
+
+<p>typescript with documented void return</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Returns**: <code>void</code> - <p>// a void return</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-functions..jsVoid" id="module_test-functions..jsVoid"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-functions~jsVoid() ⇒ <code>void</code></h5>
+
+
+
+<p>javascript post-dec comments also documented as return type</p>
+
+**Kind**: inner method of [<code>test-functions</code>](#module_test-functions)  
+**Returns**: <code>void</code> - <p>// nothing to see here</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-parameters" id="module_test-parameters"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters</h5>
+
+
+
+<h4>test-parameters (Module)</h4>
+<p>Various modes of parameter declaration</p>
+
+
+* [test-parameters](#module_test-parameters)
+    * [~one(a, b, c)](#module_test-parameters..one)
+    * [~two(a, b, c)](#module_test-parameters..two)
+    * [~three(a, b, c)](#module_test-parameters..three)
+    * [~four(a, b, c)](#module_test-parameters..four)
+    * [~five(a, b, c)](#module_test-parameters..five)
+    * [~six(a, b, c)](#module_test-parameters..six)
+
+
+<hr/>
+
+<a name="module_test-parameters..one" id="module_test-parameters..one"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~one(a, b, c)</h5>
+
+
+
+<p>name only, any type</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
+
+
+<hr/>
+
+<a name="module_test-parameters..two" id="module_test-parameters..two"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~two(a, b, c)</h5>
+
+
+
+<p>name only with comments</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>\*</code> | <p>inline</p> |
+| b | <code>\*</code> | <p>sidebar, multiple lines and verbose</p> |
+| c | <code>\*</code> | <p>sidebar single-line</p> |
+
+
+<hr/>
+
+<a name="module_test-parameters..three" id="module_test-parameters..three"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~three(a, b, c)</h5>
+
+
+
+<p>name:type (typescript)</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>string</code> | 
+| b | <code>number</code> | 
+| c | <code>FooBar</code> | 
+
+
+<hr/>
+
+<a name="module_test-parameters..four" id="module_test-parameters..four"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~four(a, b, c)</h5>
+
+
+
+<p>name:type with comment</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>string</code> | <p>Comment one</p> |
+| b | <code>\*</code> | <p>Comment two</p> |
+| c | <code>\*</code> | <p>Comment three</p> |
+
+
+<hr/>
+
+<a name="module_test-parameters..five" id="module_test-parameters..five"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~five(a, b, c)</h5>
+
+
+
+<p>ad-hoc object parameters</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>object</code> | 
+| a.foo | <code>string</code> | 
+| a.bar | <code>number</code> | 
+| b | <code>number</code> | 
+| c | <code>FooBar</code> | 
+
+
+<hr/>
+
+<a name="module_test-parameters..six" id="module_test-parameters..six"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-parameters~six(a, b, c)</h5>
+
+
+
+<p>ad-hoc object parameters, with comments</p>
+
+**Kind**: inner method of [<code>test-parameters</code>](#module_test-parameters)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>object</code> | <p>The a object holds properties that are used for some reasan, and we can document them.</p> |
+| a.foo | <code>string</code> | <p>something to say about foo</p> |
+| a.bar | <code>number</code> | <p>belly up to the bar</p> |
+| b | <code>number</code> | <p>and we document the other parameters, too</p> |
+| c | <code>FooBar</code> | <p>including good old FooBar</p> |
+
+
+<hr/>
+
+<a name="module_test-properties" id="module_test-properties"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties</h5>
+
+
+
+<h4>test-properties (Module)</h4>
+<p>Checking property declarations
+both at module scope and in classes</p>
+
+
+* [test-properties](#module_test-properties)
+    * [~PropExplorer](#module_test-properties..PropExplorer)
+    * [~aVar](#module_test-properties..aVar) : <code>string</code>
+    * [~aLet](#module_test-properties..aLet) : <code>string</code>
+    * [~aSideVar](#module_test-properties..aSideVar) : <code>string</code>
+    * [~aSideLet](#module_test-properties..aSideLet) : <code>string</code>
+    * [~baz](#module_test-properties..baz) : <code>string</code>
+    * [~huzzah](#module_test-properties..huzzah) : <code>string</code>
+    * [~a](#module_test-properties..a) : <code>number</code>
+    * [~typed](#module_test-properties..typed) : <code>string</code>
+    * [~assigned](#module_test-properties..assigned) : <code>string</code>
+    * [~one](#module_test-properties..one) : <code>string</code>
+    * [~MultipleDeclarations](#module_test-properties..MultipleDeclarations) : <code>string</code>
+    * [~aConst](#module_test-properties..aConst) : <code>number</code>
+    * [~aSideConst](#module_test-properties..aSideConst) : <code>number</code>
+    * [~myArray](#module_test-properties..myArray) : <code>string</code>
+    * [~myObject](#module_test-properties..myObject) : <code>string</code>
+    * [~another](#module_test-properties..another) : <code>string</code>
+
+
+<hr/>
+
+<a name="module_test-properties..PropExplorer" id="module_test-properties..PropExplorer"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~PropExplorer</h5>
+
+
+
+<p>Explore class properties</p>
+
+**Kind**: inner class of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> | <code>&quot;&#x27;no&quot;</code> | <p>type provided' -</p> |
+| value | <code>number</code> | <code>10</code> | <p>no type provided here either</p> |
+| commented | <code>string</code> | <code>&quot;&#x27;no&quot;</code> | <p>type provided' - but I have a comment about it</p> |
+| unassigned | <code>string</code> |  | <ul> <li></li> </ul> |
+| novalue | <code>number</code> |  | <p>also unassigned</p> |
+| anything | <code>any</code> |  | <p>unassigned any</p> |
+| justMe | <code>string</code> |  | <p>undeclared and unassigned</p> |
+| noComment | <code>string</code> |  | <ul> <li></li> </ul> |
+| Label | <code>string</code> | <code>&quot;&#x27;Foobar&#x27;&quot;</code> | <p>(<code>static</code>)</p> |
+| PropExplorer.InnerClass | <code>class</code> |  | <ul> <li></li> </ul> |
+| InnerClass.PropExplorer.constructor | <code>method</code> |  | <p>a chance to comment the inner constructor</p> |
+| InnerClass.PropExplorer.hello | <code>method</code> |  | <p>say hi</p> |
+| InnerClass.PropExplorer.getNumber | <code>method</code> |  | <p>(<code>static</code>) (<code>async</code>) (<code>returns {Promise&lt;number&gt;} resolves to the magic value</code>)  <br/>  fetch a number</p> |
+
+
+<hr/>
+
+<a name="module_test-properties..aVar" id="module_test-properties..aVar"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aVar : <code>string</code></h5>
+
+
+
+<p>top commented var</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..aLet" id="module_test-properties..aLet"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aLet : <code>string</code></h5>
+
+
+
+<p>top commented let</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..aSideVar" id="module_test-properties..aSideVar"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aSideVar : <code>string</code></h5>
+
+
+
+<p>side commented var</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..aSideLet" id="module_test-properties..aSideLet"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aSideLet : <code>string</code></h5>
+
+
+
+<p>side commented let</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..baz" id="module_test-properties..baz"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~baz : <code>string</code></h5>
+
+
+
+<p>top commented multi-dec
+will only document the last in the series</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..huzzah" id="module_test-properties..huzzah"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~huzzah : <code>string</code></h5>
+
+
+
+<p>side-commented multi, same thing</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..a" id="module_test-properties..a"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~a : <code>number</code></h5>
+
+
+
+<p>undeclared, assignment to a number</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>42</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..typed" id="module_test-properties..typed"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~typed : <code>string</code></h5>
+
+
+
+<p>declared as string in typescript</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..assigned" id="module_test-properties..assigned"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~assigned : <code>string</code></h5>
+
+
+
+<p>declared and assigned</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>&quot;&#x27;a string&#x27;&quot;</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..one" id="module_test-properties..one"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~one : <code>string</code></h5>
+
+
+
+<p>top-commented multi assignment
+will only document the first in the series</p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>&quot;1, two &#x3D; 2, three &#x3D; 3&quot;</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..MultipleDeclarations" id="module_test-properties..MultipleDeclarations"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~MultipleDeclarations : <code>string</code></h5>
+
+
+
+<p>workaround for documenting
+a multiple declaration line</p>
+<p><code>m = 1, n = 2, o = 3, p = 4</code></p>
+
+**Kind**: inner property of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>&quot;1, n &#x3D; 2, o &#x3D; 3, p &#x3D; 4&quot;</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..aConst" id="module_test-properties..aConst"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aConst : <code>number</code></h5>
+
+
+
+<p>top commented const w/assignment</p>
+
+**Kind**: inner constant of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>0</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..aSideConst" id="module_test-properties..aSideConst"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~aSideConst : <code>number</code></h5>
+
+
+
+<p>side commented const w/assignemnt</p>
+
+**Kind**: inner constant of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>0</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..myArray" id="module_test-properties..myArray"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~myArray : <code>string</code></h5>
+
+
+
+<p>an array</p>
+
+**Kind**: inner constant of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>&quot;[1,2,3,4,5]&quot;</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..myObject" id="module_test-properties..myObject"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~myObject : <code>string</code></h5>
+
+
+
+<p>an abject</p>
+
+**Kind**: inner constant of [<code>test-properties</code>](#module_test-properties)  
+**Default**: <code>&quot;{ foo: 1, bar: 2 }&quot;</code>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-properties..another" id="module_test-properties..another"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-properties~another : <code>string</code></h5>
+
+
+
+<p>another object, more complex</p>
+
+**Kind**: inner constant of [<code>test-properties</code>](#module_test-properties)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-publicExport" id="module_test-publicExport"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-publicExport</h5>
+
+
+
+<h4>test-publicExport (Module)</h4>
+<p>Meant to explore when/how to use @public and @private</p>
+
+
+<hr/>
+
+<a name="module_test-returns" id="module_test-returns"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns</h5>
+
+
+
+<h4>test-returns (Module)</h4>
+<p>Checks the rendering of return statements</p>
+
+
+* [test-returns](#module_test-returns)
+    * [~one()](#module_test-returns..one)
+    * [~two()](#module_test-returns..two)
+    * [~oneComment()](#module_test-returns..oneComment) ⇒ <code>void</code>
+    * [~twoComment()](#module_test-returns..twoComment) ⇒ <code>void</code>
+    * [~three()](#module_test-returns..three) ⇒ <code>string</code>
+    * [~four()](#module_test-returns..four) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [~five()](#module_test-returns..five) ⇒ <code>object</code>
+    * [~eight()](#module_test-returns..eight) ⇒ <code>string</code>
+    * [~nine()](#module_test-returns..nine) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [~ten()](#module_test-returns..ten) ⇒ <code>object</code>
+    * [~tenHoc()](#module_test-returns..tenHoc) ⇒ <code>object</code>
+    * [~eleven()](#module_test-returns..eleven)
+
+
+<hr/>
+
+<a name="module_test-returns..one" id="module_test-returns..one"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~one()</h5>
+
+
+
+<p>implicit void return should not document return type with no comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..two" id="module_test-returns..two"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~two()</h5>
+
+
+
+<p>explicit void return should not document return type with no comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..oneComment" id="module_test-returns..oneComment"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~oneComment() ⇒ <code>void</code></h5>
+
+
+
+<p>implicit void return should document return type with a comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>void</code> - <p>// commented version</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..twoComment" id="module_test-returns..twoComment"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~twoComment() ⇒ <code>void</code></h5>
+
+
+
+<p>explicit void return should document return type with a comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>void</code> - <p>commented version</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..three" id="module_test-returns..three"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~three() ⇒ <code>string</code></h5>
+
+
+
+<p>typed return should show return type</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..four" id="module_test-returns..four"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~four() ⇒ <code>Promise.&lt;string&gt;</code></h5>
+
+
+
+<p>Promise return should be represented properly</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..five" id="module_test-returns..five"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~five() ⇒ <code>object</code></h5>
+
+
+
+<p>An Ad-Hoc return type should document the object detail</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>object</code> - <p>Object detail:
+{ foo:string, bar:number }</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..eight" id="module_test-returns..eight"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~eight() ⇒ <code>string</code></h5>
+
+
+
+<p>type  w/comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>string</code> - <p>returns a string</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..nine" id="module_test-returns..nine"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~nine() ⇒ <code>Promise.&lt;string&gt;</code></h5>
+
+
+
+<p>Promise w/comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - <p>returns a string promise</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..ten" id="module_test-returns..ten"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~ten() ⇒ <code>object</code></h5>
+
+
+
+<p>ad-hoc type w/comment</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>object</code> - <p>returns ad-hoc</p>
+<p>Object detail:
+{ foo:string, bar:number }</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..tenHoc" id="module_test-returns..tenHoc"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~tenHoc() ⇒ <code>object</code></h5>
+
+
+
+<p>a crazy ad-hoc return function</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Returns**: <code>object</code> - <p>Object detail:
+{
+foo:string,
+crazy:{
+fool:number,
+train:string
+},
+bar:number
+}</p>  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-returns..eleven" id="module_test-returns..eleven"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-returns~eleven()</h5>
+
+
+
+<p>Test of the throws tag</p>
+
+**Kind**: inner method of [<code>test-returns</code>](#module_test-returns)  
+**Throws**:
+
+- <code>Fit</code> <p>if she gets scared</p>
+
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-semicolons" id="module_test-semicolons"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons</h5>
+
+
+
+<h4>test-semicolons (Module)</h4>
+<p>Checks syntax that includes semicolons</p>
+
+
+* [test-semicolons](#module_test-semicolons)
+    * [~BaseExampleSC](#module_test-semicolons..BaseExampleSC)
+        * [.display()](#module_test-semicolons..BaseExampleSC+display)
+    * [~PricedExampleSC](#module_test-semicolons..PricedExampleSC) ⇐ <code>BaseExampleSC</code>
+        * [.display()](#module_test-semicolons..PricedExampleSC+display)
+    * [~Thing1SC](#module_test-semicolons..Thing1SC) ⇐ <code>BaseExampleSC</code>
+    * [~Thing2SC](#module_test-semicolons..Thing2SC) ⇐ <code>PricedExampleSC</code>
+    * [~ConstructionSC](#module_test-semicolons..ConstructionSC)
+        * [new ConstructionSC([name], [place])](#new_module_test-semicolons..ConstructionSC_new)
+        * [.plan()](#module_test-semicolons..ConstructionSC+plan)
+        * [.milestone()](#module_test-semicolons..ConstructionSC+milestone)
+        * [.finish(timeSpent, timeEstimated, notes)](#module_test-semicolons..ConstructionSC+finish) ⇒ <code>string</code>
+        * [.jsdocStyleFunction(a)](#module_test-semicolons..ConstructionSC+jsdocStyleFunction) ⇒ <code>Promise.&lt;unknown&gt;</code>
+    * [~plainJaneSC(a, b, c)](#module_test-semicolons..plainJaneSC)
+    * [~publicJaneSC(a, b, c)](#module_test-semicolons..publicJaneSC)
+    * [~separatedJaneSC(a, b, c)](#module_test-semicolons..separatedJaneSC)
+    * [~indexGeneratorSC()](#module_test-semicolons..indexGeneratorSC)
+    * [~indexGeneratorTSSC()](#module_test-semicolons..indexGeneratorTSSC) ⇒ <code>Generator.&lt;number&gt;</code>
+    * [~typescriptSC(a, b, c)](#module_test-semicolons..typescriptSC)
+    * [~splitscriptSC(a, b, c)](#module_test-semicolons..splitscriptSC) ⇒ <code>string</code>
+    * [~fetchSC(url)](#module_test-semicolons..fetchSC) ⇒ <code>Promise.&lt;string&gt;</code>
+    * [~simpleVoidSC()](#module_test-semicolons..simpleVoidSC)
+    * [~simpleVoidTSSC()](#module_test-semicolons..simpleVoidTSSC)
+    * [~docVoidSC()](#module_test-semicolons..docVoidSC) ⇒ <code>void</code>
+    * [~jsVoidSC()](#module_test-semicolons..jsVoidSC) ⇒ <code>void</code>
+
+
+<hr/>
+
+<a name="module_test-semicolons..BaseExampleSC" id="module_test-semicolons..BaseExampleSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~BaseExampleSC</h5>
+
+
+
+<p>This is a base class test</p>
+
+**Kind**: inner class of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| isInterface | <code>boolean</code> |  | <ul> <li></li> </ul> |
-| extends | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| scope | <code>ScopeModifiers</code> | <code>new</code> | <p>ScopeModifiers() -</p> |
-| implements | <code>Array.&lt;string&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| mixins | <code>Array.&lt;string&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| description | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| internals | <code>APIInfo</code> | <code>new</code> | <p>APIInfo() -</p> |
-| bodyStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| bodyEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| status | <code>SpecificationStatus</code> | <code>SpecificationStatus.None</code> | <ul> <li></li> </ul> |
-| [error] | <code>string</code> |  | <p>if defined, holds error detail</p> |
+| type | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
 
 
 <hr/>
 
-<a name="module_types..PropertyInfo" id="module_types..PropertyInfo"></a>
+<a name="module_test-semicolons..BaseExampleSC+display" id="module_test-semicolons..BaseExampleSC+display"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~PropertyInfo ⇐ <code>SourceInfo</code></h5>
+    baseExampleSC.display()</h5>
 
 
 
-<p>Information about a non-function property within a source file or within a class</p>
+<p>Displays the values of the object</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Extends**: <code>SourceInfo</code>  
+**Kind**: instance method of [<code>BaseExampleSC</code>](#module_test-semicolons..BaseExampleSC)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-semicolons..PricedExampleSC" id="module_test-semicolons..PricedExampleSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~PricedExampleSC ⇐ <code>BaseExampleSC</code></h5>
+
+
+
+<p>Another base class, but it inherits from BaseExample</p>
+
+**Kind**: inner class of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Extends**: <code>BaseExampleSC</code>  
 **Access**: public  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| name | <code>string</code> | <code>&quot;\&quot;\&quot;&quot;</code> | <ul> <li></li> </ul> |
-| type | <code>string</code> | <code>&quot;\&quot;\&quot;&quot;</code> | <ul> <li></li> </ul> |
-| scope | <code>ScopeModifiers</code> | <code>new</code> | <p>ScopeModifiers() -</p> |
-| description | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| assignStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| default | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| TypeConstraint> | <code>string</code> | <code>&quot;new&quot;</code> | <p>Map&lt;string, TypeConstraint&gt;() -</p> |
+| price | <code>number</code> | <code>0</code> | <ul> <li></li> </ul> |
+| unit | <code>string</code> | <code>&quot;&#x27;dollars&#x27;&quot;</code> | <ul> <li></li> </ul> |
 
 
 <hr/>
 
-<a name="module_types..EnumInfo" id="module_types..EnumInfo"></a>
+<a name="module_test-semicolons..PricedExampleSC+display" id="module_test-semicolons..PricedExampleSC+display"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~EnumInfo ⇐ <code>SourceInfo</code></h5>
+    pricedExampleSC.display()</h5>
 
 
 
-<p>Information about an enum</p>
+<p>Displays the values and price of the object</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Extends**: <code>SourceInfo</code>  
+**Kind**: instance method of [<code>PricedExampleSC</code>](#module_test-semicolons..PricedExampleSC)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-semicolons..Thing1SC" id="module_test-semicolons..Thing1SC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~Thing1SC ⇐ <code>BaseExampleSC</code></h5>
+
+
+
+<p>We declare a thing without a price</p>
+
+**Kind**: inner class of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Extends**: <code>BaseExampleSC</code>  
 **Access**: public  
 **Properties**
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| name | <code>string</code> |  | <ul> <li></li> </ul> |
-| scope | <code>ScopeModifiers</code> | <code>new</code> | <p>ScopeModifiers() -</p> |
-| description | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| values | <code>Array.&lt;EnumValueInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| bodyStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| bodyEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
+| name | <code>string</code> | <code>&quot;&#x27;Kepler&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| type | <code>string</code> | <code>&quot;&#x27;Dog&#x27;&quot;</code> | <ul> <li></li> </ul> |
 
 
 <hr/>
 
-<a name="module_types..EnumValueInfo" id="module_types..EnumValueInfo"></a>
+<a name="module_test-semicolons..Thing2SC" id="module_test-semicolons..Thing2SC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~EnumValueInfo</h5>
+    test-semicolons~Thing2SC ⇐ <code>PricedExampleSC</code></h5>
 
 
 
-<p>Information about a single enum value</p>
+<p>We declare a thing with a price</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner class of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Extends**: <code>PricedExampleSC</code>  
 **Access**: public  
 **Properties**
 
-| Name | Type | Description |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> | <code>&quot;&#x27;Jove&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| type | <code>string</code> | <code>&quot;&#x27;Framework&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| price | <code>string</code> | <code>49.95</code> | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+<a name="module_test-semicolons..ConstructionSC" id="module_test-semicolons..ConstructionSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~ConstructionSC</h5>
+
+
+
+<p>We declare a working class</p>
+
+**Kind**: inner class of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| [name] | <code>string</code> |  | <p>name of the work</p> |
+| [place] | <code>string</code> |  | <p>place of the work</p> |
+| [other] | <code>any</code> |  | <p>other stuff, optional</p> |
+| ConstructionSC.PrinterOrientationSC | <code>enum</code> |  | <ul> <li></li> </ul> |
+| ConstructionSC.PrintActionSC | <code>interface</code> |  | <ul> <li></li> </ul> |
+| PrintActionSC.ConstructionSC.print | <code>method</code> |  | <p>(<code>returns {boolean} </code>)  <br/></p> |
+| ConstructionSC.SaveActionSC | <code>interface</code> |  | <ul> <li></li> </ul> |
+| SaveActionSC.ConstructionSC.save | <code>method</code> |  | <p>(<code>returns {boolean} An example of implemented interfaces export class PrintExampleSC implements PrintActionSC, SaveActionSC</code>)  <br/></p> |
+| ConstructionSC.PrintExampleSC | <code>class</code> |  | <p>(<code>implements PrintActionSC, SaveActionSC</code>) An example of implemented interfaces</p> |
+| PrintExampleSC.ConstructionSC.exmpleLocal | <code>method</code> |  | <p>(<code>returns {boolean} </code>)  <br/>  Local function to print Example.</p> |
+| PrintExampleSC.ConstructionSC.print | <code>method</code> |  | <p>(<code>returns {boolean} </code>)  <br/>  implementation of primt</p> |
+| PrintExampleSC.ConstructionSC.save | <code>method</code> |  | <p>(<code>returns {boolean} </code>)  <br/>  implementation of save</p> |
+| ConstructionSC.AssigmentClassSC | <code>class</code> |  | <p>Test of an assignment class</p> |
+| AssigmentClassSC.ConstructionSC.dubious | <code>method</code> |  | <p>(<code>returns {string} </code>)  <br/>  we have a method</p> |
+| ConstructionSC.ContainerSC | <code>class</code> |  | <p>Test of having an inner class</p> |
+| ContainerSC.ConstructionSC.InsiderSC | <code>class</code> |  | <p>this class is a public property of Container</p> |
+| InsiderSC.ContainerSC.ConstructionSC.name | <code>string</code> |  | <p>a name property</p> |
+| InsiderSC.ContainerSC.ConstructionSC.foobar | <code>method</code> |  | <p>Everyone needs a foobar function</p> |
+| InsiderSC.ContainerSC.ConstructionSC.constructor | <code>method</code> |  | <p>construct an Insider with <code>new Container.Insider()</code></p> |
+| ConstructionSC.PropExplorerSC | <code>class</code> |  | <p>Explore class properties</p> |
+| [PropExplorerSC.ConstructionSC.name] | <code>string</code> | <code>&quot;&#x27;no type provided&#x27;&quot;</code> | <ul> <li></li> </ul> |
+| [PropExplorerSC.ConstructionSC.value] | <code>string</code> | <code>10</code> | <p>no type provided here either</p> |
+| [PropExplorerSC.ConstructionSC.commented] | <code>string</code> | <code>&quot;&#x27;no type provided&#x27;&quot;</code> | <p>but I have a comment about it</p> |
+| PropExplorerSC.ConstructionSC.unassigned | <code>string</code> |  | <ul> <li></li> </ul> |
+| PropExplorerSC.ConstructionSC.justMe | <code>string</code> |  | <p>undeclared and unassigned</p> |
+| PropExplorerSC.ConstructionSC.noComment | <code>string</code> |  | <ul> <li></li> </ul> |
+| [PropExplorerSC.ConstructionSC.mysecret] | <code>string</code> | <code>&quot;&#x27;adkf98adf&#x27;&quot;</code> | <p>(<code>private</code>)</p> |
+| [PropExplorerSC.ConstructionSC.Label] | <code>string</code> | <code>&quot;&#x27;Foobar&#x27;&quot;</code> | <p>(<code>static</code>)</p> |
+| PropExplorerSC.ConstructionSC.InnerClass | <code>class</code> |  | <ul> <li></li> </ul> |
+| InnerClass.PropExplorerSC.ConstructionSC.constructor | <code>method</code> |  | <p>a chance to comment the inner constructor</p> |
+| InnerClass.PropExplorerSC.ConstructionSC.hello | <code>method</code> |  | <p>say hi</p> |
+| InnerClass.PropExplorerSC.ConstructionSC.getNumber | <code>method</code> |  | <p>(<code>static</code>) (<code>async</code>) (<code>returns {Promise&lt;number&gt;} resolves to the magic value</code>)  <br/>  fetch a number</p> |
+
+
+* [~ConstructionSC](#module_test-semicolons..ConstructionSC)
+    * [new ConstructionSC([name], [place])](#new_module_test-semicolons..ConstructionSC_new)
+    * [.plan()](#module_test-semicolons..ConstructionSC+plan)
+    * [.milestone()](#module_test-semicolons..ConstructionSC+milestone)
+    * [.finish(timeSpent, timeEstimated, notes)](#module_test-semicolons..ConstructionSC+finish) ⇒ <code>string</code>
+    * [.jsdocStyleFunction(a)](#module_test-semicolons..ConstructionSC+jsdocStyleFunction) ⇒ <code>Promise.&lt;unknown&gt;</code>
+
+
+<hr/>
+
+<a name="new_module_test-semicolons..ConstructionSC_new" id="new_module_test-semicolons..ConstructionSC_new"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    new ConstructionSC([name], [place])</h5>
+
+
+
+<p>creates a Construction instance</p>
+
+
+| Param | Type |
+| --- | --- |
+| [name] | <code>string</code> | 
+| [place] | <code>string</code> | 
+
+
+<hr/>
+
+<a name="module_test-semicolons..ConstructionSC+plan" id="module_test-semicolons..ConstructionSC+plan"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    constructionSC.plan()</h5>
+
+
+
+<p>Plans the construction</p>
+
+**Kind**: instance method of [<code>ConstructionSC</code>](#module_test-semicolons..ConstructionSC)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-semicolons..ConstructionSC+milestone" id="module_test-semicolons..ConstructionSC+milestone"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    constructionSC.milestone()</h5>
+
+
+
+<p>generates the next milestone</p>
+
+**Kind**: instance method of [<code>ConstructionSC</code>](#module_test-semicolons..ConstructionSC)  
+**Access**: public  
+
+<hr/>
+
+<a name="module_test-semicolons..ConstructionSC+finish" id="module_test-semicolons..ConstructionSC+finish"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    constructionSC.finish(timeSpent, timeEstimated, notes) ⇒ <code>string</code></h5>
+
+
+
+<p>complete building</p>
+
+**Kind**: instance method of [<code>ConstructionSC</code>](#module_test-semicolons..ConstructionSC)  
+**Returns**: <code>string</code> - <p>returns a report</p>  
+**Access**: public  
+
+| Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | <ul> <li></li> </ul> |
-| type | <code>string</code> | <ul> <li></li> </ul> |
-| value | <code>string</code> \| <code>number</code> | <ul> <li></li> </ul> |
-| description | <code>string</code> | <ul> <li></li> </ul> |
+| timeSpent | <code>number</code> | <p>hours of actual work</p> |
+| timeEstimated | <code>number</code> | <p>hours estimated at start</p> |
+| notes | <code>string</code> | <p>notes about the work</p> |
 
 
 <hr/>
 
-<a name="module_types..TypedefInfo" id="module_types..TypedefInfo"></a>
+<a name="module_test-semicolons..ConstructionSC+jsdocStyleFunction" id="module_test-semicolons..ConstructionSC+jsdocStyleFunction"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~TypedefInfo ⇐ <code>SourceInfo</code></h5>
+    constructionSC.jsdocStyleFunction(a) ⇒ <code>Promise.&lt;unknown&gt;</code></h5>
 
 
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
-**Extends**: <code>SourceInfo</code>  
+<p>A method documented in classic JSDoc style.  *
+But we'll let the param types and return be generated</p>
+
+**Kind**: instance method of [<code>ConstructionSC</code>](#module_test-semicolons..ConstructionSC)  
 **Access**: public  
-**Properties**
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| name | <code>string</code> |  | <ul> <li></li> </ul> |
-| form | <code>TypedefForm</code> |  | <ul> <li></li> </ul> |
-| type | <code>string</code> |  | <ul> <li></li> </ul> |
-| description | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| declaration | <code>FunctionInfo</code> \| <code>ClassInfo</code> |  | <ul> <li></li> </ul> |
-| TypeConstraint> | <code>string</code> | <code>&quot;new&quot;</code> | <p>Map&lt;string, TypeConstraint&gt;() -</p> |
-| bodyStart | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
-| bodyEnd | <code>number</code> | <code>-1</code> | <ul> <li></li> </ul> |
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>number</code> | <p>a number we pass in</p> |
 
 
 <hr/>
 
-<a name="module_types..APIInfo" id="module_types..APIInfo"></a>
+<a name="module_test-semicolons..plainJaneSC" id="module_test-semicolons..plainJaneSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~APIInfo</h5>
+    test-semicolons~plainJaneSC(a, b, c)</h5>
 
 
 
-<p>Top-level collection of all functions, classes, and properties</p>
+<p>this is as plain as it gets
+a simple JS function
+marked as public so it will appear in output</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
-**Properties**
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| functions | <code>Array.&lt;FunctionInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| classes | <code>Array.&lt;ClassInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| properties | <code>Array.&lt;PropertyInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| enums | <code>Array.&lt;EnumInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
-| typedefs | <code>Array.&lt;TypedefInfo&gt;</code> | <code>[</code> | <ul> <li></li> </ul> |
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
 
 
 <hr/>
 
-<a name="module_types..ParameterInfo" id="module_types..ParameterInfo"></a>
+<a name="module_test-semicolons..publicJaneSC" id="module_test-semicolons..publicJaneSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~ParameterInfo</h5>
+    test-semicolons~publicJaneSC(a, b, c)</h5>
 
 
 
-<p>Information about a parameter</p>
+<p>This is the same as plainJane, but
+in this case we are exporting it from the module
+and using a JSDoc form comment block</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
-**Properties**
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| type | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| TypeConstraint> | <code>string</code> | <code>&quot;new&quot;</code> | <p>Map&lt;string, TypeConstraint&gt;() -</p> |
-| ordinal | <code>number</code> |  | <ul> <li></li> </ul> |
-| name | <code>string</code> |  | <ul> <li></li> </ul> |
-| description | <code>string</code> |  | <ul> <li></li> </ul> |
-| optional | <code>boolean</code> |  | <ul> <li></li> </ul> |
-| default | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| status | <code>SpecificationStatus</code> | <code>SpecificationStatus.None</code> | <ul> <li></li> </ul> |
-| error | <code>string</code> |  | <p>if defined, holds error detail. status is probably MISMATCH.</p> |
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
 
 
 <hr/>
 
-<a name="module_types..ReturnInfo" id="module_types..ReturnInfo"></a>
+<a name="module_test-semicolons..separatedJaneSC" id="module_test-semicolons..separatedJaneSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~ReturnInfo</h5>
+    test-semicolons~separatedJaneSC(a, b, c)</h5>
 
 
 
-<p>Information about a return value</p>
+<p>All keywords are separated</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
-**Properties**
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| type | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | <ul> <li></li> </ul> |
-| description | <code>string</code> |  | <ul> <li></li> </ul> |
-| TypeConstraint> | <code>string</code> | <code>&quot;new&quot;</code> | <p>Map&lt;string, TypeConstraint&gt;() -</p> |
-| status | <code>SpecificationStatus</code> | <code>SpecificationStatus.None</code> | <ul> <li></li> </ul> |
+| Param | Type |
+| --- | --- |
+| a | <code>\*</code> | 
+| b | <code>\*</code> | 
+| c | <code>\*</code> | 
 
 
 <hr/>
 
-<a name="module_types..FICallback" id="module_types..FICallback"></a>
+<a name="module_test-semicolons..indexGeneratorSC" id="module_test-semicolons..indexGeneratorSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~FICallback</h5>
+    test-semicolons~indexGeneratorSC()</h5>
 
 
 
-<p>Callback for source reader.
-Calls back with FunctionInfo and associated text for each function in source</p>
+<p>a generator function</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
 
 <hr/>
 
-<a name="module_types..PICallback" id="module_types..PICallback"></a>
+<a name="module_test-semicolons..indexGeneratorTSSC" id="module_test-semicolons..indexGeneratorTSSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~PICallback</h5>
+    test-semicolons~indexGeneratorTSSC() ⇒ <code>Generator.&lt;number&gt;</code></h5>
 
 
 
-<p>Callback for source reader.
-Calls back with PropertyInfo and associated text for each property in source</p>
+<p>a typescript generator function</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Returns**: <code>Generator.&lt;number&gt;</code> - <p>generates numbers</p>  
 **Access**: public  
 
 <hr/>
 
-<a name="module_types..EICallback" id="module_types..EICallback"></a>
+<a name="module_test-semicolons..typescriptSC" id="module_test-semicolons..typescriptSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~EICallback</h5>
+    test-semicolons~typescriptSC(a, b, c)</h5>
 
 
 
-<p>Callback for source reader.
-Calls back with EnumInfo and associated text for each enum in source</p>
+<p>a typescript example</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| a | <code>string</code> | 
+| b | <code>number</code> | 
+| c | <code>boolean</code> | 
+
+
+<hr/>
+
+<a name="module_test-semicolons..splitscriptSC" id="module_test-semicolons..splitscriptSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~splitscriptSC(a, b, c) ⇒ <code>string</code></h5>
+
+
+
+<p>separated typescript, including separated semicolon</p>
+
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Returns**: <code>string</code> - <p>A value is returned</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| a | <code>string</code> | <p>the a parameter</p> |
+| b | <code>number</code> | <p>the b parameter</p> |
+| c | <code>boolean</code> | <p>the c parameter</p> |
+
+
+<hr/>
+
+<a name="module_test-semicolons..fetchSC" id="module_test-semicolons..fetchSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~fetchSC(url) ⇒ <code>Promise.&lt;string&gt;</code></h5>
+
+
+
+<p>example of an async function</p>
+
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - <p>the body of the return</p>  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | <p>The url to fetch</p> |
+
+
+<hr/>
+
+<a name="module_test-semicolons..simpleVoidSC" id="module_test-semicolons..simpleVoidSC"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    test-semicolons~simpleVoidSC()</h5>
+
+
+
+<p>void functions do not document a return type</p>
+
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
 
 <hr/>
 
-<a name="module_types..TICallback" id="module_types..TICallback"></a>
+<a name="module_test-semicolons..simpleVoidTSSC" id="module_test-semicolons..simpleVoidTSSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~TICallback</h5>
+    test-semicolons~simpleVoidTSSC()</h5>
 
 
 
-<p>Callback for source reader.
-Calls back with TypedefInfo and associated text for each type definition in source</p>
+<p>typescript void functions do not document a return type</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
 **Access**: public  
 
 <hr/>
 
-<a name="module_types..CICallback" id="module_types..CICallback"></a>
+<a name="module_test-semicolons..docVoidSC" id="module_test-semicolons..docVoidSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~CICallback</h5>
+    test-semicolons~docVoidSC() ⇒ <code>void</code></h5>
 
 
 
-<p>Callback for source reader.
-Calls back with ClassInfo and associated text for each class in source</p>
+<p>typescript with documented void return</p>
 
-**Kind**: inner class of [<code>types</code>](#module_types)  
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Returns**: <code>void</code> - <p>// a void return</p>  
 **Access**: public  
 
 <hr/>
 
-<a name="module_types..TypedefForm" id="module_types..TypedefForm"></a>
+<a name="module_test-semicolons..jsVoidSC" id="module_test-semicolons..jsVoidSC"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~TypedefForm</h5>
+    test-semicolons~jsVoidSC() ⇒ <code>void</code></h5>
 
 
 
-**Kind**: inner enum of [<code>types</code>](#module_types)  
-**Read only**: true  
-**Properties**
+<p>javascript post-dec comments also documented as return type</p>
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| Primitive | <code>number</code> | <code>Primitive</code> | <p><b><i>(value = 0)</i></b></p> |
-| Object | <code>number</code> | <code>Object</code> | <p><b><i>(value = 1)</i></b></p> |
-| Function | <code>number</code> | <code>Function</code> | <p><b><i>(value = 2)</i></b></p> |
-
-
-<hr/>
-
-<a name="module_types..SpecificationStatus" id="module_types..SpecificationStatus"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    types~SpecificationStatus</h5>
-
-
-
-<p>Parse error status for parameter constraints</p>
-
-**Kind**: inner enum of [<code>types</code>](#module_types)  
-**Read only**: true  
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| None | <code>number</code> | <code>None</code> | <p>not analyzed <b><i>(value = 0)</i></b></p> |
-| Okay | <code>string</code> | <code>&quot;Okay&quot;</code> | <p>documented and reconciled</p> |
-| BadConstraint | <code>string</code> | <code>&quot;BadConstraint&quot;</code> | <p>syntax error processing constraint declaration</p> |
-| NoDoc | <code>string</code> | <code>&quot;NoDoc&quot;</code> | <p>function not documented in JSDoc format</p> |
-| Mismatch | <code>string</code> | <code>&quot;Mismatch&quot;</code> | <p>JSDoc does not match typescript declaration</p> |
-
+**Kind**: inner method of [<code>test-semicolons</code>](#module_test-semicolons)  
+**Returns**: <code>void</code> - <p>// nothing to see here</p>  
+**Access**: public  

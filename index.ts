@@ -24,10 +24,10 @@ let config:any = {}
 const args = process.argv.slice(2)
 let i = 0
 let f:string
-if(!args.length) {
-  showHelp()
-  process.exit(1)
-}
+// if(!args.length) {
+//   showHelp()
+//   process.exit(1)
+// }
 while((f = args[i])) {
   if(f === 'config') {
     opts['config'] = args[i+1]
@@ -46,10 +46,10 @@ while((f = args[i])) {
   i++
 }
 
-if(args.length && !files.length) {
-    showHelp()
-    process.exit(1)
-}
+// if(args.length && !files.length) {
+//     showHelp()
+//     process.exit(1)
+// }
 
 // if invoked as a CLI, we will process the files
 if(files.length) {
