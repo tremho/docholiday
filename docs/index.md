@@ -2,22 +2,22 @@
 # Doc Holiday
 
 ## Main documentation
-- [Introduction](intro.md)
-- [Getting Started](Getting%20Started.md)
+- [Introduction](intro )
+- [Getting Started](Getting%20Started )
 
 
-- __[Deciding how you will publish your documentation](publish.md)__
-  - [Separately published HTML](publish.md#API html)
-    - [Local file access](publish.md#API html via file system)
-    - [Serving locally](publish.md@API html via local server)
-    - [Using a remote web server](publish.md#External Webserver)
-    - [Using Github Pages](publish.md#GitHub Pages)
-  - [Markdown document group](publish.md#Book Source)
-    - [API and supporting documents](publish.md#Supporting Pages)
-    - [Associate with your GitHub Repository](publish.md#Repository Go-To)
-    - [Use Gitbook or Honkit to publish your ebook manual](publish.md#eBook Publishing)
-      - [as HTML](publish.md#eBook as HTML)
-      - [as PDF or eBook](publish.md#eBook as PDF or eBook)
+- __[Deciding how you will publish your documentation](publish )__
+  - [Separately published HTML](publish #API html)
+    - [Local file access](publish #API html via file system)
+    - [Serving locally](publish @API html via local server)
+    - [Using a remote web server](publish #External Webserver)
+    - [Using Github Pages](publish #GitHub Pages)
+  - [Markdown document group](publish #Book Source)
+    - [API and supporting documents](publish #Supporting Pages)
+    - [Associate with your GitHub Repository](publish #Repository Go-To)
+    - [Use Gitbook or Honkit to publish your ebook manual](publish #eBook Publishing)
+      - [as HTML](publish #eBook as HTML)
+      - [as PDF or eBook](publish #eBook as PDF or eBook)
       
 
 - [Documenting code elements]()
@@ -29,7 +29,7 @@
 
 - __Using doc-holiday as an NPM module__
   - [installation and use in a project]() 
-  - [API Reference](API.md)
+  - [API Reference](API )
 
 
 
@@ -40,5 +40,5 @@
 - [Strategies for CI Deployments]() 
 
 
-- [Repository README](../README.md)
+- [Repository README](../README )
 

@@ -118,7 +118,7 @@ using their birthdate as the starting point</p>
   - Markdown files can be organized as part of a full document suite
   - Can use 
   [GitBook](https://www.gitbook.com) 
-  or [HonKit](https://github.com/honkit/honkit/blob/master/README.md) 
+  or [HonKit](https://github.com/honkit/honkit/blob/master/README ) 
   to publish document suite as html
 - __Supports the code you write, the way you write it__ 
   - Supports TypeScript parameters and return types
@@ -138,4 +138,4 @@ using their birthdate as the starting point</p>
 
 <hr/>
 
-##### Back <==  [Table of Contents](index.md) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Getting Started](Getting%20Started.md)
+##### Back <==  [Table of Contents](index ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Getting Started](Getting%20Started )

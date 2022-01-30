@@ -70,10 +70,10 @@ text file at the root of your project directory and modify it to suit your prefe
 
   /*
    Output location for Markdown output
-   Specify the file path (e.g. booksrc/API.md) to receive this output
+   Specify the file path (e.g. booksrc/API ) to receive this output
    Or if set up for GitBook (HonKit) output / publish
   */
-  markdown: "booksrc/API.md",
+  markdown: "booksrc/API ",
 
   /*
     intermal JSDOC configuration file location, if applicable
@@ -128,7 +128,7 @@ __engine__
 Specifies which rendering engine to use.  
 Supported documentation rendering comes from separately installed
 versions of `jsdoc`, `jsdoc2md`, and/or `documentation`, as detailed
-in the [Getting Started](Getting%20Started.md) section.  
+in the [Getting Started](Getting%20Started ) section.  
 Values here may be:
 - "jsdoc" to use JSDoc or JSDoc2md
 - "docjs" to use DocumentationJS
@@ -169,7 +169,7 @@ documentation pass, as obsolete pages can be left behind from previous runs.
 
 __markdown__  
 This specifies a file path, relative to the current directory (e.g. project root),
-specifying the markdown file to output into (e.g. `booksrc/API.md`).
+specifying the markdown file to output into (e.g. `booksrc/API `).
 
 This file is created if it does not exist. Any existing file will be
 overwritten.
