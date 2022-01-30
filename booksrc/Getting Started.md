@@ -1,6 +1,10 @@
 
 ## Getting started
 
+Doc-holiday uses some other common tools to do its work.
+You will need to install these if you don't already have them.
+
+
 #### 1. Install your rendering engine(s)
 
 _Doc-holiday_ does not render directly to html or markdown.  It creates
