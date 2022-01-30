@@ -1,203 +1,314 @@
+#!/usr/bin/env node
+/*
+The cli executor and the main API import for Doc-holiday
+ */
 
-import {TypeConstraint} from "./TypeCheck";
+import * as path from "path"
+import * as fs from 'fs-extra'
+
+import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo, TypedefInfo} from './src/types'
+import { processSourceFile, processSource } from './src/ProcessFiles'
+import {recordInfo, sortRecorded, clearRecorded, stubOut, writeStubFile, readModuleDescription} from "./src/Output";
+import {getGlobbedFiles} from "./src/Globber";
+import {executeCommand} from "./src/execCmd";
+
+import * as hjson from 'hjson'
+import {exec} from "child_process";
+
+import * as ac from "ansi-colors";
+
+let files:string[] = []
+let opts:any = {}
+let config:any = {}
+
+// Arguments passed to the CLI
+// if invoked as a CLI, we will extract the args
+const args = process.argv.slice(2)
+let i = 0
+let f:string
+// If there are no args, we are either importing or else wee ran the executable without passing any args
+if(!args.length) {
+    if(process.argv[1] === __filename) { // true if we ran the executable
+        showHelp()
+        process.exit(1)
+    }
+}
+// look for options and gather the files from any passed globs
+while((f = args[i])) {
+    if(f === 'config') {
+        opts['config'] = args[i+1]
+    }
+    if(f.substring(0,7) === 'config=') opts['config'] = f.substring(7)
+    if(f === '-c') {
+        opts['config'] = args[i+1]
+    }
+    if(f.substring(0,3) === '-c=') opts['config'] = f.substring(3)
+
+        // if(f.substring(0,9) === 'verbosity') opts['verbosity'] = args[i+1]
+        // if(f.substring(0,10) === 'verbosity=') opts['verbosity'] = f.substring(10)
+        // if(f.substring(0,3) === '-v') opts['verbosity'] = args[i+1]
+    // if(f.substring(0,3) === '-v=') opts['verbosity'] = f.substring(3)
+
+    else {
+        let gfs = getGlobbedFiles(f)
+        for(let gf of gfs) {
+            files.push(gf)
+        }
+    }
+    i++
+}
+
+// if we have arge, but no files, that is an error -- show help
+if(args.length && !files.length) {
+    showHelp()
+    process.exit(1)
+}
+
+// if invoked as a CLI, we will process the files
+if(files.length) {
+    // console.log('Doc Holiday ', files)
+    readConfiguration()
+    clean()
+    let generator = processFileList(files, config.intermediate)
+    while(true) {
+        let gen = generator.next()
+        let stub = gen.value
+        if(!stub) break;
+        // if(stub) trace(1, stub)
+        if(gen.done) break;
+    }
+    execute()
+}
+
+// If used as a module, the rest of this file represents the exposed API
 
 /**
- * Details about the scope of an entity
+ * Options for stub generation
  */
-export class ScopeModifiers {
-    public static?:boolean;
-    public public?:boolean;
-    public private?:boolean;
-    public optional?:boolean;
-    public const?:boolean;
-    public async?:boolean;
-    public generator?:boolean;
+export class DocOptions {
+    sourceType:string = 'ts'  // either 'ts' (typescript) or 'js' (javascript)
+    stubExtension:string = '.docstub.js'
 }
+
 
 /**
- * Information of where in the source file this entity exists
+ * Process a list of source files into comment-normalized stubs
+ * output to an output path or generating a string yield callback for each file processed.
+ * @param {string[]} files
+ * @param {string} outPath
+ *
+ * @generator {string} with no outPath given, will generate successive results from process files as string content.
+ *                     with outPath, the generated file will be return on each iteration
+ *
+ * <<<jsdoc tag=example>>>
+ *     ```
+ *     // myFiles:string[] = [... an array of file paths to convert ]
+ *     let generator = processFileList(files)
+ *     while(true) {
+ *         let gen = generator.next()
+ *         let stub = gen.value
+ *         if(stub) console.log(stub)
+ *         if(gen.done) break;
+ *       }
+ *
+ *     let outFile = processFileList(myFiles, myOutDir).next()
+ *     // stub output will be in the file named by outFile
+ *    ```
  */
-export class SourceInfo {
-    public decStart:number = -1;
-    public decEnd: number = -1;
-    public comStart: number = -1;
-    public comEnd: number = -1;
-}
+export function* processFileList(files:string[], outPath=''):Generator<string> {
 
-/**
- * Information about a function within the source
- */
-export class FunctionInfo extends SourceInfo {
-    public name:string = '';
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string;
-    public params: ParameterInfo[] = []
-    public return?: ReturnInfo;
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-    public status:SpecificationStatus = SpecificationStatus.None;
-    public error?:string; // if defined, holds error detail. status is probably MISMATCH.
-}
+    // console.log('processing files', files)
+    let f = files.shift()
+    while(f) {
+        clearRecorded()
+        let fp = path.normalize(f)
+        processSourceFile(fp, recordModuleFunc, recordProperty, recordClass, recordEnum, recordTypedef)
+        sortRecorded()
+        if (outPath) {
+            let bn = path.basename(f)
+            bn = bn.substring(0, bn.lastIndexOf('.'))
+            let outFile = path.normalize(path.join(outPath, bn+'.docstub.js')) // todo: use options for stubExtension
 
-/**
- * Information about a class within the source
- */
-export class ClassInfo extends SourceInfo {
-    public name:string = '';
-    public isInterface:boolean
-    public extends:string = '';
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public implements: string[] = []
-    public mixins: string[] = []
-    public description:string = ''
-    public internals:APIInfo = new APIInfo()
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-    public status:SpecificationStatus = SpecificationStatus.None;
-    public error?:string; // if defined, holds error detail
-}
+            let content = fs.readFileSync(fp).toString()
+            const desc = readModuleDescription(content)
 
-/**
- * Information about a non-function property within a source file or within a class
- */
-export class PropertyInfo extends SourceInfo {
-    public name:string = "";
-    public type:string = "";
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string = ''
-    public assignStart:number = -1
-    public default:string = ''
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-}
-
-/**
- * Information about an enum
- */
-export class EnumInfo extends SourceInfo {
-    public name:string
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string = ''
-    public values:EnumValueInfo[] = []
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-}
-
-/**
- * Information about a single enum value
- */
-export class EnumValueInfo {
-    public name:string
-    public type:string
-    public value:string|number
-    public description:string
-}
-
-export enum TypedefForm {
-    Primitive,
-    Object,
-    Function,
-}
-
-export class TypedefInfo extends SourceInfo {
-    public name:string
-    public form:TypedefForm
-    public type:string
-    public description:string = ''
-    public declaration:FunctionInfo|ClassInfo
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-}
-
-/**
- * Top-level collection of all functions, classes, and properties
- */
-export class APIInfo {
-    public functions: FunctionInfo[] = []
-    public classes: ClassInfo[] = []
-    public properties: PropertyInfo[] = []
-    public enums: EnumInfo[] = []
-    public typedefs:TypedefInfo[] = []
-}
-
-/**
- * Parse error status for parameter constraints
- */
-export enum SpecificationStatus {
-    None ="",   // not analyzed
-    Okay ="Okay",   // documented and reconciled
-    BadConstraint = "BadConstraint", // syntax error processing constraint declaration
-    NoDoc = "NoDoc", // function not documented in JSDoc format
-    Mismatch = "Mismatch", // JSDoc does not match typescript declaration
-
-    // these two are not needed and can be assumed by the absence of the associated properties
-    // and other status may also be in effect.
-    // NoConstraint = "NoConstraint", // Constraints have not been declared for this (but a description has)
-    // NoDescription = "NoDescription" // no description or constraints have been provided
-}
-
-/**
- * Information about a parameter
- */
-export class ParameterInfo {
-    public type:string = ''
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public ordinal: number;
-    public name:string;
-    public description:string;
-    public optional: boolean;
-    public default:string = ''
-    public status: SpecificationStatus = SpecificationStatus.None;
-    public error:string; // if defined, holds error detail. status is probably MISMATCH.
+            writeStubFile(outFile, bn, desc)
+            yield outFile
+        } else {
+            yield stubOut()
+        }
+        f = files.shift()
+    }
 }
 
 /**
- * Information about a return value
+ * Convert source text into documentation stub output
+ *
+ * @param {string} content
+ *          The original source to convert
+ * @param {DocOptions} options
+ *          Options affecting stub creation
  */
-export class ReturnInfo {
-    public type:string = ''
-    public description:string;
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public status: SpecificationStatus = SpecificationStatus.None;
+export function docstub(content:string, options?:DocOptions) {
+    if(!options) options = new DocOptions()
+    return processSource(content, options.sourceType, recordModuleFunc, recordProperty, recordClass, recordEnum, recordTypedef)
+}
+
+export {processSource}
+export {processSourceFile}
+
+
+function recordModuleFunc(fi: FunctionInfo, source: string) {
+    recordInfo(fi, source)
+}
+
+function recordProperty(pi: PropertyInfo, source: string) {
+    recordInfo(pi, source)
+}
+
+function recordClass(ci: ClassInfo, source: string) {
+    recordInfo(ci, source)
+}
+
+function recordEnum(ei:EnumInfo, source: string) {
+    recordInfo(ei, source)
+}
+
+function recordTypedef(ti:TypedefInfo, source: string) {
+    recordInfo(ti, source)
+}
+
+function readConfiguration() {
+    let cf = opts.config || 'doc-holiday.conf'
+    cf = path.resolve(cf.trim())
+    console.log(cf)
+    if(!fs.existsSync(cf)) {
+        showHelp()
+        console.error(ac.bold.red('No config found or specified.  use config option to specify location of a doc-holiday.conf file if not in current directory'))
+        process.exit(3)
+    }
+    let contents = fs.readFileSync(cf).toString()
+    config = hjson.parse(contents)
+    // console.log('read config', config)
+
+    // translate references
+    for(let key of Object.getOwnPropertyNames(config)) {
+        let value = config[key]
+        if(typeof value === 'string') {
+            let repl = '%'+key+'%'
+            while(contents.indexOf(repl) !== -1) contents = contents.replace(repl, value)
+        }
+    }
+    config = hjson.parse(contents)
+    // console.log('translated config', JSON.stringify(config, null, 2))
+
+}
+
+function clean() {
+    const gen = path.resolve(config.intermediate)
+    const md = path.resolve(config.markdown)
+    fs.removeSync(gen)
+    fs.removeSync(md)
 }
 
 /**
- * Callback for source reader.
- * Calls back with FunctionInfo and associated text for each function in source
+ * Executes the jsdoc or similar documentation generation according to the doc-holiday.conf file settings.
+ * In normal flow, this is called after docstub generation for all source files is complete, and the configuration
+ * is set to generate from the docstub .js files in the intermediate directory (gen).
  */
-export interface FICallback {
-    (fi:FunctionInfo, text?:string):void
+export async function execute() {
+    // now run the exec
+
+    // insure we have the intermediate directory we've specified
+    // (Should have been created by stub generation)
+    const gen = path.resolve(config.intermediate)
+    if(!fs.existsSync(gen)) {
+        console.error("Specified intermediate directory "+gen+" does not exist!")
+        throw Error()
+    }
+    if(config.engine === "jsdoc") {
+        // read in jsdoc config and add our own values
+        let jc = path.resolve(config.jsdocConfig)
+        if (!fs.existsSync(jc)) {
+            console.error('JSDOC config file ' + jc + ' does not exist')
+            throw Error()
+        }
+        let cjc: any = path.resolve('jsdoc-conf.json')
+        cjc = fs.readFileSync(cjc).toString()
+        // canonical json config
+        cjc = hjson.parse(cjc)
+        let ctemp: any = fs.readFileSync(jc).toString()
+        ctemp = hjson.parse(ctemp)
+        let jst = Object.assign(ctemp, cjc)
+        jst.opts = {
+            template: config.template || "templates/default",
+            sort: false
+        }
+        // console.log('resulting json config', jst)
+
+        // put our jsdoc config in intermediate director
+        fs.writeFileSync(path.join(gen, 'jsdoc.conf'), JSON.stringify(jst, null, 2))
+    }
+
+
+    let eng = config.engine
+    let fmts = config.format.split(',')
+    const execFmt = async (fmt:string) => {
+        if(fmt) {
+            let exec = config.execInfo[eng][fmt]['exec']
+            console.log('exec', exec)
+
+            const exp = exec.split(' ')
+            const cmd = exp.shift()
+            if (eng === 'jsdoc' && fmt=='html') {
+                let dhroot = path.resolve('.')
+                let dhIntercept = path.join(dhroot, 'templates')
+                exp.unshift(dhIntercept)
+                exp.unshift('-t')
+            }
+
+            // todo: use enginePath to prefix cmd
+
+            return executeCommand(cmd, exp, '', true).then(rt => {
+                // console.log(rt)
+                return rt.retcode
+            })
+        }
+    }
+    let fmt
+    while((fmt = fmts.shift())) {
+        console.log('converting to '+fmt+'...')
+        let rt = await execFmt(fmt)
+        if(rt) break
+    }
 }
 
-/**
- * Callback for source reader.
- * Calls back with PropertyInfo and associated text for each property in source
- */
-export interface PICallback {
-    (pi:PropertyInfo, text?:string):void
+function showHelp() {
+    console.log(ac.bold.green("\n------------------------"))
+    console.log( ac.bold.green('     doc-holiday'))
+    console.log(ac.bold.green("------------------------"))
+    console.log("")
+    console.log(ac.italic.grey(" doc-holiday [options] <file glob list>"))
+    console.log("")
+    console.log(ac.italic.grey(" where <file glob list> is one or more glob pattern file locations"))
+    console.log(ac.dim.italic.grey("( for help on glob patterns, see https://en.wikipedia.org/wiki/Glob_%28programming%29 )"))
+    console.log(ac.italic.grey("and [options] is one of:"))
+    console.log(ac.bold.black(" config <file>"), ac.black.italic("-- Specify doc-holiday.conf file location"))
+    console.log(ac.bold.black(" config=<file>"),ac.black.italic("-- same as above"))
+    console.log(ac.bold.black(" -c <file>"), ac.black.italic("-- same as above"))
+    console.log(ac.bold.black(" -c=<file>"), ac.black.italic("-- same as above"))
+    console.log("")
 }
 
-/**
- * Callback for source reader.
- * Calls back with EnumInfo and associated text for each enum in source
- */
-export interface EICallback {
-    (ei:EnumInfo, text?:string):void
+/*
+export function trace(level:number, ...args) {
+  const verb = Number(opts.verbosity)
+  if(!isFinite(verb) || verb < 0 || verb > 3) {
+    console.error('illegal verbosity value "'+opts.verbosity+'"')
+    process.exit(2)
+  }
+  if(verb && level <= verb) {
+    console.log(args)
+  }
 }
-
-/**
- * Callback for source reader.
- * Calls back with TypedefInfo and associated text for each type definition in source
  */
-export interface TICallback {
-    (ti:TypedefInfo, text?:string): void
-}
-
-/**
- * Callback for source reader.
- * Calls back with ClassInfo and associated text for each class in source
- */
-export interface CICallback {
-    (ci:ClassInfo, text?:string):void
-}
-

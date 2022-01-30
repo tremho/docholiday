@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+/*
+The cli executor and the main API import for Doc-holiday
+ */
 
 import * as path from "path"
 import * as fs from 'fs-extra'
@@ -14,22 +17,23 @@ import {exec} from "child_process";
 
 import * as ac from "ansi-colors";
 
-
-
 let files:string[] = []
 let opts:any = {}
 let config:any = {}
 
+// Arguments passed to the CLI
 // if invoked as a CLI, we will extract the args
 const args = process.argv.slice(2)
 let i = 0
 let f:string
+// If there are no args, we are either importing or else wee ran the executable without passing any args
 if(!args.length) {
-  if(process.argv[1] === __filename) {
+  if(process.argv[1] === __filename) { // true if we ran the executable
     showHelp()
     process.exit(1)
   }
 }
+// look for options and gather the files from any passed globs
 while((f = args[i])) {
   if(f === 'config') {
     opts['config'] = args[i+1]
@@ -39,6 +43,12 @@ while((f = args[i])) {
     opts['config'] = args[i+1]
   }
   if(f.substring(0,3) === '-c=') opts['config'] = f.substring(3)
+
+  // if(f.substring(0,9) === 'verbosity') opts['verbosity'] = args[i+1]
+  // if(f.substring(0,10) === 'verbosity=') opts['verbosity'] = f.substring(10)
+  // if(f.substring(0,3) === '-v') opts['verbosity'] = args[i+1]
+  // if(f.substring(0,3) === '-v=') opts['verbosity'] = f.substring(3)
+
   else {
     let gfs = getGlobbedFiles(f)
     for(let gf of gfs) {
@@ -48,6 +58,7 @@ while((f = args[i])) {
   i++
 }
 
+// if we have arge, but no files, that is an error -- show help
 if(args.length && !files.length) {
     showHelp()
     process.exit(1)
@@ -63,7 +74,7 @@ if(files.length) {
     let gen = generator.next()
     let stub = gen.value
     if(!stub) break;
-    // if(stub) console.log(stub)
+    // if(stub) trace(1, stub)
     if(gen.done) break;
   }
   execute()
@@ -170,8 +181,11 @@ function recordTypedef(ti:TypedefInfo, source: string) {
 function readConfiguration() {
   let cf = opts.config || 'doc-holiday.conf'
   cf = path.resolve(cf.trim())
+  console.log(cf)
   if(!fs.existsSync(cf)) {
-    console.error('No config found or specified.  use -c to specify location of a doc-holiday.conf file if not in current directory')
+    showHelp()
+    console.error(ac.bold.red('No config found or specified.  use config option to specify location of a doc-holiday.conf file if not in current directory'))
+    process.exit(3)
   }
   let contents = fs.readFileSync(cf).toString()
   config = hjson.parse(contents)
@@ -252,6 +266,9 @@ export async function execute() {
         exp.unshift(dhIntercept)
         exp.unshift('-t')
       }
+
+      // todo: use enginePath to prefix cmd
+
       return executeCommand(cmd, exp, '', true).then(rt => {
         // console.log(rt)
         return rt.retcode
@@ -282,3 +299,16 @@ function showHelp() {
   console.log(ac.bold.black(" -c=<file>"), ac.black.italic("-- same as above"))
   console.log("")
 }
+
+/*
+export function trace(level:number, ...args) {
+  const verb = Number(opts.verbosity)
+  if(!isFinite(verb) || verb < 0 || verb > 3) {
+    console.error('illegal verbosity value "'+opts.verbosity+'"')
+    process.exit(2)
+  }
+  if(verb && level <= verb) {
+    console.log(args)
+  }
+}
+ */

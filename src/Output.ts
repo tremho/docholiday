@@ -47,6 +47,7 @@ export function readModuleDescription(source:string) {
     const lines = source.split('\n')
     for(let ln of lines) {
         ln = ln.trim()
+        if(ln.substring(0,2) === '#!') continue; // skip shebang line
         if(ln.charAt(0) === '/') {
             reading = true
             ln = ln.substring(1)

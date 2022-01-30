@@ -143,6 +143,8 @@ export class SourceReader {
     }
     readSourceLine() {
         const rt = new SourceInfo()
+        // skip shebang line
+        if(this.text.substring(this.pos, this.pos+2) === '#!') this.pos = this.text.indexOf('\n', this.pos)
         this.skipWhite()
         while(this.text.charAt(this.pos) === ';') this.pos++
         while(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
@@ -628,8 +630,11 @@ export class SourceReader {
         while (!done) {
             let si = this.readSourceLine()
             if(this.pos <= lastPos) {
-                console.error(`Synchronization stall on line ${this.getCurrentLineNumber()}`)
-                throw Error('Synchronization Stall')
+                // console.error(`Synchronization stall on line ${this.getCurrentLineNumber()}`)
+                // throw Error('Synchronization Stall')
+                this.pos = this.text.indexOf('\n', this.pos+1)
+                if(this.pos === -1) this.pos = endPos
+                continue
             }
             done = (si.decStart >= endPos || si.decEnd < 0)
             if (!done) {

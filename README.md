@@ -56,11 +56,13 @@ Add verbosity logger and do a console sweep_
 - [X] make cli and do npm private publish
 - [X] temp link of global to build/index.js for dev test
 - [X] use ansi colors for help display
-- [ ] add a verbosity option (0 - 3) default 0 
-- [ ] (rev) cli defaults and process detection
-- [ ] put to travis
+- <del>[ ] add a verbosity option (0 - 3) default 0</del> 
+- [X] (rev) cli defaults and process detection
+- [ ] ignore shebang line when parsing module description
 - [ ] use to self-document
+- [ ] put to travis
 - [ ] add badges for readme
+- [ ] use to document jove
 - [ ] public publish to npm
 
 -----------
