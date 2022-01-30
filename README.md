@@ -58,8 +58,9 @@ Add verbosity logger and do a console sweep_
 - [X] use ansi colors for help display
 - <del>[ ] add a verbosity option (0 - 3) default 0</del> 
 - [X] (rev) cli defaults and process detection
-- [ ] ignore shebang line when parsing module description
+- [X] ignore shebang line when parsing module description
 - [ ] use to self-document
+- [ ] fix issues below
 - [ ] put to travis
 - [ ] add badges for readme
 - [ ] use to document jove
@@ -69,10 +70,20 @@ Add verbosity logger and do a console sweep_
 
 ### Issues
 
+- [ ] 'Biorhythm' example in intro doesn't really work as advertised
+  - parameters mangled
+  - return type wrong
+  - multi-line comment has // 
+  - hbs template is inserting &lt;code&gt; and &lt;p&gt; tags
+
+- [ ] we should have a sort (true/false) option we can honor
+  in our plugin (default: false == use our intercept)
+- [ ] console logs for execute and plugin intercept should be removed
 ----
 ###### Can live with for now
 
 - [ ] (properties) multi-value assignment provides incorrect default and type
+
 
 -----------
 
