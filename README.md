@@ -46,9 +46,19 @@ In the closing phase...(I think).... just need to finish the following:
 - <del>[ ] attribution hack?</del>
 
 <span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
-- 
-- [ ] make cli and do npm private publish
-- [ ] put to travi
+
+_Able to generate self-doc. Need to write the docs.  
+I should re-export  
+Also, do a test of module import and make sure we don't execute  
+Add verbosity logger and do a console sweep_
+
+
+- [X] make cli and do npm private publish
+- [X] temp link of global to build/index.js for dev test
+- [X] use ansi colors for help display
+- [ ] add a verbosity option (0 - 3) default 0 
+- [ ] (rev) cli defaults and process detection
+- [ ] put to travis
 - [ ] use to self-document
 - [ ] add badges for readme
 - [ ] public publish to npm

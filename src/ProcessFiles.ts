@@ -23,7 +23,11 @@ export function processSourceFile(srcPath:string, fncallback:FICallback, prcallb
     const contents = fs.readFileSync(srcPath).toString()
 
     const ext = srcPath.substring(srcPath.lastIndexOf('.'))
-    return processSource(contents, ext, fncallback, prcallback, clscallback, encallback, tdcallback)
+    try {
+        return processSource(contents, ext, fncallback, prcallback, clscallback, encallback, tdcallback)
+    } catch(e) {
+        throw Error('a problem occurred while parsing '+srcPath+": "+e.message)
+    }
 }
 
 /**
@@ -35,6 +39,8 @@ export function processSourceFile(srcPath:string, fncallback:FICallback, prcallb
  * @param prcallback function to call on each PropertyInfo parse
  * @param clscallback function to call on each ClassInfo parse
  * @param encallback function to call on each EnumInfo parse
+ *
+ * @throws {Error} from getAPIInfo if there is a parse issue
  */
 export function processSource(contents:string, ext:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback, tdcallback:TICallback) {
     const reader = new SourceReader(contents, ext)

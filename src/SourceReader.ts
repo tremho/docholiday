@@ -25,7 +25,8 @@ import {
 
 import * as TypeCheck from "./TypeCheck"
 import * as Parenthesis from "parenthesis"
-import {endAll} from "tap";
+import * as Brackets from "g2-bracket-parser"
+import peeler from "peeler"
 
 const constraintRE = /\<[\w|\d|=|,|"||!|'|\s]+\>/g
 
@@ -79,15 +80,20 @@ export class SourceReader {
     skipImport() {
         let qc = '"'
         let q1 = this.text.indexOf(qc, this.pos)
-        if(q1 === -1) qc == "'"
-        q1 = this.text.indexOf(qc, this.pos)
-        let q2 = this.text.indexOf(qc, q1+1)
-        if(q2 === -1) throw ("missing quote in import statement")
-        let e = this.pos
-        while(e < q2) {
-            e = this.text.indexOf('\n', e)
+        if(q1 === -1) {
+            qc = "'"
         }
-        this.pos = e
+        q1 = this.text.indexOf(qc, this.pos)
+        if(q1 == -1) {
+            throw ("missing quotes in import statement")
+        }
+        let q2 = this.text.indexOf(qc, q1+1)
+        if(q2 === -1) throw ("missing matching quote in import statement")
+        this.pos = q2+1
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
     }
     skipExport() {
         if(this.text.indexOf('{', this.pos) !== -1) {
@@ -96,6 +102,10 @@ export class SourceReader {
         } else {
             this.pos = this.text.indexOf('\n', this.pos)
         }
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
     }
     skipRequire() {
         let p1 = this.text.indexOf('(', this.pos)
@@ -106,6 +116,10 @@ export class SourceReader {
             e = this.text.indexOf('\n', e)
         }
         this.pos = e
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
+        while(this.text.charAt(this.pos) === ';') this.pos++
+        this.skipWhite()
     }
     nextEnd() {
         // find end from here to end of line or start of comment
@@ -131,9 +145,8 @@ export class SourceReader {
         const rt = new SourceInfo()
         this.skipWhite()
         while(this.text.charAt(this.pos) === ';') this.pos++
-        if(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
-        // if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
-        if(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
+        while(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
+        while(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
         let n = this.nextEnd()
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
         rt.comStart = this.pos;
@@ -178,6 +191,15 @@ export class SourceReader {
         return rt;
     }
     readTypeDef(str, startIndex) {
+        let tp = ''
+        let ti = str.indexOf('<', startIndex)
+        if(ti !== -1) {
+            let te = str.indexOf('>', ti)
+            if(te !== -1) {
+                tp = str.substring(0, te+1).trim()
+                return tp
+            }
+        }
         let type = this.readNextWord(str, startIndex)
         if(type.charAt(type.length-1) === ',') type = type.substring(0,type.length-1)
         let bs = str.indexOf('{', startIndex)
@@ -523,6 +545,9 @@ export class SourceReader {
         }
         // Find body boundaries { }
         let {start, end} = this.findBracketBoundaries(n)
+        if(start === -1 || end === -1) {
+            start = end = fi.decEnd +1
+        }
         fi.bodyStart = start;
         fi.bodyEnd = end;
         // if(opi2 !== -1) fi.bodyEnd = opi2+1
@@ -550,6 +575,9 @@ export class SourceReader {
         }
         let name = this.getFunctionName(inClass, fullsrc)
         if (name || (inClass && fullsrc.trim().charAt(0) === '(')) {
+            if(inClass && fullsrc.indexOf('=') !== -1) {
+                return fi
+            }
             let longSrc = fullsrc.trim().substring(0, fullsrc.indexOf(name))
             let m = name.match(/\w+$/)
             if(m) {
@@ -563,34 +591,49 @@ export class SourceReader {
     }
     findBracketBoundaries(startPos:number, bracket='{'):{start:number, end:number} {
         let bs = this.text.indexOf(bracket, startPos)
-        let pres = Parenthesis(this.text.substring(bs))
-        const sectionLength = (section) => {
-            let sl = 0;
-            for (let i =0; i<section.length; i++) {
-                let ct = section[i]
-                if(Array.isArray(ct)) {
-                    sl += sectionLength(ct)
-                } else {
-                    sl += ct.length;
-                }
-            }
-            return sl
-        }
+        // let btext = stripComments(this.text.substring(bs))
+        let btext = this.text.substring(bs)
 
-        let be = sectionLength(pres[1])
-        return {start: bs, end: bs+be+2}
+
+        let endBracket;
+        if(bracket === '{') endBracket = '}'
+        if(bracket === '[') endBracket = ']'
+        if(bracket === '(') endBracket = ')'
+        if(bracket === '<') endBracket = '>'
+        //
+        // let popts = {
+        //     pairs: [bracket+endBracket]
+        // }
+        // be = btext.length
+        // try {
+        //     let presults = peeler(btext, popts)
+        //     be = presults[0].pos.end
+        // } catch(e) {
+        //     console.log(e)
+        // }
+        let be = myBracketExtract(btext, bracket+endBracket)
+        return {start: bs, end: bs + be}
     }
 
+    private getCurrentLineNumber():number {
+        return this.text.substring(0, this.pos).split('\n').length
+    }
 
     getAPIInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
         const api:APIInfo = new APIInfo()
         let done = false
         this.pos = fromPos;
+        let lastPos = -1
         if(!endPos) endPos = this.text.length;
         while (!done) {
             let si = this.readSourceLine()
+            if(this.pos <= lastPos) {
+                console.error(`Synchronization stall on line ${this.getCurrentLineNumber()}`)
+                throw Error('Synchronization Stall')
+            }
             done = (si.decStart >= endPos || si.decEnd < 0)
             if (!done) {
+                lastPos = this.pos
                 let fi = this.extractFunctionInfo(inClass, si)
                 if(fi.decStart !== -1) {
                     api.functions.push(fi)
@@ -738,19 +781,21 @@ export class SourceReader {
         Object.assign(pi, si)
 
         let bracketed = false;
-        ['[', '{', '('].forEach(bracket => {
-            if (!bracketed) {
-                let bi = rightSide.indexOf(bracket)
-                if (bi !== -1) {
-                    let {start, end} = this.findBracketBoundaries(si.decStart + ai + bi, bracket)
-                    if (end !== -1 && end > si.decEnd) {
-                        pi.assignStart = start;
-                        pi.decEnd = end;
-                        bracketed = true;
+        if(rightSide.trim().charAt(0) !== '/') { // skip trying to bracket a Regular Expression (we'll start in the wrong place)
+            ['[', '{', '('].forEach(bracket => {
+                if (!bracketed) {
+                    let bi = rightSide.indexOf(bracket)
+                    if (bi !== -1) {
+                        let {start, end} = this.findBracketBoundaries(si.decStart + ai + bi, bracket)
+                        if (end !== -1 && end > si.decEnd) {
+                            pi.assignStart = start;
+                            pi.decEnd = end;
+                            bracketed = true;
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
 
         if (this.text.substring(si.comEnd, si.decStart).split('\n').length === 2) {
             pi.description = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
@@ -926,7 +971,7 @@ export class SourceReader {
         let text = this.text.substring(si.decStart, si.decEnd).trim()
         if(text.charAt(0) === '/') return ei;
         if(text.substring(0,6) === 'import') return ei;
-        if(text.substring(0,6) === 'export') return ei;
+        // if(text.substring(0,6) === 'export') return ei;
         if(text.substring(0.7) === 'require') return ei;
 
         let n = text.indexOf('{')
@@ -1021,7 +1066,7 @@ export class SourceReader {
                     if (isFinite(Number(ev.value))) {
                         preVal = Number(ev.value)
                     }
-                    ei.values.push(ev)
+                    if(ev.name) ei.values.push(ev)
                     preDesc = ''
                 }
             }
@@ -1394,3 +1439,92 @@ function deriveTypeFromValue(value:string) {
     return typeof value
 }
 
+function stripComments(src:string) {
+    let out = ''
+    const lines = (src || '').split('\n')
+    let inComment = false
+    for(let ln of lines) {
+        let ci = ln.indexOf('//')
+        if (ci !== -1) {
+            ln = ln.substring(0, ci)
+        }
+        while ((ci = ln.indexOf('/*')) !== -1) {
+            let ei = ln.indexOf('*/', ci)
+            if (ei == -1) ei = ln.length
+            else ei += 2
+            ln = ln.substring(0, ci) + ln.substring(ci + 2, ei)
+        }
+        if (ln) out += ln + '\n'
+    }
+    return out
+}
+
+function myBracketExtract(src:string, pair:string) {
+    let bracket = pair.charAt(0)
+    let endBracket = pair.charAt(1)
+    let currentLevel = 0
+    let endPos = -1
+
+    let done = false
+    let pos = -1
+    let inComment = false
+    let inQuote = ''
+    let comEnd = ''
+    // slowboat version
+    try {
+        let wasesc = false
+        while (!done) {
+            let escaped = !wasesc && src.charAt(pos) === '\\'
+            // if (escaped) {
+            //     console.log('break here for escape at ' + pos)
+            // }
+            // if(pos > 2209) {
+            //     console.log('break here to start stepping')
+            // }
+            let c = src.charAt(++pos)
+            if(escaped && c === '\\') {
+                wasesc = true
+                continue
+            }
+            if(!c) break;
+            if (inComment) {
+                if (!escaped && c === comEnd.charAt(0)) {
+                    inComment = false
+                    if (comEnd === '*/') pos++
+                }
+                if(c !== inQuote) continue
+            }
+            if (!escaped && !inQuote && c === '/') {
+                pos++
+                let c2 = src.charAt(pos)
+                if (c2 === '/') comEnd = '\n'
+                else if(c2 === '*') comEnd = '*/'
+                else comEnd = ''
+                inComment = comEnd !== ''
+            }
+            if (!escaped && (c === '"' || c === "'" || c === '`')) {
+                if (c === inQuote) {
+                    inQuote = ''
+                }
+                else if(!inQuote) {
+                    inQuote = c
+                }
+            }
+            if (inQuote) continue
+
+            if (c === bracket) {
+                ++currentLevel
+            }
+            if (c === endBracket) {
+                --currentLevel
+                done = currentLevel == 0
+            }
+        }
+    } catch(e) {
+        console.error(e)
+    }
+    endPos = pos
+    let firstOpen = src.indexOf(bracket)
+    let extract = src.substring(firstOpen, endPos+1).trim()
+    return extract.length
+}

@@ -12,6 +12,9 @@ import {executeCommand} from "./src/execCmd";
 import * as hjson from 'hjson'
 import {exec} from "child_process";
 
+import * as ac from "ansi-colors";
+
+
 
 let files:string[] = []
 let opts:any = {}
@@ -21,6 +24,10 @@ let config:any = {}
 const args = process.argv.slice(2)
 let i = 0
 let f:string
+if(!args.length) {
+  showHelp()
+  process.exit(1)
+}
 while((f = args[i])) {
   if(f === 'config') {
     opts['config'] = args[i+1]
@@ -39,6 +46,11 @@ while((f = args[i])) {
   i++
 }
 
+if(args.length && !files.length) {
+    showHelp()
+    process.exit(1)
+}
+
 // if invoked as a CLI, we will process the files
 if(files.length) {
   // console.log('Doc Holiday ', files)
@@ -49,7 +61,7 @@ if(files.length) {
     let gen = generator.next()
     let stub = gen.value
     if(!stub) break;
-    if(stub) console.log(stub)
+    // if(stub) console.log(stub)
     if(gen.done) break;
   }
   execute()
@@ -250,4 +262,21 @@ export async function execute() {
     let rt = await execFmt(fmt)
     if(rt) break
   }
+}
+
+function showHelp() {
+  console.log(ac.bold.green("\n------------------------"))
+  console.log( ac.bold.green('     doc-holiday'))
+  console.log(ac.bold.green("------------------------"))
+  console.log("")
+  console.log(ac.italic.grey(" doc-holiday [options] <file glob list>"))
+  console.log("")
+  console.log(ac.italic.grey(" where <file glob list> is one or more glob pattern file locations"))
+  console.log(ac.dim.italic.grey("( for help on glob patterns, see https://en.wikipedia.org/wiki/Glob_%28programming%29 )"))
+  console.log(ac.italic.grey("and [options] is one of:"))
+  console.log(ac.bold.black(" config <file>"), ac.black.italic("-- Specify doc-holiday.conf file location"))
+  console.log(ac.bold.black(" config=<file>"),ac.black.italic("-- same as above"))
+  console.log(ac.bold.black(" -c <file>"), ac.black.italic("-- same as above"))
+  console.log(ac.bold.black(" -c=<file>"), ac.black.italic("-- same as above"))
+  console.log("")
 }

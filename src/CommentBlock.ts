@@ -386,8 +386,10 @@ export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
 
     if(ci.internals.functions?.length) {
         for(let fi of ci.internals.functions) {
-            out += renderFunctionComment(fi,indent+2, ifc)
-            out += renderFunctionStub(fi, indent+2, ifc)
+            if(fi.name) {
+                out += renderFunctionComment(fi, indent + 2, ifc)
+                out += renderFunctionStub(fi, indent + 2, ifc)
+            }
         }
     }
     out += spaces+'}\n\n'
