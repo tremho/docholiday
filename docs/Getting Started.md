@@ -42,7 +42,7 @@ than the JSDoc-default behavior of sorting alphabetically, grouped by
 type. 
 
 At this point you may want to read the section 
-[Publishing your documentation](publishing )
+[Publishing your documentation](publishing)
 to get an idea of what formats you will need to output to match
 the publishing scheme you will be using.
 
@@ -80,4 +80,4 @@ when run.
 `npm install --save-dev documentation`
 
 
-##### Back <==  [Introduction](intro ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Configuration](config )
+##### Back <==  [Introduction](intro) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Configuration](config)

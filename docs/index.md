@@ -2,11 +2,10 @@
 # Doc Holiday
 
 ## Main documentation
-- [Introduction](intro )
-- [Getting Started](Getting%20Started )
+- [Introduction](intro)
+- [Getting Started](Getting Started)
 
-
-- __[Deciding how you will publish your documentation](publish )__
+- __[Deciding how you will publish your documentation](publish)__
   - [Separately published HTML](publish #API html)
     - [Local file access](publish #API html via file system)
     - [Serving locally](publish @API html via local server)
@@ -29,7 +28,7 @@
 
 - __Using doc-holiday as an NPM module__
   - [installation and use in a project]() 
-  - [API Reference](API )
+  - [API Reference](API)
 
 
 
@@ -40,5 +39,5 @@
 - [Strategies for CI Deployments]() 
 
 
-- [Repository README](../README )
+- [Repository README](../README)
 

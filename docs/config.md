@@ -70,7 +70,7 @@ text file at the root of your project directory and modify it to suit your prefe
 
   /*
    Output location for Markdown output
-   Specify the file path (e.g. booksrc/API ) to receive this output
+   Specify the file path (e.g. booksrc/API) to receive this output
    Or if set up for GitBook (HonKit) output / publish
   */
   markdown: "booksrc/API ",
@@ -128,7 +128,7 @@ __engine__
 Specifies which rendering engine to use.  
 Supported documentation rendering comes from separately installed
 versions of `jsdoc`, `jsdoc2md`, and/or `documentation`, as detailed
-in the [Getting Started](Getting%20Started ) section.  
+in the [Getting Started](Getting Started) section.  
 Values here may be:
 - "jsdoc" to use JSDoc or JSDoc2md
 - "docjs" to use DocumentationJS

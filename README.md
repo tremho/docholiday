@@ -70,6 +70,11 @@ Add verbosity logger and do a console sweep_
 
 ### Issues
 
+- [ ] Refactor to be more Github Pages friendly.
+  - change html output to docs/html
+  - get rid of docs/ test
+  - change booksrc to docs
+
 - [ ] 'Biorhythm' example in intro doesn't really work as advertised
   - parameters mangled
   - return type wrong
