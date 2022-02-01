@@ -48,7 +48,7 @@ export function processSourceFile(srcPath:string, fncallback:FICallback, prcallb
  */
 export function processSource(contents:string, ext:string, fncallback:FICallback, prcallback:PICallback, clscallback:CICallback, encallback:EICallback, tdcallback:TICallback) {
     const reader = new SourceReader(contents, ext)
-    const apiResults = reader.getAPIInfo()
+    const apiResults = reader.getApiInfo()
 
     apiResults.functions.forEach(fi => {
         fncallback(fi, contents)

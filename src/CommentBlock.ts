@@ -608,8 +608,9 @@ function customGen(block:string, text:string):string {
     let argMap:any = {}
     for(let arg of args) {
         let kv = arg.split('=')
+        if(!kv) continue
         let key = kv[0].trim().toLowerCase()
-        let value = kv[1].trim()
+        let value = (kv[1] && kv[1].trim()) || ''
         if(value.charAt(0) === value.charAt(value.length-1)) {
             let q = value.charAt(0)
             if(q === '"' || q === "'" || q === '`') {
