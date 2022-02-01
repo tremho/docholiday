@@ -45,8 +45,6 @@ In the closing phase...(I think).... just need to finish the following:
   )
 - <del>[ ] attribution hack?</del>
 
-<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
-
 _Able to generate self-doc. Need to write the docs.  
 I should re-export  
 Also, do a test of module import and make sure we don't execute  
@@ -67,13 +65,18 @@ Add verbosity logger and do a console sweep_
 - [ ] public publish to npm
 
 -----------
+<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
 
 ### Issues
 
-- [ ] Refactor to be more Github Pages friendly.
+- [X] Refactor to be more Github Pages friendly.
   - change html output to docs/html
   - get rid of docs/ test
   - change booksrc to docs
+  - Rewrite the whole publishing section to discuss github pages
+  - mention other methods without explicit how to.
+
+
 
 - [ ] 'Biorhythm' example in intro doesn't really work as advertised
   - parameters mangled
@@ -84,6 +87,51 @@ Add verbosity logger and do a console sweep_
 - [ ] we should have a sort (true/false) option we can honor
   in our plugin (default: false == use our intercept)
 - [ ] console logs for execute and plugin intercept should be removed
+
+- [ ] Test and document mix-ins
+
+- [ ] Commented SourceReader is failing.  Out of sync in private functions
+past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
+`clean` and `lns` and treating as properties outside of class -- and whack.
+- [ ] also in SourceReader -- multiline comment for comments property was failing. I have since removed it.
+
+
+- [ ] create CLI options for 
+  - just make stubs
+  - just render stubs
+  - just make collection and output as JSON
+- [ ] add CLI docs
+
+- [ ] document TypeCheck and show practical use of runtime
+
+----
+##### Issues documenting our sources
+- [ ] typecheck module inserted markdown not working.  
+It's also too long.
+
+- [ ] multi-type `  * @param {ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|TypedefInfo} info
+  ` is not rendered by jsdoc properly
+
+- [ ] TypeCheck~TypeConstraint - bad docs for [name] and constructor
+
+- [ ] jsdoc block dash ( - ) in parameter descriptions should be ignored `TypeCheck~parseConstraints`
+
+- [ ] types are not linking.
+
+- [ ] support line spacing options (end with period or cap next, deliberate line)
+
+- [ ] default value picking up other parameter defs `execCmd~executeCommand` 'cwd'
+
+- [ ] see if we can mitigate the problem with spaces in a default value `new ScopeModifiers()`.
+_I believe this is a jsdoc rendering issue_
+
+- [ ] callbacks are not representing parameter and return info (any info)
+
+- [ ] SpecificationStatus is a misnomer for this context.
+
+
+
+
 ----
 ###### Can live with for now
 

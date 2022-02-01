@@ -4,8 +4,7 @@
 templates/static
 templates/tmpl
 build/
-gen/
+.dh-temp/
 examples/comp/
-booksrc/_book/
 node_modules/
 package-lock.json

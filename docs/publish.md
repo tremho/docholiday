@@ -6,72 +6,87 @@ who will be using the code that it references.
 
 This means providing it to this audience through a standard and consumable medium.
 
-If you are writing documentation for an in-house tool, perhaps this is
-a space on an internal web server.
 
-If you are creating tools or libraries for an open-source project, and you 
-want your GitHub repository to be the front-face for this project, then
-you may simply want to associate your documentation with the repository.
+## Creating a full documentation suite
+Your JSDoc-compatible document rendering engine will create an API document in either HTML or Markdown.
 
-If you have a project that you want a separate public face for, you 
-may wish to use an existing public webserver or make use of GitHub Pages 
-to serve your documentation content.
+Perhaps you also would like to include additional documentation materials to create a more complete "manual".
 
-Whatever your needs, there is a pathway to getting your docs published
-in that form.  Let's look at a few common scenarios.
+### Creating a documentation suite using html
+Suppose your configuration produces html output into the folder docs/html.  You want to frame this up with an introduction page
+and perhaps some other reference pages.
+
+Create an index.html file in your 'docs' folder that looks something like this:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Awesome Project</title>
+</head>
+<body>
+  <h3>Welcome to The Awesome Project!</h3>
+  <p>Here is some interesting information about this project or product
+  and probably links to other pages</p>
+  <p>
+    See our <a href="html/index.html">API Documentation</a> for reference!
+  </p>
+</body>
+</html>
+```
+Obviously, you can expand on this idea to create whatever your mad web skills will allow.
+You will keep all the source for this site in  your 'docs' folder and check it into your repository.
+You can then choose to publish this html elsewhere in a conventional fashion, or choose to use GitHub Pages for this.
+
+### Creating a documentation suite using Markdown
+This is similar to the html process, except in this scheme all the supporting pages are written using Markdown.
+This may be a little easier to work with for most project documentation scenarios.  Markdown is directly supported by GitHub Pages.
+
+Simply create additional Markdown (.md) files within your docs/ folder.  For GitHub Pages compatibility, name the opening page `index.hd`
+and have it look something like this to start:
+
+```markdown
+## Main documentation
+- [Introduction](intro)
+- [Getting Started](Getting Started)
+- [API Reference](API)
+```
+
+You can create the "intro.md" and "Getting Started.md" and/or other pages that make up your documentation suite.
+Also note that this assumes your API has been generated as "API.md".
+
+### Using GitHub Pages for your project documentation
+Your project is probably already hosted in a GitHub repository.  If your project is not in a repository at all, you should really reconsider
+your life choices and get your code into a secure and managed version-control environment.  If your project is in a repository other than GitHub,
+that's okay -- you can still use GitHub Pages to publish your documentation (although you will need to take additional steps to copy the documentation
+to the GitHub repository that will publish your docs. Refer to the [GitHub Pages Documentation](https://pages.github.com) for how to get started).
+
+Assuming that your project _is_ in a GitHub repository, then simply 
+login to GitHub, go to your repository page, and click on 'Settings' (note you must be logged in to see this)
+![github repository settings](images/gh-settings.png)
+
+and then select 'Pages' from the left side panel
+
+![github pages option](images/pages-menu.png)
+
+You will see options for GitHub Pages publishing here, including the primary control that enables the publishing. It looks like this:
+
+![pages chooser](images/pages-disabled.png)
+
+There is a drop-down where you choose which branch to publish docs from (the 'none' setting disables publishing).  Use this to choose
+your 'main' branch.
+
+Another drop-down appears to choose the folder to publish.  This can only be be /docs, or / (root).  Choose /docs.  
+
+![docs publish setting](images/pages-enabled.png)
+
+Press the "Save" button.
+
+Now return to your computer with your project and commit and push your /docs folder to the repository at your 'main' branch.
+
+That's it!  Your docs should be publicly viewable by pointing a browser to https://_yourgithubname_.github.io._yourprojectname_
+
+_(If you revisit this Pages section of your repository settings, you will see the status report that your docs are being published,
+and it will show the URL.)_
 
 
-### API html
-When the configured format is 'html', the html document tree
-will be created in the directory specified by the configuration's 'html' setting.
-the `index.html` file within this folder is the starting page for your
-generated API documentation.
-
-You can view this locally and/or choose to export it to a publicly viewable
-location.
-
-#### API html via file system
-Use the file-system explorer of your computer to list the files of the 
-html output folder and double-click on `index.html`.
-
-Or, from the command-line, go to the html output directory and type
-`open index.html`
-
-#### API html via local server
-There are several options here.  One is:
-1. `cd` to the html output directory
-2. `npx http-server`
-3. open browser and point to [http://localhost:8080](http://localhost:8080)
-
-#### External Webserver
-Following the instructions for your webserver provider, copy
-the full contents of the html output directory into your webserver
-document path.  Then point to this location with your browser.
-
-#### GitHub Pages
-If you don't have or don't want to use a traditional WebServer, consider
-using [GitHub Pages]() instead.
-
-This is a great solution for projects that are already on GitHub anyway, 
-and is a practical alternative to a conventional web server even for projects
-that are not.
-
-- Read the material at the GitHub Pages site. 
-You will want to decide if you will use your single 'account' site or 
-your per-project site for the current publishing task (these options are not mutually exclusive). 
-
-
-__If using the single account option__, set your html output configuration setting
-to point with the root of the cloned repository representing your _username_.github.io
-site (for example `/Users/myname/projects/myname.github.io/thisproject`) so that
-your API documentation is generated there.
-
-Once your docs are generated, move to the _username_.github.io project directory and add, commit and push
-these files to the site repository.  You should see your docs at http://_username_.github.io/_thisproject_/ (or whatever you named your output directory)
-
-__If using the per-project approach__, set your html output configuration setting
-to be a folder local to your project root (e.g. 'doc'), and make sure this location
-is not under .gitignore and can be pushed to the repository.
-
-Once your docs are generated, add, commit, and push these to the repository.
-You should make

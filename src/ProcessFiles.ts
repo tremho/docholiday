@@ -1,3 +1,7 @@
+/*
+Module for handling processing of source files
+ */
+
 import * as fs from "fs";
 import {FICallback, CICallback, PICallback, EICallback, EnumInfo, TICallback, TypedefInfo} from "./types"
 import {SourceReader} from "./SourceReader";

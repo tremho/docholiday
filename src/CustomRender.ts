@@ -1,7 +1,19 @@
+// Handles {{{ }}} extensions
+// currently supporting `text`, `jsdoc`, and `plantUML`
 
 import {executeCommand} from "./execCmd";
 const {geturl} = require('plantuml-api')
 
+/**
+ * Checks to see if one of the locally handled extensions is being referenced, and if so
+ * performs the requested rendering.
+ *
+ * This is called by the CommentBlock processing when it detects a {{{ }}} pattern.
+ *
+ * @param name
+ * @param argMap
+ * @param text
+ */
 export function handleInternalCustom(name:string, argMap:any, text:string):string {
     let out = ''
     name = name.trim().toLowerCase()
@@ -26,6 +38,19 @@ export function handleInternalCustom(name:string, argMap:any, text:string):strin
     return out;
 }
 
+/**
+ * Checks to see if one of the locally handled extensions is being referenced, and if so
+ * performs the requested rendering.
+ *
+ * This is called by the CommentBlock processing when it detects a {{{ }}} pattern.
+ *
+ * _Note: This is currently __NOT_ being called because we must do some refactoring before we can
+ * perform an asynchronous rendering action, and external commands are inherently asynchronous_
+ *
+ * @param name
+ * @param args
+ * @param text
+ */
 export async function handleExternalCustom(name:string, args:string[], text:string):Promise<string> {
     args.push(text)
     console.warn(`TODO: launch command ${name} ${args}`)

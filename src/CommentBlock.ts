@@ -1,3 +1,9 @@
+/**
+ * Expresses stub output.
+ * Converts SourceInfo-derived data objects into appropriate
+ * JSDOC comment blocks and associated code stubs.
+ */
+
 import {
     ClassInfo,
     EnumInfo,
@@ -12,8 +18,15 @@ import {TypeConstraint} from "./TypeCheck";
 import {handleInternalCustom} from "./CustomRender";
 
 
+/* the RegEx Pattern for a custom extension {{{ }}} */
 const customRE =  /{{{[\w|\d|=|,|"|'|\s]+}}}/g
 
+/**
+ * Renders the comment block for the entity, and its associated stub code
+ *
+ * @param entityInfo the SourceInfo-derived data object of the parsed code entity
+ * @param indent     the indent margin where the comment block begins
+ */
 export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInfo|EnumInfo|TypedefInfo, indent:number) {
     if(entityInfo instanceof FunctionInfo) {
         return renderFunctionComment(entityInfo, indent)
@@ -32,23 +45,49 @@ export function renderCommentBlock(entityInfo:FunctionInfo|ClassInfo|PropertyInf
     }
 }
 
+/**
+ * Renders the top line of a comment block.
+ * JSDOC style is that this should be "/**"
+ * @param indent
+ */
 function beginCommentBlock(indent:number):string {
     let out = indent ? ' '.repeat(indent) : ''
     out += '/**\n'
     return out
 }
+
+/**
+ * Renders a single line in a comment block.
+ * Handles the ' * ' indent of a jsdoc format block.
+ *
+ * @param indent
+ * @param text
+ */
 function commentLine(indent:number, text:string):string {
     let out = indent ? ' '.repeat(indent) : ''
     out += ' * ' + text+ '\n'
     return out
 
 }
+
+/**
+ * Renders the closing end-comment delimeter of the comment block
+ * @param indent
+ */
 function endCommentBlock(indent:number):string {
     let out = indent ? ' '.repeat(indent) : ''
     out += ' */\n'
     return out
 }
 
+/**
+ * Renders multiple lines of text into an inset comment block.
+ * Also checks for and expands custom {{{}}} extensions.
+ *
+ * @param indent    indent to start of comment block
+ * @param inset     inset within comment block
+ * @param text      text to render
+ */
 function commentText(indent:number, inset:number, text:string=''):string {
     let out = ''
     const cm = text.match(customRE)
@@ -79,6 +118,15 @@ function commentText(indent:number, inset:number, text:string=''):string {
     return out
 }
 
+/**
+ * Renders the comment output for a Function
+ * Note that this differs depending upon whether or not the function exists within a class,
+ * and different still if part of an inner class.
+ *
+ * @param fi
+ * @param indent
+ * @param forClass
+ */
 function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='') : string {
 
     let out = beginCommentBlock(indent)
@@ -173,6 +221,16 @@ function renderFunctionComment(fi:FunctionInfo, indent:number, forClass:string='
     out += endCommentBlock(indent)
     return out
 }
+
+/**
+ * Renders the comment output for a Property
+ * Note that this differs depending upon whether or not the property exists within a class,
+ * and different still if part of an inner class.
+
+ * @param pi
+ * @param indent
+ * @param forClass
+ */
 function renderPropertyComment(pi:PropertyInfo, indent:number, forClass = '') : string {
     let out = beginCommentBlock(indent)
 
@@ -210,6 +268,14 @@ function renderPropertyComment(pi:PropertyInfo, indent:number, forClass = '') : 
     return out
 }
 
+/**
+ * Renders the comment output for a Class
+ * Note that this differs depending upon whether or not the class itself exist within a class.
+
+ * @param ci
+ * @param indent
+ * @param forClass
+ */
 function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string {
     let out = beginCommentBlock(indent)
 
@@ -297,6 +363,15 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
     return out
 }
 
+/**
+ * Renders the comment output for an Enumeration
+ * Note that this differs depending upon whether or not the enum exists within a class,
+ * and different still if part of an inner class.
+ *
+ * @param ei
+ * @param indent
+ * @param forClass
+ */
 function renderEnumComment(ei:EnumInfo, indent:number, forClass='') : string {
     let out = beginCommentBlock(indent)
 
@@ -312,6 +387,14 @@ function renderEnumComment(ei:EnumInfo, indent:number, forClass='') : string {
     return out
 }
 
+/**
+ * Renders the comment output for a TypeDef
+ * Note that this differs depending upon whether or not the typedef exists within a class
+ *
+ * @param ti
+ * @param indent
+ * @param forClass
+ */
 function renderTypedefComment(ti:TypedefInfo, indent:number, forClass = ''): string {
     let out = beginCommentBlock(indent)
 
@@ -371,6 +454,15 @@ function renderTypedefComment(ti:TypedefInfo, indent:number, forClass = ''): str
     return out
 }
 
+/**
+ * Renders the code stub for a class.
+ * Unless an inner class, the stub will encapsulate other comment blocks and stubs representing the
+ * inner members of this class.
+ *
+ * @param ci
+ * @param indent
+ * @param forClass
+ */
 export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
     let out = ''
     let spaces = (indent && ' '.repeat(indent)) || ''
@@ -396,6 +488,15 @@ export function renderClassStub(ci:ClassInfo, indent:number, forClass = '') {
     return out
 }
 
+/**
+ * Renders the function stub.
+ * The only purpose for the stub is to give JSDOC rendering engines the entity anchor for the comment
+ * block above.  So the actual 'function' does not need to represent the contract.
+ * Nevertheless, this rendering outputs the parameters and returns a value representing the primitive return type.
+ * @param fi
+ * @param indent
+ * @param forClass
+ */
 export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:string='') {
     let type = fi.return?.type || ''
     let rv = returnValueFromType(type)
@@ -426,6 +527,11 @@ export function renderFunctionStub(fi:FunctionInfo, indent:number, forClass:stri
     return out
 }
 
+/**
+ * Renders a code stub for a declared property.
+ * @param pi
+ * @param indent
+ */
 export function renderPropertyStub(pi:PropertyInfo, indent:number) {
     let spaces = indent && ' '.repeat(indent) || ''
     let out = spaces+'    var '+pi.name
@@ -439,6 +545,12 @@ export function renderPropertyStub(pi:PropertyInfo, indent:number) {
 
     return out
 }
+
+/**
+ * Renders a code stub for an Enumeration
+ * @param ei
+ * @param indent
+ */
 export function renderEnumStub(ei:EnumInfo, indent:number) {
     const spaces = indent && ' '.repeat(indent) || ''
     let out = spaces+`    var ${ei.name} = {`
@@ -461,6 +573,11 @@ export function renderEnumStub(ei:EnumInfo, indent:number) {
     return out
 }
 
+/**
+ * Formats the list of Contraints applies to a value into a series of comment lines
+ * @param indent
+ * @param info
+ */
 function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|ReturnInfo|TypedefInfo) {
     let out = ''
     let spaces = indent ? ' '.repeat(indent) : ''
@@ -478,6 +595,12 @@ function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|Retur
     return out
 }
 
+/**
+ * Checks the comment block given for custom extensions defined by the {{{}}} pattern
+ * and calls upon the CustomRender extension handlers to format if appropriate.
+ * @param block
+ * @param text
+ */
 function customGen(block:string, text:string):string {
     let out = ''
     let args:string[] = block.substring(3, block.length-3).split(' ')
@@ -501,6 +624,9 @@ function customGen(block:string, text:string):string {
     return out;
 }
 
+// Return a value that represents the primitive type given
+// will return "" (any) for an unrecognized type
+// Note that returned value may violate any contract Constraints, since these are not considered.
 function returnValueFromType(type:string) {
     let rv
     switch(type) {

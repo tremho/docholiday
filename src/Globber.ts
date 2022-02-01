@@ -1,3 +1,6 @@
+/*
+Module for evaluating glob patterns
+ */
 
 const picomatch = require('picomatch');
 import * as fs from 'fs'

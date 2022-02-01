@@ -1,7 +1,8 @@
 
 /*
-write ordered stubs out to a text file
-process this with jsdoc or documentation.js
+Output module that processes the stub output.
+ - records entities that have been parsed  for a module
+ - writes ordered stubs out to a text file that can be processed by a JSDOC engine
  */
 
 import * as fs from 'fs'
@@ -15,17 +16,27 @@ import {
     renderEnumStub
 } from "./CommentBlock";
 
+/**
+ * A entry into the list of parsed items that have been recorded
+ */
 class OrderedParts {
-    info:FunctionInfo|PropertyInfo|ClassInfo|EnumInfo|TypedefInfo
-    indent:number
-    start:number
+    info:FunctionInfo|PropertyInfo|ClassInfo|EnumInfo|TypedefInfo // Any of the supported SourceInfo-derived entity types
+    indent:number   // The indent margin in the code this entity was found
+    start:number    // The position in the source code this entity was found
 }
-const recorded:OrderedParts[] = []
+const recorded:OrderedParts[] = [] // the internal collection of parsed entities
 
+// Clears the list of recorded entities
 export function clearRecorded() {
     recorded.splice(0,recorded.length)
 }
 
+/**
+ * Records the information of a parsed entity into the collection
+ *
+ * @param info
+ * @param source
+ */
 export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|TypedefInfo, source:string) {
     const op = new OrderedParts()
     op.info = info
@@ -34,6 +45,10 @@ export function recordInfo(info:ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|Typ
     recorded.push(op)
 }
 
+/*
+Determines the indent of this source by counting whitespace characters from the preceding line start.
+_Note: Does not consider tab expansion_
+ */
 export function findSourceIndent(si:SourceInfo, source:string) {
     let at = si.comStart
     let pr = source.lastIndexOf('\n', at)
@@ -41,6 +56,17 @@ export function findSourceIndent(si:SourceInfo, source:string) {
     return at - pr
 }
 
+/**
+ * Examines the top lines of the source for a module description.
+ *
+ * A module description is any comment block of one or more lines
+ * starting at the very first line and ending with a blank line below it.
+ *
+ * _Note: for source code that must include a "#!" "shebang" comment as the
+ * first line, the module description comment block can begin on the second line_
+ *
+ * @param source
+ */
 export function readModuleDescription(source:string) {
     let description = ''
     let reading = false
@@ -71,11 +97,17 @@ export function readModuleDescription(source:string) {
     return description
 }
 
+// Sorts the recorded collection of entity info so that the array is represented in the original
+// source code order
 export function sortRecorded() {
     recorded.sort((a, b) => {
         return (a.start - b.start)
     })
 }
+
+/**
+ * Outputs all the recorded entities for a parsed module as a series of comment blocks and code stubs
+ */
 export function stubOut():string {
     let out = ''
     for(let cb of recorded) {
@@ -97,6 +129,9 @@ export function stubOut():string {
     }
     return out
 }
+/**
+ * Writes the stubbed version of af module source to the stub file
+ */
 export function writeStubFile(filePath:string, moduleName:string, moduleDescription:string) {
     try {
         let pn = path.normalize(filePath)

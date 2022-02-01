@@ -1,10 +1,5 @@
 /*
-Status:
-9/8 - identifies function declaration starts in example source file
-Next:
-    - parse out function name and parameters from declaration
-    - parse out parameter and return metadata from jsdoc
-    - do a variant for typescript that reads parameter and return types from there
+ * Source code reader and parser to identify code entities and extract metadata
  */
 
 import {
@@ -24,12 +19,17 @@ import {
 } from "./types";
 
 import * as TypeCheck from "./TypeCheck"
-import * as Parenthesis from "parenthesis"
-import * as Brackets from "g2-bracket-parser"
-import peeler from "peeler"
 
+// RegExp pattern for recognizing a constraint declaration
 const constraintRE = /\<[\w|\d|=|,|"||!|'|\s]+\>/g
 
+/**
+ * The primary source parsing object.
+ * Maintains its parsing position in the source internally.
+ *
+ * Call `getApiInfo` to receive a full analysis of the given source.
+ *
+ */
 export class SourceReader {
     private readonly text:string = ''; // text of the source
     private pos:number = 0; // current parse position
@@ -57,19 +57,23 @@ export class SourceReader {
         this.skipWhite();
     }
 
+    // returns the position past skipped white space in a given string
     pastWhite(str:string, startIndex:number = 0) {
         let n = startIndex
         while(str.charCodeAt(n) < 33) n++;
         return n;
     }
+    // advance past white space in parsing
     skipWhite() {
         this.pos = this.pastWhite(this.text, this.pos)
     }
+    // advances to the next start of white space in parsing
     findWhite(str, startIndex) {
         let n = startIndex
         while(str.charCodeAt(n) > 32) n++;
         return n;
     }
+    // reads the next word, stopping at comma or whitespace
     readNextWord(str, startIndex) {
         let b = this.pastWhite(str, startIndex)
         let c = str.indexOf(',',startIndex)
@@ -77,6 +81,7 @@ export class SourceReader {
         if(c !== -1) e = Math.min(c, e)
         return str.substring(b, e)
     }
+    // skips past an import statement
     skipImport() {
         let qc = '"'
         let q1 = this.text.indexOf(qc, this.pos)
@@ -95,6 +100,7 @@ export class SourceReader {
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
     }
+    // skips past an export statement
     skipExport() {
         if(this.text.indexOf('{', this.pos) !== -1) {
             let {end} = this.findBracketBoundaries(this.pos)
@@ -107,6 +113,7 @@ export class SourceReader {
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
     }
+    // skips past a require statement
     skipRequire() {
         let p1 = this.text.indexOf('(', this.pos)
         let p2 = this.text.indexOf(')', p1+1)
@@ -121,8 +128,8 @@ export class SourceReader {
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
     }
+    // finds the next end of line or start of comment
     nextEnd() {
-        // find end from here to end of line or start of comment
         let lnEnd = this.text.indexOf('\n', this.pos)
         if(lnEnd === -1) lnEnd = this.text.length;
         let nd = this.text.length -1;
@@ -141,6 +148,7 @@ export class SourceReader {
         }
         return nd || this.text.length
     }
+    // Reads the next line of source, discrening the start and end of the comment block and code declaration.
     readSourceLine() {
         const rt = new SourceInfo()
         // skip shebang line
@@ -192,6 +200,7 @@ export class SourceReader {
         }
         return rt;
     }
+    // Read a type description. Includes support for template types.
     readTypeDef(str, startIndex) {
         let tp = ''
         let ti = str.indexOf('<', startIndex)
@@ -276,22 +285,10 @@ export class SourceReader {
         // doesn't look like a function
         return '';
     }
-    findFunctions():FunctionInfo[] {
-        const found:FunctionInfo[] = []
-        this.pos = 0;
-        let done = false
-        while(!done) {
-            let si = this.readSourceLine()
-            done = (si.decStart === this.text.length || si.decEnd < 0)
-            if(!done) {
-                let fi = this.extractFunctionInfo(false, si)
-                if (fi.decStart !== -1) {
-                    found.push(fi)
-                }
-            }
-        }
-        return found
-    }
+
+    /**
+     * Try to build a valid FunctionInfo entity from the given SourceInfo
+     */
     extractMethodInfo(name, si:SourceInfo, longsrc:string = ''):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
         Object.assign(fi, si)
@@ -559,6 +556,11 @@ export class SourceReader {
 
         return fi
     }
+
+    /*
+    First step in identifying a function from the given SourceInfo
+    before possibly handing off to `extractMethodInfo`
+     */
     extractFunctionInfo(inClass:boolean, si:SourceInfo):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
         let fullsrc
@@ -591,9 +593,12 @@ export class SourceReader {
         }
         return fi
     }
+
+    /**
+     * Find the start and end positions of potentially nested source code brackets
+     */
     findBracketBoundaries(startPos:number, bracket='{'):{start:number, end:number} {
         let bs = this.text.indexOf(bracket, startPos)
-        // let btext = stripComments(this.text.substring(bs))
         let btext = this.text.substring(bs)
 
 
@@ -617,10 +622,17 @@ export class SourceReader {
         return {start: bs, end: bs + be}
     }
 
+    /*
+     * Determine the line number of the current parse position.
+     * Used for error reporting
+     */
     private getCurrentLineNumber():number {
         return this.text.substring(0, this.pos).split('\n').length
     }
 
+    /**
+     * Returns the collected analysis of source code entities
+     */
     getAPIInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
         const api:APIInfo = new APIInfo()
         let done = false
@@ -679,6 +691,7 @@ export class SourceReader {
         return api
     }
 
+    // tries to extract PropertyInfo information from the given SourceInfo position
     extractPropertyInfo(si:SourceInfo, inClass:boolean):PropertyInfo {
         const pi = new PropertyInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
@@ -846,6 +859,8 @@ export class SourceReader {
         return pi;
     }
 
+    // tries to extract ClassInfo information from the given SourceInfo position
+    // recurses into `getApiInfo` for all entities within the class scope.
     extractClassInfo(si:SourceInfo, isType = false):ClassInfo {
         let ci:ClassInfo = new ClassInfo()
         const src = this.text.substring(si.decStart, si.decEnd)
@@ -902,6 +917,7 @@ export class SourceReader {
         }
         return ci
     }
+    // Used to determine the name of a class or interface
     getClassName(text:string):string  {
         let name = ''
         text = text.trim()
@@ -925,6 +941,7 @@ export class SourceReader {
         }
         return name;
     }
+    // if the class extends another, the base class name is returned here
     getExtends(text:string):string {
         let ext = ''
         text = text.trim()
@@ -937,6 +954,7 @@ export class SourceReader {
         }
         return ext;
     }
+    // If the class implements one or more interfaces, the array of names is returned here
     getImplements(text:string):string[] {
         let imp:string[] = []
         text = text.trim()
@@ -953,6 +971,7 @@ export class SourceReader {
         }
         return imp
     }
+    // legacy method to recognize mix-in patterns (alternative to implements)
     findMixins(extDec:string) {
         let mixins:string[] = []
         let opi = extDec.indexOf('(')
@@ -971,6 +990,7 @@ export class SourceReader {
         return {mixins, base}
     }
 
+    // Tries to extract EnumInfo from the given SourceInfo position
     extractEnumInfo(si:SourceInfo):EnumInfo {
         const ei = new EnumInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
@@ -1080,6 +1100,7 @@ export class SourceReader {
         return ei
     }
 
+    // Tries to extract TypedefInfo from the given SourceInfo position
     extractTypedefInfo(si:SourceInfo) : TypedefInfo {
         const ti = new TypedefInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
@@ -1212,14 +1233,14 @@ export class SourceReader {
                 console.error(e)
             }
 
-
         }
         return ti
     }
 
-
     /**
-     * Read comment block
+     * Reads comment block
+     *  - reads primary description
+     *  - reads JSDoc values from @param or @return blocks, and use if we don't have these from code parse
      */
     gatherCommentMeta(fi:FunctionInfo) {
         // const comBlock = this.text.substring(fi.comStart, fi.comEnd)
@@ -1391,9 +1412,11 @@ export class SourceReader {
             }
         }
     }
+
     private readCommentBlock(rawBlock:string):string {
         return this.readCommentBlockForm1(rawBlock) || this.readCommentBlockForm2(rawBlock)
     }
+
     private readCommentBlockForm1(rawBlock:string):string {
         if(rawBlock.substring(0,3) === '/**') {
             rawBlock = rawBlock.substring(3)
@@ -1416,6 +1439,7 @@ export class SourceReader {
         })
         return clean.join('\n').trim()
     }
+
     private readCommentBlockForm2(rawBlock:string):string {
         const clean:string[] = []
         let blockPos = 0;
@@ -1428,6 +1452,8 @@ export class SourceReader {
         return clean.join('\n').trim()
     }
 }
+
+// returns the associated primitive type for a value represented by the given value string
 function deriveTypeFromValue(value:string) {
     if(!value) value = ''
     value = value.trim()
@@ -1444,26 +1470,30 @@ function deriveTypeFromValue(value:string) {
     return typeof value
 }
 
-function stripComments(src:string) {
-    let out = ''
-    const lines = (src || '').split('\n')
-    let inComment = false
-    for(let ln of lines) {
-        let ci = ln.indexOf('//')
-        if (ci !== -1) {
-            ln = ln.substring(0, ci)
-        }
-        while ((ci = ln.indexOf('/*')) !== -1) {
-            let ei = ln.indexOf('*/', ci)
-            if (ei == -1) ei = ln.length
-            else ei += 2
-            ln = ln.substring(0, ci) + ln.substring(ci + 2, ei)
-        }
-        if (ln) out += ln + '\n'
-    }
-    return out
-}
-
+/**
+ * My own bracket matching algorithm
+ *
+ * Tried using libraries from npm, such as
+ * `parenthesis`, `g2-bracket-parser` and `peeler`
+ * but each of these had some failing or another that prevented it from
+ * working as I needed it.
+ *
+ * This version works, although it is not elegant.
+ * It parses one character at a time, which thankfully turns out to run faster than
+ * I originally feared.
+ * This allows treating the problem from a state-machine perspective, and
+ * there is no chance of skipping a stateful event
+ * (although I suppose an optimization could be made to skip whitespace, or clearly defined comment blocks).
+ *
+ * This simply counts brackets and levels until we return to level 0
+ * it statefully ignores brackets that are out of scope, including cases for:
+ * - comments
+ * - quoted strings (single, double, and backtick)
+ * - handles escapes for quote scope recognition
+ *
+ * @param src   The bracketed source
+ * @param pair  The matching pair that define the bracket delimiters
+ */
 function myBracketExtract(src:string, pair:string) {
     let bracket = pair.charAt(0)
     let endBracket = pair.charAt(1)
