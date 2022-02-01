@@ -1,7 +1,11 @@
 
 # Doc Holiday
 
-doc push 1/31
+
+__O.K., corral that document backlog__
+
+_Take a break from disappointing documentation results_  
+_with the gunslinger for your documentation needs_
 
 ## Main documentation
 - [Introduction](intro)
@@ -26,5 +30,5 @@ doc push 1/31
 - [Strategies for CI Deployments]() 
 
 
-- [Repository README](../README)
+- [Project Repository on GitHub](https://github.com/tremho/docholiday)
 
