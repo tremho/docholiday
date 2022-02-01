@@ -633,7 +633,7 @@ export class SourceReader {
     /**
      * Returns the collected analysis of source code entities
      */
-    getAPIInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
+    getApiInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
         const api:APIInfo = new APIInfo()
         let done = false
         this.pos = fromPos;
@@ -912,7 +912,7 @@ export class SourceReader {
                 ci.bodyStart = start;
                 ci.bodyEnd = end;
                 // now we hunt for methods and props
-                ci.internals = this.getAPIInfo(start+1, end-1, true)
+                ci.internals = this.getApiInfo(start+1, end-1, true)
             }
         }
         return ci
@@ -1240,7 +1240,7 @@ export class SourceReader {
     /**
      * Reads comment block
      *  - reads primary description
-     *  - reads JSDoc values from @param or @return blocks, and use if we don't have these from code parse
+     *  - reads JSDoc values from param or return blocks, and use if we don't have these from code parse
      */
     gatherCommentMeta(fi:FunctionInfo) {
         // const comBlock = this.text.substring(fi.comStart, fi.comEnd)
@@ -1248,6 +1248,7 @@ export class SourceReader {
         // we can only read the description from the comment block
         let n = fi.comStart;
         let nd = this.text.indexOf('@', n)
+        if(nd === -1) nd = this.text.length
 
         // skip any reserved in-comment pass-throughs
         while(this.text.substring(nd, nd+7)=== '@public'
@@ -1524,8 +1525,14 @@ function myBracketExtract(src:string, pair:string) {
             if(!c) break;
             if (inComment) {
                 if (!escaped && c === comEnd.charAt(0)) {
-                    inComment = false
-                    if (comEnd === '*/') pos++
+                    if (comEnd === '*/') {
+                        if(src.charAt(pos+1) == comEnd.charAt(1)) {
+                            inComment = false
+                            pos++
+                        }
+                    } else {
+                        inComment = false
+                    }
                 }
                 if(c !== inQuote) continue
             }
@@ -1537,7 +1544,7 @@ function myBracketExtract(src:string, pair:string) {
                 else comEnd = ''
                 inComment = comEnd !== ''
             }
-            if (!escaped && (c === '"' || c === "'" || c === '`')) {
+            if (!escaped && !inComment && (c === '"' || c === "'" || c === '`')) {
                 if (c === inQuote) {
                     inQuote = ''
                 }
