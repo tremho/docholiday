@@ -1,14 +1,35 @@
 
+import {FunctionInfo, ParameterInfo, ReturnInfo, SpecificationStatus} from "../src/types";
+import * as TypeCheck from "../src/TypeCheck";
 
-// Calculates the biorythm of the named indiidual
-// using their birthdate as the starting point
-export function computeBiorhythm(
-    name:string, // The user's name
-    birthdate: Date // the user's birthdate
-                    // (time portion of date ignored)
-):BiorhythmData // computed object
-{
-    // ... awesome code here...
+// before the class
+function foobar() {
+
 }
 
+// we are starting our class
+class Foobar {
+    alone = 'solo' // side comment on one prop
 
+    /**
+     * Something about this function will make the parse fail,
+     * but only if there is a quote mark in the comment block,
+     * so is it that there can't be quotes in comments?
+     */
+    problemFunction() {
+            // if we have a comment here, it can't have a quote mark
+    }
+
+    // a mid-point class prop
+    public mProp:string = 'weird'
+
+    // the function following
+    public nextFunc() {
+
+    }
+}
+
+// we are now out of the class again
+function classLess() {
+
+}

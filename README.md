@@ -90,9 +90,10 @@ Add verbosity logger and do a console sweep_
 
 - [ ] Test and document mix-ins
 
-- [ ] Commented SourceReader is failing.  Out of sync in private functions
+- [X] Commented SourceReader is failing.  Out of sync in private functions
 past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
 `clean` and `lns` and treating as properties outside of class -- and whack.
+
 - [ ] also in SourceReader -- multiline comment for comments property was failing. I have since removed it.
 
 
@@ -106,8 +107,8 @@ past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
 
 ----
 ##### Issues documenting our sources
-- [ ] typecheck module inserted markdown not working.  
-It's also too long.
+- [X] typecheck module inserted markdown not working.  
+It's also too long. _was unmatched backticks in markdown. now removed_
 
 - [ ] multi-type `  * @param {ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|TypedefInfo} info
   ` is not rendered by jsdoc properly
@@ -127,9 +128,9 @@ _I believe this is a jsdoc rendering issue_
 
 - [ ] callbacks are not representing parameter and return info (any info)
 
-- [ ] SpecificationStatus is a misnomer for this context.
+- [ ] SpecificationStatus is a misnomer for this context. Remove jsdoc form errors. maybe note the block type.
 
-
+- [ ] Ignore any number of sequential - or * at start of comment lines
 
 
 ----

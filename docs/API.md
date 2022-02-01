@@ -8,9 +8,32 @@
   </thead>
   <tbody>
 <tr>
+    <td><a href="#module_CommentBlock">CommentBlock</a></td>
+    <td><h4>CommentBlock (Module)</h4>
+<p>Expresses stub output.
+Converts SourceInfo-derived data objects into appropriate
+JSDOC comment blocks and associated code stubs.</p></td>
+    </tr>
+<tr>
+    <td><a href="#module_CustomRender">CustomRender</a></td>
+    <td><h4>CustomRender (Module)</h4>
+<p>Handles {{{ }}} extensions
+currently supporting <code>text</code>, <code>jsdoc</code>, and <code>plantUML</code></p></td>
+    </tr>
+<tr>
+    <td><a href="#module_execCmd">execCmd</a></td>
+    <td><h4>execCmd (Module)</h4>
+<p>Module for the <code>executeCommand</code> function</p></td>
+    </tr>
+<tr>
     <td><a href="#module_Globber">Globber</a></td>
     <td><h4>Globber (Module)</h4>
 <p>Module for evaluating glob patterns</p></td>
+    </tr>
+<tr>
+    <td><a href="#module_index">index</a></td>
+    <td><h4>index (Module)</h4>
+<p>The cli executor and the main API import for Doc-holiday</p></td>
     </tr>
 <tr>
     <td><a href="#module_Output">Output</a></td>
@@ -37,16 +60,6 @@
 <p>Module for Constraint definitions and TypeCheck support</p></td>
     </tr>
 <tr>
-    <td><a href="#module_execCmd">execCmd</a></td>
-    <td><h4>execCmd (Module)</h4>
-<p>Module for the <code>executeCommand</code> function</p></td>
-    </tr>
-<tr>
-    <td><a href="#module_index">index</a></td>
-    <td><h4>index (Module)</h4>
-<p>The cli executor and the main API import for Doc-holiday</p></td>
-    </tr>
-<tr>
     <td><a href="#module_types">types</a></td>
     <td><h4>types (Module)</h4>
 <p>Details about the scope of an entity</p>
@@ -62,6 +75,239 @@ public generator?:boolean;
     </tr>
 </tbody>
 </table>
+
+
+<hr/>
+
+<a name="module_CommentBlock" id="module_CommentBlock"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock</h5>
+
+
+
+<h4>CommentBlock (Module)</h4>
+<p>Expresses stub output.
+Converts SourceInfo-derived data objects into appropriate
+JSDOC comment blocks and associated code stubs.</p>
+
+
+* [CommentBlock](#module_CommentBlock)
+    * [~renderCommentBlock(entityInfo, indent)](#module_CommentBlock..renderCommentBlock)
+    * [~renderClassStub(ci, indent, [forClass])](#module_CommentBlock..renderClassStub)
+    * [~renderFunctionStub(fi, indent, [forClass])](#module_CommentBlock..renderFunctionStub)
+    * [~renderPropertyStub(pi, indent)](#module_CommentBlock..renderPropertyStub)
+    * [~renderEnumStub(ei, indent)](#module_CommentBlock..renderEnumStub)
+
+
+<hr/>
+
+<a name="module_CommentBlock..renderCommentBlock" id="module_CommentBlock..renderCommentBlock"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock~renderCommentBlock(entityInfo, indent)</h5>
+
+
+
+<p>Renders the comment block for the entity, and its associated stub code</p>
+
+**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| entityInfo | <code>FunctionInfo</code> \| <code>ClassInfo</code> \| <code>PropertyInfo</code> \| <code>EnumInfo</code> \| <code>TypedefInfo</code> | <p>SourceInfo-derived data object of the parsed code entity</p> |
+| indent | <code>number</code> | <p>indent margin where the comment block begins</p> |
+
+
+<hr/>
+
+<a name="module_CommentBlock..renderClassStub" id="module_CommentBlock..renderClassStub"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock~renderClassStub(ci, indent, [forClass])</h5>
+
+
+
+<p>Renders the code stub for a class.
+Unless an inner class, the stub will encapsulate other comment blocks and stubs representing the
+inner members of this class.</p>
+
+**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
+**Access**: public  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| ci | <code>ClassInfo</code> |  | 
+| indent | <code>number</code> |  | 
+| [forClass] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
+
+
+<hr/>
+
+<a name="module_CommentBlock..renderFunctionStub" id="module_CommentBlock..renderFunctionStub"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock~renderFunctionStub(fi, indent, [forClass])</h5>
+
+
+
+<p>Renders the function stub.
+The only purpose for the stub is to give JSDOC rendering engines the entity anchor for the comment
+block above.  So the actual 'function' does not need to represent the contract.
+Nevertheless, this rendering outputs the parameters and returns a value representing the primitive return type.</p>
+
+**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
+**Access**: public  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| fi | <code>FunctionInfo</code> |  | 
+| indent | <code>number</code> |  | 
+| [forClass] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
+
+
+<hr/>
+
+<a name="module_CommentBlock..renderPropertyStub" id="module_CommentBlock..renderPropertyStub"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock~renderPropertyStub(pi, indent)</h5>
+
+
+
+<p>Renders a code stub for a declared property.</p>
+
+**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| pi | <code>PropertyInfo</code> | 
+| indent | <code>number</code> | 
+
+
+<hr/>
+
+<a name="module_CommentBlock..renderEnumStub" id="module_CommentBlock..renderEnumStub"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CommentBlock~renderEnumStub(ei, indent)</h5>
+
+
+
+<p>Renders a code stub for an Enumeration</p>
+
+**Kind**: inner method of [<code>CommentBlock</code>](#module_CommentBlock)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| ei | <code>EnumInfo</code> | 
+| indent | <code>number</code> | 
+
+
+<hr/>
+
+<a name="module_CustomRender" id="module_CustomRender"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CustomRender</h5>
+
+
+
+<h4>CustomRender (Module)</h4>
+<p>Handles {{{ }}} extensions
+currently supporting <code>text</code>, <code>jsdoc</code>, and <code>plantUML</code></p>
+
+
+* [CustomRender](#module_CustomRender)
+    * [~handleInternalCustom(name, argMap, text)](#module_CustomRender..handleInternalCustom) ⇒ <code>string</code>
+    * [~handleExternalCustom(name, args, text)](#module_CustomRender..handleExternalCustom) ⇒ <code>Promise.&lt;string&gt;</code>
+
+
+<hr/>
+
+<a name="module_CustomRender..handleInternalCustom" id="module_CustomRender..handleInternalCustom"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CustomRender~handleInternalCustom(name, argMap, text) ⇒ <code>string</code></h5>
+
+
+
+<p>Checks to see if one of the locally handled extensions is being referenced, and if so
+performs the requested rendering.</p>
+<p>This is called by the CommentBlock processing when it detects a</p>
+
+**Kind**: inner method of [<code>CustomRender</code>](#module_CustomRender)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| name | <code>string</code> | 
+| argMap | <code>any</code> | 
+| text | <code>string</code> | 
+
+
+<hr/>
+
+<a name="module_CustomRender..handleExternalCustom" id="module_CustomRender..handleExternalCustom"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    CustomRender~handleExternalCustom(name, args, text) ⇒ <code>Promise.&lt;string&gt;</code></h5>
+
+
+
+<p>Checks to see if one of the locally handled extensions is being referenced, and if so
+performs the requested rendering.</p>
+<p>This is called by the CommentBlock processing when it detects a</p>
+
+**Kind**: inner method of [<code>CustomRender</code>](#module_CustomRender)  
+**Access**: public  
+
+| Param | Type |
+| --- | --- |
+| name | <code>string</code> | 
+| args | <code>Array.&lt;string&gt;</code> | 
+| text | <code>string</code> | 
+
+
+<hr/>
+
+<a name="module_execCmd" id="module_execCmd"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    execCmd</h5>
+
+
+
+<h4>execCmd (Module)</h4>
+<p>Module for the <code>executeCommand</code> function</p>
+
+
+<hr/>
+
+<a name="module_execCmd..executeCommand" id="module_execCmd..executeCommand"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    execCmd~executeCommand(cmd, args, [cwd], provide, set) ⇒ <code>Promise.&lt;any&gt;</code></h5>
+
+
+
+<p>Execute an external command and return the results
+in stdout string, stderr string, return code.
+Optionally allow command to echo to console in real time, or run silent.</p>
+
+**Kind**: inner method of [<code>execCmd</code>](#module_execCmd)  
+**Access**: public  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| cmd | <code>object</code> |  | <p>command to execute</p> |
+| args | <code>object</code> |  | <p>to pass to command, as an array</p> |
+| [cwd] | <code>any</code> | <code>&#x27;&#x27;,consolePass&#x3D;false,env &#x3D; {}</code> | <p>working directory to run command, if not the currently set one</p> |
+| provide | <code>\*</code> |  |  |
+| set | <code>\*</code> |  |  |
 
 
 <hr/>
@@ -95,6 +341,104 @@ public generator?:boolean;
 | --- | --- |
 | globexp | <code>string</code> | 
 
+
+<hr/>
+
+<a name="module_index" id="module_index"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    index</h5>
+
+
+
+<h4>index (Module)</h4>
+<p>The cli executor and the main API import for Doc-holiday</p>
+
+
+* [index](#module_index)
+    * [~DocOptions](#module_index..DocOptions)
+    * [~processFileList(files, [outPath])](#module_index..processFileList) ⇒ <code>Generator.&lt;string&gt;</code>
+    * [~docstub(content, [options])](#module_index..docstub)
+    * [~execute()](#module_index..execute)
+
+
+<hr/>
+
+<a name="module_index..DocOptions" id="module_index..DocOptions"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    index~DocOptions</h5>
+
+
+
+<p>Options for stub generation</p>
+
+**Kind**: inner class of [<code>index</code>](#module_index)  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| sourceType | <code>string</code> | <code>&quot;&#x27;ts&#x27;&quot;</code> | <p>either 'ts' (typescript) or 'js' (javascript)</p> |
+| stubExtension | <code>string</code> | <code>&quot;&#x27;.docstub.js&#x27;&quot;</code> | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+<a name="module_index..processFileList" id="module_index..processFileList"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    index~processFileList(files, [outPath]) ⇒ <code>Generator.&lt;string&gt;</code></h5>
+
+
+
+<p>Process a list of source files into comment-normalized stubs
+output to an output path or generating a string yield callback for each file processed.</p>
+
+**Kind**: inner method of [<code>index</code>](#module_index)  
+**Access**: public  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| files | <code>Array.&lt;string&gt;</code> |  | 
+| [outPath] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
+
+
+<hr/>
+
+<a name="module_index..docstub" id="module_index..docstub"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    index~docstub(content, [options])</h5>
+
+
+
+<p>Convert source text into documentation stub output</p>
+
+**Kind**: inner method of [<code>index</code>](#module_index)  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| content | <code>string</code> | <p>The original source to convert</p> |
+| [options] | <code>DocOptions</code> | <p>Options affecting stub creation</p> |
+
+
+<hr/>
+
+<a name="module_index..execute" id="module_index..execute"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    index~execute()</h5>
+
+
+
+<p>Executes the jsdoc or similar documentation generation according to the doc-holiday.conf file settings.
+In normal flow, this is called after docstub generation for all source files is complete, and the configuration
+is set to generate from the docstub .js files in the intermediate directory (gen).</p>
+
+**Kind**: inner method of [<code>index</code>](#module_index)  
+**Access**: public  
 
 <hr/>
 
@@ -746,7 +1090,7 @@ before possibly handing off to <code>extractMethodInfo</code></p>
 <p>Reads comment block</p>
 <ul>
 <li>reads primary description</li>
-<li>reads JSDoc values from</li>
+<li>reads JSDoc values from param or return blocks, and use if we don't have these from code parse</li>
 </ul>
 
 **Kind**: instance method of [<code>SourceReader</code>](#module_SourceReader..SourceReader)  
@@ -990,142 +1334,6 @@ otherwise, return ConstraintStatus.NotConstraint  to signify this is a descripti
 | type | <code>\*</code> | <ul> <li>the block of text to evaluate</li> </ul> |
 | block | <code>\*</code> | <ul> <li>the type parsed from the param or return declaration</li> </ul> |
 
-
-<hr/>
-
-<a name="module_execCmd" id="module_execCmd"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    execCmd</h5>
-
-
-
-<h4>execCmd (Module)</h4>
-<p>Module for the <code>executeCommand</code> function</p>
-
-
-<hr/>
-
-<a name="module_execCmd..executeCommand" id="module_execCmd..executeCommand"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    execCmd~executeCommand(cmd, args, [cwd], provide, set) ⇒ <code>Promise.&lt;any&gt;</code></h5>
-
-
-
-<p>Execute an external command and return the results
-in stdout string, stderr string, return code.
-Optionally allow command to echo to console in real time, or run silent.</p>
-
-**Kind**: inner method of [<code>execCmd</code>](#module_execCmd)  
-**Access**: public  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| cmd | <code>object</code> |  | <p>command to execute</p> |
-| args | <code>object</code> |  | <p>to pass to command, as an array</p> |
-| [cwd] | <code>any</code> | <code>&#x27;&#x27;,consolePass&#x3D;false,env &#x3D; {}</code> | <p>working directory to run command, if not the currently set one</p> |
-| provide | <code>\*</code> |  |  |
-| set | <code>\*</code> |  |  |
-
-
-<hr/>
-
-<a name="module_index" id="module_index"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    index</h5>
-
-
-
-<h4>index (Module)</h4>
-<p>The cli executor and the main API import for Doc-holiday</p>
-
-
-* [index](#module_index)
-    * [~DocOptions](#module_index..DocOptions)
-    * [~processFileList(files, [outPath])](#module_index..processFileList) ⇒ <code>Generator.&lt;string&gt;</code>
-    * [~docstub(content, [options])](#module_index..docstub)
-    * [~execute()](#module_index..execute)
-
-
-<hr/>
-
-<a name="module_index..DocOptions" id="module_index..DocOptions"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    index~DocOptions</h5>
-
-
-
-<p>Options for stub generation</p>
-
-**Kind**: inner class of [<code>index</code>](#module_index)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| sourceType | <code>string</code> | <code>&quot;&#x27;ts&#x27;&quot;</code> | <p>either 'ts' (typescript) or 'js' (javascript)</p> |
-| stubExtension | <code>string</code> | <code>&quot;&#x27;.docstub.js&#x27;&quot;</code> | <ul> <li></li> </ul> |
-
-
-<hr/>
-
-<a name="module_index..processFileList" id="module_index..processFileList"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    index~processFileList(files, [outPath]) ⇒ <code>Generator.&lt;string&gt;</code></h5>
-
-
-
-<p>Process a list of source files into comment-normalized stubs
-output to an output path or generating a string yield callback for each file processed.</p>
-
-**Kind**: inner method of [<code>index</code>](#module_index)  
-**Access**: public  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| files | <code>Array.&lt;string&gt;</code> |  | 
-| [outPath] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | 
-
-
-<hr/>
-
-<a name="module_index..docstub" id="module_index..docstub"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    index~docstub(content, [options])</h5>
-
-
-
-<p>Convert source text into documentation stub output</p>
-
-**Kind**: inner method of [<code>index</code>](#module_index)  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| content | <code>string</code> | <p>The original source to convert</p> |
-| [options] | <code>DocOptions</code> | <p>Options affecting stub creation</p> |
-
-
-<hr/>
-
-<a name="module_index..execute" id="module_index..execute"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    index~execute()</h5>
-
-
-
-<p>Executes the jsdoc or similar documentation generation according to the doc-holiday.conf file settings.
-In normal flow, this is called after docstub generation for all source files is complete, and the configuration
-is set to generate from the docstub .js files in the intermediate directory (gen).</p>
-
-**Kind**: inner method of [<code>index</code>](#module_index)  
-**Access**: public  
 
 <hr/>
 
