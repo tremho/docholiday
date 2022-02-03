@@ -35,6 +35,9 @@ export class SourceReader {
     private pos:number = 0; // current parse position
     private readonly fileType:string; // type of file we are parsing
 
+    // Underutilized list of comment pairs
+    // In actuality, this is used only one place
+    // other places do all the parsing inline.
     private comments:string[][] = [
         ['//','\n'],
         ['/*', '*/']

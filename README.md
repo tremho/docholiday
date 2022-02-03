@@ -57,7 +57,7 @@ Add verbosity logger and do a console sweep_
 - <del>[ ] add a verbosity option (0 - 3) default 0</del> 
 - [X] (rev) cli defaults and process detection
 - [X] ignore shebang line when parsing module description
-- [ ] use to self-document
+- [X] use to self-document
 - [ ] fix issues below
 - [ ] put to travis
 - [ ] add badges for readme
@@ -69,8 +69,13 @@ Add verbosity logger and do a console sweep_
 
 ### Issues
 
+- [ ] Mix In is not recognized; does not work
+  - current focus example is set for the MDN case. Debug from here.
+
+- [ ] document TypeCheck and show practical use of runtime
+
 - [X] go src/** works as expected
-- [ ] API docs look right
+- [X] API docs look right
   - NB: Multiple types with | renders okay in html but not markdown
   - NB: ditto for string[] (Array<string>)
   - NB: property defaults with new, [] do not render correctly in markdown
@@ -96,17 +101,15 @@ Add verbosity logger and do a console sweep_
   - multi-line comment has // 
   - hbs template is inserting &lt;code&gt; and &lt;p&gt; tags
 
-- [ ] we should have a sort (true/false) option we can honor
+- [X] we should have a sort (true/false) option we can honor
   in our plugin (default: false == use our intercept)
-- [ ] console logs for execute and plugin intercept should be removed
-
-- [ ] Test and document mix-ins
+- [X] console logs for execute and plugin intercept should be removed
 
 - [X] Commented SourceReader is failing.  Out of sync in private functions
 past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
 `clean` and `lns` and treating as properties outside of class -- and whack.
 
-- [ ] also in SourceReader -- multiline comment for comments property was failing. I have since removed it.
+- [X] also in SourceReader -- multiline comment for comments property was failing.
 
 
 - [X] create CLI options for 
@@ -115,15 +118,9 @@ past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
   - just make collection and output as JSON
 - [ ] add CLI docs
 
-- [ ] document TypeCheck and show practical use of runtime
 
 ----
 ##### Issues documenting our sources
-- [X] typecheck module inserted markdown not working.  
-It's also too long. _was unmatched backticks in markdown. now removed_
-
-- [ ] multi-type `  * @param {ClassInfo|FunctionInfo|PropertyInfo|EnumInfo|TypedefInfo} info
-  ` is not rendered by jsdoc properly
 
 - [ ] TypeCheck~TypeConstraint - bad docs for [name] and constructor
 
@@ -132,8 +129,6 @@ It's also too long. _was unmatched backticks in markdown. now removed_
 - [ ] types are not linking.
 
 - [ ] support line spacing options (end with period or cap next, deliberate line)
-
-- [ ] default value picking up other parameter defs `execCmd~executeCommand` 'cwd'
 
 - [ ] see if we can mitigate the problem with spaces in a default value `new ScopeModifiers()`.
 _I believe this is a jsdoc rendering issue_
@@ -168,7 +163,7 @@ _I believe this is a jsdoc rendering issue_
 - [X] typescript form parameters fail if no space after comma
 - 
 - [X] ad-hoc parameter type not represented in JSDOC stub (collapses to object)
-- [ ] nested ad-hoc parameters fail big time
+- [X] nested ad-hoc parameters fail big time
 - [X] ad-hoc return type not represented in JSDOC stub (collapses to object)
 - [X] ad-hoc return type also produces a property declaration with part of the ad-hoc statement
 - 

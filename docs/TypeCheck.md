@@ -141,7 +141,6 @@
 
  Typescript declared parameters and returns may be commented as 'side-comments' after the declaration, as in this
  example:
-
       function example(param1:string, // comment for param1
                        param2:number, // comment for param2
       ) : number // comment for return value
