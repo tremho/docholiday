@@ -213,8 +213,10 @@ export class SourceReader {
         }
         let type = this.readNextWord(str, startIndex)
         if(type.charAt(type.length-1) === ',') type = type.substring(0,type.length-1)
-        let bs = str.indexOf('{', startIndex)
-        if(bs !== -1) {
+        let dc = str.indexOf(':')
+        if(dc !== -1 || dc > startIndex) type = ''
+        let bs = this.pastWhite(str, startIndex)
+        if(str.charAt(bs) === '{') {
             let be = str.indexOf('}', bs)
             if(be !== -1) {
                 type = str.substring(bs, be+1)
@@ -332,14 +334,17 @@ export class SourceReader {
         // this won't have types (unless typescript), but we can get names and ordinal out of it
         //
 
-        // index past name
-        let opi = this.text.indexOf(name, si.decStart) + name.length;
-        opi = this.text.indexOf('(', opi)
-        // let opi2 = this.text.substring(opi+1, si.decEnd).indexOf('(',)
-        // if(opi2 !== -1) opi += opi2+1
-        let cpi = this.text.indexOf(')', opi)
-        let opi2 = this.text.indexOf('(', opi+1)
-        if(opi2 !== -1 && opi2 < cpi) opi = opi2
+        // v3 attempt
+        // index past name, get opi
+        // bracket match '(' for cpi
+        let pn = this.text.indexOf(name, si.decStart) +name.length
+        let opi, cpi
+        try {
+            let {start, end} = this.findBracketBoundaries(pn, '(')
+            opi = start
+            cpi = end - 1
+        } catch(e) {}
+
         let pdec = this.text.substring(opi+1, cpi)
         let oti = pdec.indexOf('<')
         let ahi = pdec.indexOf('{')
@@ -363,6 +368,14 @@ export class SourceReader {
             }
             pdec = pdec.trim()
             let c = pdec.indexOf(':')
+            let a = pdec.indexOf('=')
+            let s = pdec.indexOf(' ')
+            let r = pdec.indexOf('\n')
+            let t = Math.min(a, s)
+            if(t === -1) t = Math.min(a, s)
+            if(t === -1) t = Math.min(t, r)
+            if(t === -1) t = r
+            if(t < c) c = t
             let type
             let b = 0
             if(c !== -1) {
@@ -395,7 +408,7 @@ export class SourceReader {
                 }
             }
             let nt = ntc.split(':')
-            const pi = new ParameterInfo()
+            let pi = new ParameterInfo()
             pi.name = parent ? parent+'.'+nt[0].trim() : nt[0].trim()
             if(pi.name.charAt(pi.name.length-1) === '?') {
                 pi.name = pi.name.substring(0, pi.name.length-1)
@@ -454,6 +467,14 @@ export class SourceReader {
             }
             // <<<
 
+            if(!pi.name) { // this is a continuation of a comment
+                const lastPi:ParameterInfo|undefined = fi.params.pop()
+                if(lastPi) {
+                    lastPi.description += '\n' + pi.description
+                    pi = lastPi
+                }
+            }
+
             let isAdHoc = false
             if(pi.type.charAt(0) == '{') {
                 isAdHoc = true
@@ -472,7 +493,7 @@ export class SourceReader {
         }
         // typescript can provide return type
         // if(opi2 !== -1) cpi = this.text.indexOf(')', cpi+1)
-        let n = this.pastWhite(this.text, cpi + 1);
+        let n = this.pastWhite(this.text, cpi)
         if(this.fileType === 'typescript') {
             fi.return = new ReturnInfo();
             if (this.text.charAt(n) === ':') {
@@ -1466,6 +1487,7 @@ function deriveTypeFromValue(value:string) {
         if(q === '[') return 'array'
         if(q === '{') return 'object'
     }
+    if(value === 'true' || value === 'false') return 'boolean'
     if(value === '') return 'string'
     if(isFinite(Number(value))) return 'number'
     return typeof value

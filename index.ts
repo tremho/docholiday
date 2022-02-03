@@ -39,10 +39,16 @@ while((f = args[i])) {
     opts['config'] = args[i+1]
   }
   if(f.substring(0,7) === 'config=') opts['config'] = f.substring(7)
-  if(f === '-c') {
+  else if(f === '-c') {
     opts['config'] = args[i+1]
   }
-  if(f.substring(0,3) === '-c=') opts['config'] = f.substring(3)
+  else if(f.substring(0,3) === '-c=') opts['config'] = f.substring(3)
+
+  else if(f.substring(0,10) === '--no-clean') opts.noClean = true
+  else if(f.substring(0,12) === '--stubs-only') opts.stubsOnly = true
+  else if(f.substring(0,13) === '--render-only') opts.renderOnly = opts.noClean = true
+  else if(f.substring(0,12) === '--analysis') opts.analyseOnly = true
+
 
   // if(f.substring(0,9) === 'verbosity') opts['verbosity'] = args[i+1]
   // if(f.substring(0,10) === 'verbosity=') opts['verbosity'] = f.substring(10)
@@ -59,25 +65,27 @@ while((f = args[i])) {
 }
 
 // if we have arge, but no files, that is an error -- show help
-if(args.length && !files.length) {
+if(args.length && !files.length && !opts.renderOnly) {
     showHelp()
     process.exit(1)
 }
 
 // if invoked as a CLI, we will process the files
-if(files.length) {
+if(files.length || opts.renderOnly) {
   // console.log('Doc Holiday ', files)
   readConfiguration()
-  clean()
+  if(!opts.noClean) clean()
   let generator = processFileList(files, config.intermediate)
-  while(true) {
+  while(!opts.renderOnly) {
     let gen = generator.next()
     let stub = gen.value
     if(!stub) break;
     // if(stub) trace(1, stub)
     if(gen.done) break;
   }
-  execute()
+  if(!opts.stubsOnly) {
+    execute()
+  }
 }
 
 // If used as a module, the rest of this file represents the exposed API
@@ -181,7 +189,7 @@ function recordTypedef(ti:TypedefInfo, source: string) {
 function readConfiguration() {
   let cf = opts.config || 'doc-holiday.conf'
   cf = path.resolve(cf.trim())
-  console.log(cf)
+  // console.log(cf)
   if(!fs.existsSync(cf)) {
     showHelp()
     console.error(ac.bold.red('No config found or specified.  use config option to specify location of a doc-holiday.conf file if not in current directory'))
@@ -242,7 +250,7 @@ export async function execute() {
     let jst = Object.assign(ctemp, cjc)
     jst.opts = {
       template: config.template || "templates/default",
-      sort: false
+      sort: config.sort
     }
     // console.log('resulting json config', jst)
 
@@ -256,7 +264,7 @@ export async function execute() {
   const execFmt = async (fmt:string) => {
     if(fmt) {
       let exec = config.execInfo[eng][fmt]['exec']
-      console.log('exec', exec)
+      // console.log('exec', exec)
 
       const exp = exec.split(' ')
       const cmd = exp.shift()
@@ -277,6 +285,7 @@ export async function execute() {
   }
   let fmt
   while((fmt = fmts.shift())) {
+    fmt = fmt.trim()
     console.log('converting to '+fmt+'...')
     let rt = await execFmt(fmt)
     if(rt) break

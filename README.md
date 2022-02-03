@@ -69,6 +69,18 @@ Add verbosity logger and do a console sweep_
 
 ### Issues
 
+- [X] go src/** works as expected
+- [ ] API docs look right
+  - NB: Multiple types with | renders okay in html but not markdown
+  - NB: ditto for string[] (Array<string>)
+  - NB: property defaults with new, [] do not render correctly in markdown
+  - Note: All nb items above not present under docJS 
+  
+
+- [X] executeCommand parmeters not represented properly
+  - goes awry at cmd='', somehow picked up the words process and set
+  
+
 - [X] Refactor to be more Github Pages friendly.
   - change html output to docs/html
   - get rid of docs/ test
@@ -78,7 +90,7 @@ Add verbosity logger and do a console sweep_
 
 
 
-- [ ] 'Biorhythm' example in intro doesn't really work as advertised
+- [X] 'Biorhythm' example in intro doesn't really work as advertised
   - parameters mangled
   - return type wrong
   - multi-line comment has // 
@@ -97,7 +109,7 @@ past GatherCommentMeta -- inside `readCommentBlockForm1` is picking up
 - [ ] also in SourceReader -- multiline comment for comments property was failing. I have since removed it.
 
 
-- [ ] create CLI options for 
+- [X] create CLI options for 
   - just make stubs
   - just render stubs
   - just make collection and output as JSON

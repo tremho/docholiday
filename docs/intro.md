@@ -103,8 +103,8 @@ using their birthdate as the starting point</p>
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | string | the user's name
-| birthdate | Date | ths user's birthdate (time portion of date ignored)
+| name | <code>string</code> | <p>The user's name</p> |
+| birthdate | <code>Date</code> | <p>the user's birthdate (time portion of date ignored)</p> |
 <hr/>
 
 ## Features

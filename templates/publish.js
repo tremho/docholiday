@@ -9,17 +9,24 @@ const fs = require('fs')
  */
 exports.publish = (taffyData, opts, tutorials) => {
 
-  console.log("We've intercepted the publish")
+  // console.log("We've intercepted the publish")
   // console.log("options", opts)
 
   const conf = readConfig(opts.configure)
   const template = conf?.opts?.template || opts.template || 'templates/default'
-  const sortOpt = conf?.opts?.sort
+  const sortOpt = opts?.sort
   const orig = linkTemplateDir(template)
 
 
-  taffyData.sort = () => {
-    console.log("intercepted and disabled sort", 'Sort option = ', sortOpt)
+  const orgsort = taffyData.sort
+  taffyData.sort = (...args) => {
+    // console.log("intercepted and disabled sort", 'Sort option = ', sortOpt)
+    if(!sortOpt) {
+      console.log('entities will appear in source order')
+      return;
+    } // disable if sort === false
+    console.log('entities will be sorted per jsdoc template '+template)
+    orgsort(...args)
   }
 
   return orig.publish(taffyData, opts, tutorials)
