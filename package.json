@@ -24,7 +24,8 @@
     "docs:prepare": "echo 'Creating book'",
     "docs:build": "npm run docs:prepare && cd ./booksrc && honkit build",
     "docs:serve": "npm run docs:prepare && cd ./booksrc && honkit serve",
-    "docs:clean": "rm -fr _book"
+    "docs:clean": "rm -fr _book",
+    "tcCase": "npm run build && node build/cases/tcDemo.js"
   },
   "keywords": [],
   "author": "",

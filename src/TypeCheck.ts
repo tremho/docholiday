@@ -818,3 +818,24 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
 
 }
 
+/**
+ * Simple test to see if a value adheres to a set of constraints
+ */
+export function validate(
+
+    value:any, // The value to test for constraints. Must be one of the basic types supported by contraints
+    constraintString:string // the constraints to test it against. Constraints listed must match the type being tested. Do not include < > brackets.
+
+):boolean // returns true if value passes all constraint tests.
+{
+    let tc = parseConstraints(typeof value, constraintString || '')
+    let ok:boolean = true
+    try {
+        if(tc) tc.test(value)
+    } catch(e) {
+        ok = false
+    }
+    return ok
+
+}
+

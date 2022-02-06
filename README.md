@@ -69,7 +69,9 @@ Add verbosity logger and do a console sweep_
 
 ### Issues
 
-- [ ] Mix In is not recognized; does not work
+- [X] --analysis cli option is not working
+
+- [X] Mix In is not recognized; does not work
   - current focus example is set for the MDN case. Debug from here.
 
 - [ ] document TypeCheck and show practical use of runtime

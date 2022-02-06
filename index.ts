@@ -8,7 +8,7 @@ import * as fs from 'fs-extra'
 
 import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo, TypedefInfo} from './src/types'
 import { processSourceFile, processSource } from './src/ProcessFiles'
-import {recordInfo, sortRecorded, clearRecorded, stubOut, writeStubFile, readModuleDescription} from "./src/Output";
+import {recordInfo, sortRecorded, clearRecorded, analysisJSON, writeStubFile, readModuleDescription} from "./src/Output";
 import {getGlobbedFiles} from "./src/Globber";
 import {executeCommand} from "./src/execCmd";
 
@@ -71,20 +71,33 @@ if(args.length && !files.length && !opts.renderOnly) {
 }
 
 // if invoked as a CLI, we will process the files
+let count = 0
 if(files.length || opts.renderOnly) {
   // console.log('Doc Holiday ', files)
   readConfiguration()
   if(!opts.noClean) clean()
-  let generator = processFileList(files, config.intermediate)
+  let outPath = opts.analyseOnly ? '' : config.intermediate
+  let generator = processFileList(files, outPath)
+  let analyseOut = '['
   while(!opts.renderOnly) {
     let gen = generator.next()
-    let stub = gen.value
-    if(!stub) break;
+    count++
+    let value = gen.value
+    if(!value) break;
+    if(!outPath) {
+      analyseOut += value
+      analyseOut += ','
+    }
     // if(stub) trace(1, stub)
     if(gen.done) break;
   }
-  if(!opts.stubsOnly) {
+  if(!opts.stubsOnly  && !opts.analyseOnly) {
     execute()
+  }
+  if(opts.analyseOnly) {
+    analyseOut = analyseOut.substring(0, analyseOut.length-1) // remove last comma
+    analyseOut += ']'
+    console.log(analyseOut)
   }
 }
 
@@ -101,11 +114,11 @@ export class DocOptions {
 
 /**
  * Process a list of source files into comment-normalized stubs
- * output to an output path or generating a string yield callback for each file processed.
+ * output to an output path or generating an analysis JSON yield for each file processed.
  * @param {string[]} files
- * @param {string} outPath
+ * @param {string} outPath  if '', analysis JSON will be emitted instead on each yield
  *
- * @generator {string} with no outPath given, will generate successive results from process files as string content.
+ * @generator {string} with no outPath given, will generate successive analysis results from process files as JSON content.
  *                     with outPath, the generated file will be return on each iteration
  *
  * <<<jsdoc tag=example>>>
@@ -143,7 +156,7 @@ export function* processFileList(files:string[], outPath=''):Generator<string> {
       writeStubFile(outFile, bn, desc)
       yield outFile
     } else {
-      yield stubOut()
+      yield analysisJSON()
     }
     f = files.shift()
   }
@@ -306,6 +319,12 @@ function showHelp() {
   console.log(ac.bold.black(" config=<file>"),ac.black.italic("-- same as above"))
   console.log(ac.bold.black(" -c <file>"), ac.black.italic("-- same as above"))
   console.log(ac.bold.black(" -c=<file>"), ac.black.italic("-- same as above"))
+  console.log('')
+  console.log(ac.bold.black(" --stubs-only"), ac.black.italic("-- Generate stubs to intermediate directory only"))
+  console.log(ac.bold.black(" --no-clean"), ac.black.italic("-- Do not clear intermediate directory before generation"))
+  console.log(ac.bold.black(" --render-only"), ac.black.italic("-- Run rendering from stubs (per configuration settings) only"))
+  console.log(ac.bold.black(" --analysis"), ac.black.italic("-- parse source code and emit analysis json only"))
+
   console.log("")
 }
 

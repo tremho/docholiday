@@ -297,7 +297,7 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
     } else {
         if (ci.mixins.length) {
             for (let mi of ci.mixins) {
-                out += commentLine(indent, `   @implements ${mi}`)
+                out += commentLine(indent, `   @mixes ${mi}`)
             }
         }
         if (ci.description) out += commentText(indent, 0, ci.description)

@@ -31,6 +31,11 @@ export function clearRecorded() {
     recorded.splice(0,recorded.length)
 }
 
+// Return the recorded analysis as JSON
+export function analysisJSON() {
+    return JSON.stringify(recorded)
+}
+
 /**
  * Records the information of a parsed entity into the collection
  *

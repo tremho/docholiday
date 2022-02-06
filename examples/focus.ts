@@ -1,12 +1,12 @@
 
-let calculatorMixin = Base => class extends Base {
+export let calculatorMixin = Base => class extends Base {
     calc() { }
 };
 
-let randomizerMixin = Base => class extends Base {
+export let randomizerMixin = Base => class extends Base {
     randomize() { }
 };
 
-class Foo { }
-class Bar extends calculatorMixin(randomizerMixin(Foo)) { }
+export class Foo { }
+export class Bar extends calculatorMixin(randomizerMixin(Foo)) { }
 
