@@ -74,6 +74,7 @@ Add verbosity logger and do a console sweep_
 - [X] Mix In is not recognized; does not work
   - current focus example is set for the MDN case. Debug from here.
 
+- [ ] Constraints not working (see focus)
 - [ ] document TypeCheck and show practical use of runtime
 
 - [X] go src/** works as expected

@@ -1,12 +1,10 @@
 
-export let calculatorMixin = Base => class extends Base {
-    calc() { }
-};
 
-export let randomizerMixin = Base => class extends Base {
-    randomize() { }
-};
+export function constraintTest(
+    a:string, //<minLength=3, maxLength=12>
+    b:number,  // <integer, positive>
+    c:number,  // <min=32, max=412>
+)
+{
 
-export class Foo { }
-export class Bar extends calculatorMixin(randomizerMixin(Foo)) { }
-
+}

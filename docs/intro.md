@@ -126,6 +126,10 @@ using their birthdate as the starting point</p>
   - Comments may be via // /* or /** (jsdoc-style) blocks 
   - Supports descriptions in comments above or to the side
   - Supports Functions, Properties, Classes, Enums, Typedefs, and Interfaces
+- __Constraints__
+  - Now you can specify the runtime expectations of a parameter or return _value_, and 
+not just its type. For example: Should this `number` be a positive integer between 0-100?
+A constraint will allow you to specify that, and much more. See [Introducing Constraints](constraints)
 - __Diagrams!__ 
   - Supports image diagrams using [PlantUML](https://plantuml.com) descriptive language
 - __Roll your own__ 

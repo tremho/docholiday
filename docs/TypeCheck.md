@@ -1,6 +1,5 @@
 
 ### Topic Documentation for Constraint declarations
-
  A protocol for utilizing and extending JSDoc comment syntax to declare parameters and return values
  with their runtime constraints as well as their types.
 
