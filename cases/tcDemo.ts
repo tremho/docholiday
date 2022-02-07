@@ -1,12 +1,19 @@
+/*
+Case study for typecheck runtime
+ */
+
 import {validate} from "../src/TypeCheck";
 
 
-function typeCheckCase1(
+/*
+An example of using constraints
+ */
+export function typeCheckCase1(
     name:string, //<minLength=4, maxLength=32>
     age:number,  // <positive, integer, non-zero>
     phone: string, //<match=\\([0-9]{3}\) [0-9]{3}-[0-9]{4}>
 
-):string
+):string // <minLength=4 match=[okay|bad \w+]
 {
     let out = ''
     if(!validate(name,'minLength=4, maxLength=32')) {

@@ -591,6 +591,7 @@ function formatConstraints(indent: number, info:ParameterInfo|PropertyInfo|Retur
             }
          })
         out += commentLine(indent, '   </ul>')
+        out += commentLine(indent, '')
     }
     return out
 }

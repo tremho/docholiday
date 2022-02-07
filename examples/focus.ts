@@ -1,10 +1,41 @@
+// Comment block types
 
 
-export function constraintTest(
-    a:string, //<minLength=3, maxLength=12>
-    b:number,  // <integer, positive>
-    c:number,  // <min=32, max=412>
-)
-{
+/**
+ * Classic JSDoc
+ */
+export function a() {
 
 }
+
+/*
+Regular C
+ */
+export function b() {
+
+}
+
+// Double slash
+export function c() {
+
+}
+
+ /*********************************\
+  * Rounded corner comments
+ \*********************************/
+export function rounded() {}
+
+///////////////////////////////////
+// Multislash comments
+///////////////////////////////////
+export function multislash() {}
+
+//--------------------------------
+// arbitrary after slash
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+export function slashArbitrary() {}
+
+/*%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%
+Conventional arbitrary
+%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%$%*/
+export function normalArbitrary() {}

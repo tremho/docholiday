@@ -19,9 +19,10 @@ import {
 } from "./types";
 
 import * as TypeCheck from "./TypeCheck"
+import {TypeConstraint} from "./TypeCheck";
 
 // RegExp pattern for recognizing a constraint declaration
-const constraintRE = /\<[\w|\d|=|,|"||!|'|\s]+\>/g
+const constraintRE = /<.+>/g
 
 /**
  * The primary source parsing object.
@@ -206,8 +207,10 @@ export class SourceReader {
     // Read a type description. Includes support for template types.
     readTypeDef(str, startIndex) {
         let tp = ''
+        let ci = str.indexOf('/', startIndex)
+        if(ci === -1) ci = str.length
         let ti = str.indexOf('<', startIndex)
-        if(ti !== -1) {
+        if(ti !== -1 && ti < ci) {
             let te = str.indexOf('>', ti)
             if(te !== -1) {
                 tp = str.substring(0, te+1).trim()
@@ -217,7 +220,7 @@ export class SourceReader {
         let type = this.readNextWord(str, startIndex)
         if(type.charAt(type.length-1) === ',') type = type.substring(0,type.length-1)
         let dc = str.indexOf(':')
-        if(dc !== -1 || dc > startIndex) type = ''
+        if(dc > startIndex) type = ''
         let bs = this.pastWhite(str, startIndex)
         if(str.charAt(bs) === '{') {
             let be = str.indexOf('}', bs)
@@ -359,6 +362,16 @@ export class SourceReader {
             swap = swap.replace(',', ';;')
             pdec = pdec.substring(0, oti)+ swap + pdec.substring(cti)
         }
+        pdec = pdec.trim()
+
+        if(pdec.substring(0, 8) === 'function') {
+            cpi = pdec.indexOf('(',8)
+            if(oti !== -1) {
+                cpi = pdec.indexOf(')', oti)
+                if(cpi === -1) cpi = pdec.length
+                pdec = pdec.substring(oti+1, cpi)
+            }
+        }
 
         // parameters
         let parent = '' // part of ad-hoc object handling
@@ -370,6 +383,7 @@ export class SourceReader {
                 parent = ''
             }
             pdec = pdec.trim()
+            if(pdec == '}') pdec = ''
             let c = pdec.indexOf(':')
             let a = pdec.indexOf('=')
             let s = pdec.indexOf(' ')
@@ -445,30 +459,6 @@ export class SourceReader {
                 }
             }
             if(ilc) pi.description = ilc
-            // constraints >>>
-            // parse out constraints here
-            let ctext = (pi.description?.replace(/;;/g, ',') || '')
-            let constraintDeclaration = ''
-            const cm = ctext.match(constraintRE)
-            if(cm) {
-                for(let m of cm) {
-                    let n = ctext.indexOf(m)
-                    ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
-                    if(constraintDeclaration) constraintDeclaration += ', '
-                    constraintDeclaration += m.substring(1, m.length-1)
-                }
-            }
-            pi.description = ctext
-            try {
-                if(constraintDeclaration) {
-                    pi.constraintMap = TypeCheck.parseConstraintsToMap(pi.type, constraintDeclaration)
-                }
-            } catch (e) {
-                console.error(e)
-                pi.error = e.message;
-                pi.status = SpecificationStatus.BadConstraint
-            }
-            // <<<
 
             if(!pi.name) { // this is a continuation of a comment
                 const lastPi:ParameterInfo|undefined = fi.params.pop()
@@ -499,6 +489,7 @@ export class SourceReader {
         let n = this.pastWhite(this.text, cpi)
         if(this.fileType === 'typescript') {
             fi.return = new ReturnInfo();
+            if(this.text.charAt(n) === ')') n++
             if (this.text.charAt(n) === ':') {
                 let bs = this.text.indexOf('{', n+1)
                 if(bs === -1) bs = this.text.length
@@ -527,33 +518,6 @@ export class SourceReader {
                 } else {
                     fi.return.description = ''
                 }
-                // parse out constraints here
-                let ctext = fi.return.description
-                if(ctext.substring(ctext.length-2) === '*/') ctext = ctext.substring(0, ctext.length-2)
-                ctext = ctext.replace(/;;/g, ',')
-                let constraintDeclaration = ''
-                const cm = ctext.match(constraintRE)
-                if(cm) {
-                    for(let m of cm) {
-                        let n = ctext.indexOf(m)
-                        ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
-                        if(constraintDeclaration) constraintDeclaration += ', '
-                        constraintDeclaration += m.substring(1, m.length-1)
-                    }
-                }
-                fi.return.description = ctext.trim()
-                if(fi.return.type.indexOf(';') !== -1) {
-                    fi.return.type = fi.return.type.replace(';', '')
-                }
-                try {
-                    if(constraintDeclaration) {
-                        fi.return.constraintMap = TypeCheck.parseConstraintsToMap(fi.return.type, constraintDeclaration)
-                    }
-                } catch (e) {
-                    console.error(e)
-                    // error = e.message;
-                    // status = SpecificationStatus.BadConstraint
-                }
             }
             if(!fi.return.description) {
                 // last chance for a description: a // comment on the same line
@@ -577,6 +541,29 @@ export class SourceReader {
         // let dbCheck = this.text.substring(fi.bodyStart, fi.bodyEnd)
         // console.log(dbCheck)
         this.gatherCommentMeta(fi)
+
+        for(let cpi of fi.params) {
+            let ctext = cpi.description?.replace(/;;/g, ',') || ''
+            let result = extractConstraints(ctext, cpi.type)
+            if(result.error) {
+                cpi.error = result.error
+                cpi.status = result.status
+            } else {
+                cpi.description = result.description
+                cpi.constraintMap = result.constraintMap
+            }
+        }
+        let cri = fi.return
+        if(cri) {
+            let ctext = cri.description?.replace(/;;/g, ',') || ''
+            let result = extractConstraints(ctext, cri.type)
+            if(result.error) {
+                cri.status = result.status
+            } else {
+                cri.description = result.description
+                cri.constraintMap = result.constraintMap
+            }
+        }
 
         return fi
     }
@@ -848,25 +835,10 @@ export class SourceReader {
 
         // parse out constraints here
         let ctext = pi.description.trim()
-        let constraintDeclaration = ''
-        const cm = ctext.match(constraintRE)
-        if(cm) {
-            for(let m of cm) {
-                let n = ctext.indexOf(m)
-                ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
-                if(constraintDeclaration) constraintDeclaration += ', '
-                constraintDeclaration += m.substring(1, m.length-1)
-            }
-        }
-        pi.description = ctext
-        try {
-            if(constraintDeclaration) {
-                pi.constraintMap = TypeCheck.parseConstraintsToMap(type, constraintDeclaration)
-            }
-        } catch (e) {
-            console.error(e)
-            // error = e.message;
-            // status = SpecificationStatus.BadConstraint
+        let result = extractConstraints(ctext, pi.type)
+        if(!result.error) {
+            pi.description = result.description
+            pi.constraintMap = result.constraintMap
         }
 
         pi.name = name;
@@ -1237,26 +1209,11 @@ export class SourceReader {
                 ti.type = TypedefForm[ti.form].toLowerCase()
             }
             // parse out constraints here
-            let constraintDeclaration = ''
-            let desc = ti.description
-            const cm = desc.match(constraintRE)
-            if(cm) {
-                for(let m of cm) {
-                    let n = desc.indexOf(m)
-                    desc = desc.substring(0,n)+desc.substring(n+m.length)
-                    if(constraintDeclaration) constraintDeclaration += ', '
-                    constraintDeclaration += m.substring(1, m.length-1)
-                }
+            let result = extractConstraints(ti.description, ti.type)
+            if(!result.error) {
+                ti.description = result.description
+                ti.constraintMap = result.constraintMap
             }
-            ti.description = desc
-            try {
-                if(constraintDeclaration) {
-                    ti.constraintMap = TypeCheck.parseConstraintsToMap(ti.type, constraintDeclaration)
-                }
-            } catch (e) {
-                console.error(e)
-            }
-
         }
         return ti
     }
@@ -1311,18 +1268,6 @@ export class SourceReader {
                 // at this point, pi, pe are the locations of this param line
                 // and pe -> next delimiter is block, but we do that below
                 n = pe
-
-                // parse out constraints here
-                let constraintDeclaration = ''
-                const cm = pd.match(constraintRE)
-                if(cm) {
-                    for(let m of cm) {
-                        let n = pd.indexOf(m)
-                        pd = pd.substring(0,n)+pd.substring(n+m.length)
-                        if(constraintDeclaration) constraintDeclaration += ', '
-                        constraintDeclaration += m.substring(1, m.length-1)
-                    }
-                }
 
                 let fpi = fi.params[pIndex]
                 // here we parse the gist of the param declaration
@@ -1393,16 +1338,6 @@ export class SourceReader {
                 if (!agree) {
                     if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Mismatch
                     fi.error = 'name, type or description mismatch with declared parameter'
-                }
-                try {
-                    if(constraintDeclaration) {
-                        fpi.constraintMap = TypeCheck.parseConstraintsToMap(pInfo.type, constraintDeclaration)
-                    }
-                    if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.Okay
-                } catch (e) {
-                    console.error(e)
-                    fi.error = e.message;
-                    if (fpi.status === SpecificationStatus.None) fpi.status = SpecificationStatus.BadConstraint
                 }
                 // onward
                 fi.params[pIndex++] = fpi;
@@ -1594,4 +1529,35 @@ function myBracketExtract(src:string, pair:string) {
     let firstOpen = src.indexOf(bracket)
     let extract = src.substring(firstOpen, endPos+1).trim()
     return extract.length
+}
+
+function extractConstraints(description:string, type:string): {description:string, constraintMap:any, error:string, status:SpecificationStatus} {
+    // constraints >>>
+    let result:any = {}
+    // parse out constraints here
+    let ctext = (description?.replace(/;;/g, ',') || '')
+    let constraintDeclaration = ''
+    const cm = ctext.match(constraintRE)
+    if(cm) {
+        for(let m of cm) {
+            let n = ctext.indexOf(m)
+            ctext = ctext.substring(0,n)+ctext.substring(n+m.length)
+            if(constraintDeclaration) constraintDeclaration += ', '
+            constraintDeclaration += m.substring(1, m.length-1)
+        }
+    }
+    description = ctext
+    try {
+        if(constraintDeclaration) {
+            result.constraintMap = TypeCheck.parseConstraintsToMap(type, constraintDeclaration)
+            result.description = description
+        }
+    } catch (e) {
+        console.error(e)
+        result.error = e.message;
+        result.status = SpecificationStatus.BadConstraint
+    }
+    return result
+    // <<<
+
 }

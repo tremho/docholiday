@@ -65,7 +65,6 @@ Add verbosity logger and do a console sweep_
 - [ ] public publish to npm
 
 -----------
-<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
 
 ### Issues
 
@@ -74,8 +73,22 @@ Add verbosity logger and do a console sweep_
 - [X] Mix In is not recognized; does not work
   - current focus example is set for the MDN case. Debug from here.
 
-- [ ] Constraints not working (see focus)
+- [X] Constraints not working (see focus)
+
+<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
+
+- [X] refactor how constraints are parsed for params/return so that
+we do this at end, after gatherMetadata, and we have the chance 
+to apply constraints in the JSDoc block.
+This also fixes the reappearance of constraint comment on inline-return. 
+
+<del>- [ ] I want to be able to use any form of comment block header</del>
+
 - [ ] document TypeCheck and show practical use of runtime
+- [ ] document examples of all entity types with variations.
+- [ ] callbacks are best defined as an interface, but do not
+capture parameter, return info.  Best to put this into def block
+yourself
 
 - [X] go src/** works as expected
 - [X] API docs look right

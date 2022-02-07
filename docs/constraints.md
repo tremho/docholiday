@@ -20,11 +20,17 @@ values accordingly (or you missed a case, and your app crashes).
 But does the documentation reflect that?  
 
 Maybe you spelled all of this out in the function or parameter descriptions, but
-probably not, because that's hard to do and even if you did it would not stand out
+probably not, because that's tedious to do and even if you did it would not stand out
 as anything to take note of because the comment would be a long rambling block of text.
 
 This is where constraints come in.  
 
 Constraints allow you to declare the runtime limitations of a value
 in a concise format in your comments.  This is expanded upon in the final
-documentation to render as a table
+documentation to render as a separately styled list of restrictions upon the value that is easy to note by those
+reading the documentation.
+
+If you are looking for a corresponding validation library you can use at runtime to enforce this in your code, we have
+that too! [the `validate` function]() can be imported into your sources and used to check that a value passed at 
+runtime meets the specification documented.
+

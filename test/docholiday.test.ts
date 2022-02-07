@@ -19,7 +19,7 @@ async function docTests(name:string) {
         try {
             const content = fs.readFileSync(testPath).toString()
             docstub(content)
-            const stubFile = path.join('gen', 'test-'+name+'.docstub.js')
+            const stubFile = path.join('.dh-temp', 'test-'+name+'.docstub.js')
             const stub = fs.readFileSync(stubFile).toString()
             const comp = fs.readFileSync(compPath).toString()
             const diff = compareLines(stub, comp)
