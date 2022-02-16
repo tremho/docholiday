@@ -16,8 +16,8 @@ export let aSideLet // side commented let
 export const aSideConst = 0 // side commented const w/assignemnt
 
 // top commented multi-dec
-// will only document the last in the series
-export let foo, bor, baz
+// will only document the first in the series
+export let foo, bar, baz
 
 export let foobar, foobaz, huzzah // side-commented multi, same thing
 
@@ -66,11 +66,13 @@ export class PropExplorer {
     commented = 'no type provided' // but I have a comment about it
 
     unassigned:string
+
     novalue:number      // also unassigned
 
     anything:any    // unassigned any
 
     justMe // undeclared and unassigned
+
     noComment
 
     private mysecret:string = 'adkf98adf'

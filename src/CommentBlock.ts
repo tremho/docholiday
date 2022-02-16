@@ -357,6 +357,9 @@ function renderClassComment(ci:ClassInfo, indent:number, forClass = '') : string
                 if (imp.trim()) out += commentLine(indent, '@implements ' + imp)
             }
         }
+        if(ci.isMixin) {
+            out += commentLine(indent, '@mixin')
+        }
     }
     out += commentLine(indent, '')
     out += endCommentBlock(indent)
@@ -401,13 +404,20 @@ function renderTypedefComment(ti:TypedefInfo, indent:number, forClass = ''): str
     if(forClass) {
         return commentLine(indent, `@property {${ti.type}} ${forClass}.${ti.name} - ${ti.description || ''}`)
     }
-
-    out += commentLine(indent, '@name '+ti.name)
-    out += commentLine(indent, '@typedef {'+ti.type+'}')
-    if(ti.description) out += commentText(indent, 0, ti.description)
+    let type = ti.type
+    if(type.indexOf('&') !== -1) {
+        ti.type = 'class'
+    }
+    if(ti.type === 'function') {
+        out += commentLine(indent, '@callback '+ ti.name)
+    }
+    else {
+        out += commentLine(indent, '@typedef {' + ti.type + '} ' + ti.name)
+    }
+    if(ti.description) out += commentText(indent, 0, '@description '+ti.description)
     out += formatConstraints(indent, ti)
 
-    if(ti.form === TypedefForm.Object) {
+    if(ti.form === TypedefForm.Object || ti.form === TypedefForm.Array) {
         let ci = ti.declaration as ClassInfo
         for(let pi of ci.internals.properties) {
             if(!pi.scope.private) {
@@ -448,6 +458,16 @@ function renderTypedefComment(ti:TypedefInfo, indent:number, forClass = ''): str
             }
         }
 
+    }
+    if(type.indexOf('&') !== -1) {
+        const tp = type.split('&')
+        for(let ifType of tp) {
+            ifType = ifType.trim()
+            if(ifType.charAt(ifType.length-1) === ';') ifType = ifType.substring(0, ifType.length-1)
+            if(ifType) {
+                out += commentLine(indent, '@implements {'+ifType+'}')
+            }
+        }
     }
 
     out += endCommentBlock(indent)
@@ -544,6 +564,16 @@ export function renderPropertyStub(pi:PropertyInfo, indent:number) {
     out += '\n'
 
     return out
+}
+
+/**
+ * Renders a code stub for a typedef.
+ * No stub is necessary for a typedef
+ * @param ti
+ * @param indent
+ */
+export function renderTypedefStub(ti:TypedefInfo, indent:number) {
+    return '\n'
 }
 
 /**

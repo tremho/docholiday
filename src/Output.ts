@@ -12,6 +12,7 @@ import {
     renderCommentBlock,
     renderFunctionStub,
     renderPropertyStub,
+    renderTypedefStub,
     renderClassStub,
     renderEnumStub
 } from "./CommentBlock";
@@ -127,7 +128,7 @@ export function stubOut():string {
             } else if (cb.info instanceof EnumInfo) {
                 blktxt += renderEnumStub(cb.info, cb.indent)
             } else if (cb.info instanceof TypedefInfo) {
-                blktxt += '\n'
+                blktxt += renderTypedefStub(cb.info, cb.indent)
             }
             out += blktxt
         }

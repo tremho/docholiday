@@ -9,11 +9,15 @@ You will need to install these if you don't already have them.
 
 _Doc-holiday_ does not render directly to html or markdown.  It creates
 intermediate files that are rendered to html or markdown using standard
-industry tools that respect the JDDoc markup conventions.
+industry tools that respect the JSDoc markup conventions.
 
 Three tools are directly supported by _doc-holiday_.  You may
 choose to have all three of these tools installed, or you may elect
 to only install those you will use for your output needs.
+
+- __jsdoc__ (the original JSDOC documentation generator)
+- __jsdoc2md__ (outputs JSDOC as Markdown)
+- __documentation__ (Documentation JS - Cleaner, more modern, but less flexible.  For HTML and Markdown)
 
 The most canonical of these is of course JSDoc itself.
 
@@ -24,14 +28,16 @@ a simplifying philosophy, as well as a clean default output style. It uses a dif
 JSDoc, and may thus be more difficult to customize the styling.
 
 If you want both html and markdown, you must install either just DocumentationJS (which
-can do both) or both of JSDoc (for html) and JSDoc2MD (for markdown).
+can do both) or each of JSDoc (for html) and JSDoc2MD (for markdown).
 
 | engine | config engine | config format | HTML | Markdown | private entities |
 | ------ | ------------- | ------------- | ---- | -------- | ---------------- |
 | JSDoc  |  jsdoc       |  html          | YES  |  NO      | yes _(unless supressed by template)_ |
 | JSDoc2Md |  jsdoc     |  markdown      | NO   |  YES     | no |
+| JSDOC + JSDoc2MD | jsdoc | html,markdown | YES | YES | yes/no |
 | DocumentationJS | docjs | html | YES | NO | no |
 | DocumentationJS | docjs | markdown | NO | YES | no |
+| DocumentationJS | doc js| html,markdown | YES | YES | no | 
 
 _Doc-holiday_ is configured to allow JSDoc to include private entities in 
 the output.  However, many templates disable this option as part of their

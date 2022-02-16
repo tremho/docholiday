@@ -107,10 +107,16 @@ export class SourceReader {
     // skips past an export statement
     skipExport() {
         if(this.text.indexOf('{', this.pos) !== -1) {
-            let {end} = this.findBracketBoundaries(this.pos)
-            this.pos = end+1
-        } else {
-            this.pos = this.text.indexOf('\n', this.pos)
+            let {start, end} = this.findBracketBoundaries(this.pos)
+            let btwn = this.text.substring(this.pos, start).trim()
+            if(btwn.substring(0,6) === 'export') btwn = btwn.substring(6).trim()
+            if(!btwn || btwn === 'default') {
+                if(start !== -1 && end !== -1) {
+                    this.pos = end + 1
+                } else {
+                    this.pos = this.text.indexOf('\n', this.pos)
+                }
+            }
         }
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
@@ -133,8 +139,12 @@ export class SourceReader {
         this.skipWhite()
     }
     // finds the next end of line or start of comment
-    nextEnd() {
+    nextEnd(isType = false) {
         let lnEnd = this.text.indexOf('\n', this.pos)
+        let sc = this.text.indexOf(';', this.pos)
+        let tc = this.text.indexOf(',',this.pos)
+        if(sc !== -1 && sc < lnEnd) lnEnd = sc
+        if(isType && tc !== -1 && tc < lnEnd) lnEnd = tc
         if(lnEnd === -1) lnEnd = this.text.length;
         let nd = this.text.length -1;
         for (let i=0; i<this.comments.length; i++) {
@@ -153,15 +163,17 @@ export class SourceReader {
         return nd || this.text.length
     }
     // Reads the next line of source, discrening the start and end of the comment block and code declaration.
-    readSourceLine() {
+    readSourceLine(isType = false) {
         const rt = new SourceInfo()
         // skip shebang line
         if(this.text.substring(this.pos, this.pos+2) === '#!') this.pos = this.text.indexOf('\n', this.pos)
         this.skipWhite()
         while(this.text.charAt(this.pos) === ';') this.pos++
+        if(isType) while(this.text.charAt(this.pos) === ',') this.pos++
         while(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
+        if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
         while(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
-        let n = this.nextEnd()
+        let n = this.nextEnd(isType)
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
         rt.comStart = this.pos;
         if(this.text.charAt(this.pos) === '/') {
@@ -229,6 +241,7 @@ export class SourceReader {
             }
         }
         type = type.replace(/;;/g, ',')
+        if(type.charAt(type.length-1) === ';') type = type.substring(0, type.length-1)
         return type
     }
 
@@ -245,6 +258,9 @@ export class SourceReader {
         if(text.substring(0, 6) === 'export') {
             exported = true
             text = text.substring(7).trim()
+        }
+        if(text.substring(0,5).trim() === 'type') {
+            return ""; // this looks like a typedef, so skip it
         }
         if(text.substring(0,5) === 'async') {
             async = true
@@ -285,9 +301,12 @@ export class SourceReader {
                 || (ap[2] && ap[2].charAt(0) === '>')   // arrow function notation on right of assignment
                 && ap[2].indexOf('class ') === -1       // if we assign to a class, it's not a function (mixin case)
             ) {
-                let dp = ap[0].trim().split(/\s+/)
-                let ni = dp.length-1
-                return dp[ni].trim() // name
+                let name = exported ? 'export ' : ''
+                name +=  ap[0].trim() // decorated name
+                return name
+                // let dp = ap[0].trim().split(/\s+/)
+                // let ni = dp.length-1
+                // return dp[ni].trim() // name
             }
         }
         // doesn't look like a function
@@ -346,11 +365,18 @@ export class SourceReader {
         let pn = this.text.indexOf(name, si.decStart) +name.length
         let opi, cpi
         try {
-            let {start, end} = this.findBracketBoundaries(pn, '(')
+            let {start, end} = this.findBracketBoundaries(si.decStart, '(')
             opi = start
             cpi = end - 1
         } catch(e) {}
 
+        let opi2 = -1
+        let cpi2 = cpi
+        // if(this.text.charAt(opi) === '(') {
+        //     let {start, end} = this.findBracketBoundaries(opi+1, '(')
+        //     opi2 = opi = start
+        //     cpi = end -1
+        // }
         let pdec = this.text.substring(opi+1, cpi)
         let oti = pdec.indexOf('<')
         let ahi = pdec.indexOf('{')
@@ -365,12 +391,9 @@ export class SourceReader {
         pdec = pdec.trim()
 
         if(pdec.substring(0, 8) === 'function') {
-            cpi = pdec.indexOf('(',8)
-            if(oti !== -1) {
-                cpi = pdec.indexOf(')', oti)
-                if(cpi === -1) cpi = pdec.length
-                pdec = pdec.substring(oti+1, cpi)
-            }
+            let {start, end} = this.findBracketBoundaries(opi+8, '(')
+            pdec = this.text.substring(start+1, end-1)
+            cpi = end
         }
 
         // parameters
@@ -485,19 +508,27 @@ export class SourceReader {
             }
         }
         // typescript can provide return type
-        // if(opi2 !== -1) cpi = this.text.indexOf(')', cpi+1)
-        let n = this.pastWhite(this.text, cpi)
+        let n = this.pastWhite(this.text, cpi+1)
+        let nobody = false
         if(this.fileType === 'typescript') {
             fi.return = new ReturnInfo();
             if(this.text.charAt(n) === ')') n++
-            if (this.text.charAt(n) === ':') {
+            this.skipWhite()
+            if (this.text.charAt(n) === ':' || this.text.substr(n, 2) === '=>') {
                 let bs = this.text.indexOf('{', n+1)
                 if(bs === -1) bs = this.text.length
+                if(this.text.charAt(n) === '=') {
+                    let eol = this.text.indexOf('\n', n)
+                    if(bs > eol) bs = eol
+                    n++
+                    nobody = true
+                }
+
                 let btwn = this.text.substring(n+1, bs).trim()
                 let aht = ''
                 if(!btwn) {
                     let ahi = bs
-                    let {start, end} = this.findBracketBoundaries(ahi)
+                    let {end} = this.findBracketBoundaries(ahi)
                     let ahe = end
                     aht = this.text.substring(ahi, ahe+1)
                     bs = this.text.indexOf('{', ahe+1)
@@ -514,7 +545,10 @@ export class SourceReader {
                     e = bs
                     if(this.text.charAt(m+1) === '*') e = this.text.indexOf('*/',m)
                     if(e === -1) e = bs
-                    fi.return.description = this.text.substring(m+2, e).trim() || ''
+                    let t = this.text.substring(m+2, e)
+                    if(t.charAt(0) !== '\n') { // break on a blank line
+                        fi.return.description = t.trim() || ''
+                    }
                 } else {
                     fi.return.description = ''
                 }
@@ -530,14 +564,22 @@ export class SourceReader {
                 }
             }
         }
-        // Find body boundaries { }
-        let {start, end} = this.findBracketBoundaries(n)
-        if(start === -1 || end === -1) {
-            start = end = fi.decEnd +1
+        if(fi.return && (fi.return.description || '').substr(0,2) === '//') fi.return.description = fi.return?.description.substring(2).trim()
+        // if we have a no-body return type arrow declaration, boundaries work differently
+        if(nobody) {
+            let {start, end} = this.findNobodyBounds(n)
+            fi.bodyStart = start;
+            fi.bodyEnd = end;
+        } else {
+            // Find body boundaries { }
+            let {start, end} = this.findBracketBoundaries(n)
+            if (start === -1 || end === -1) {
+                start = end = fi.decEnd + 1
+            }
+            fi.bodyStart = start;
+            fi.bodyEnd = end;
         }
-        fi.bodyStart = start;
-        fi.bodyEnd = end;
-        // if(opi2 !== -1) fi.bodyEnd = opi2+1
+        if(opi2 !== -1) fi.bodyEnd = opi2+1
         // let dbCheck = this.text.substring(fi.bodyStart, fi.bodyEnd)
         // console.log(dbCheck)
         this.gatherCommentMeta(fi)
@@ -575,6 +617,8 @@ export class SourceReader {
     extractFunctionInfo(inClass:boolean, si:SourceInfo):FunctionInfo {
         let fi:FunctionInfo = new FunctionInfo()
         let fullsrc
+        if(this.text.charAt(this.pos) === '/') return fi
+
         if(inClass) {
             const src = this.text.substring(si.decStart, si.decEnd)
             const m = src.match(/[a-z|A-Z|_]+\(/)
@@ -585,7 +629,8 @@ export class SourceReader {
                 fullsrc = src
             }
         } else {
-            const n = this.text.indexOf('{', this.pos)
+            let n = this.text.indexOf('{', this.pos)
+            if(n === -1) n = this.text.length
             fullsrc = this.text.substring(this.pos, n)
         }
         let name = this.getFunctionName(inClass, fullsrc)
@@ -625,12 +670,35 @@ export class SourceReader {
         // be = btext.length
         // try {
         //     let presults = peeler(btext, popts)
-        //     be = presults[0].pos.end
+        //     be = presults[0].pos.end o
         // } catch(e) {
         //     console.log(e)
         // }
         let be = myBracketExtract(btext, bracket+endBracket)
         return {start: bs, end: bs + be}
+    }
+
+    findNobodyBounds(start) {
+        let cs = this.text.indexOf('/*', start)
+        if(cs !== -1) {
+            let ce = this.text.indexOf('*/', cs)
+            if(ce === -1) ce = this.text.length-2
+            start = ce+2
+        }
+        start = this.findWhite(this.text, start)
+        let ls = this.text.indexOf('\n', start)+1
+        while(ls) {
+            let le = this.text.indexOf('\n', ls)
+            if(le === -1) le = this.text.length
+            let ln = this.text.substring(ls, le).trim()
+            if(ln.substr(0,2) !== '//') {
+                break
+            }
+            ls = le+1
+        }
+        if(ls < start) ls = this.text.indexOf('\n', start)
+        if(ls === -1) ls = this.text.length
+        return {start, end: ls}
     }
 
     /*
@@ -644,16 +712,16 @@ export class SourceReader {
     /**
      * Returns the collected analysis of source code entities
      */
-    getApiInfo(fromPos=0, endPos=0, inClass = false):APIInfo {
+    getApiInfo(fromPos=0, endPos=0, inClass = false, isType = false):APIInfo {
         const api:APIInfo = new APIInfo()
         let done = false
         this.pos = fromPos;
         let lastPos = -1
         if(!endPos) endPos = this.text.length;
         while (!done) {
-            let si = this.readSourceLine()
+            let si = this.readSourceLine(isType)
             if(this.pos <= lastPos) {
-                // console.error(`Synchronization stall on line ${this.getCurrentLineNumber()}`)
+                console.error(`Synchronization stall on line ${this.getCurrentLineNumber()}`)
                 // throw Error('Synchronization Stall')
                 this.pos = this.text.indexOf('\n', this.pos+1)
                 if(this.pos === -1) this.pos = endPos
@@ -680,7 +748,7 @@ export class SourceReader {
                             let ti = this.extractTypedefInfo(si)
                             if (ti.decStart !== -1) {
                                 api.typedefs.push(ti)
-                                this.pos = ti.bodyEnd + 1
+                                this.pos = ti.bodyEnd
                             } else {
                                 let pi = this.extractPropertyInfo(si, inClass);
                                 if (pi.decStart !== -1) {
@@ -706,10 +774,13 @@ export class SourceReader {
     extractPropertyInfo(si:SourceInfo, inClass:boolean):PropertyInfo {
         const pi = new PropertyInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
+        let lntext = this.text.substring(si.decStart, this.text.indexOf('\n',si.decStart))
         if (text.charAt(0) === '/') return pi;
         if (text.substring(0, 6) === 'import') return pi;
-        // if (text.substring(0, 6) === 'export') return pi;
+        if (text.substring(0, 6) === 'export') this.skipExport()
         if (text.substring(0, 7) === 'require') return pi;
+        this.skipWhite()
+        if(this.text.charAt(this.pos) === '/') return pi
         let ok = inClass // anything goes for class props
         const allowedPrefixes = ['var', 'let', 'const', 'export', 'public', 'readonly', 'private', 'static']
         for (let pfx of allowedPrefixes) {
@@ -721,19 +792,17 @@ export class SourceReader {
         let leftSide = ''
         let rightSide = '';
         let commentAfter = '';
-        let ci = text.indexOf('//')
-        if(ci === -1) ci = text.indexOf('/*')
+        let ci = lntext.indexOf('//')
+        if(ci === -1) ci = lntext.indexOf('/*')
         let cc = ''
-        if (ci !== -1) cc = text.charAt(ci + 1)
+        if (ci !== -1) cc = lntext.charAt(ci + 1)
         if (cc === '/' || cc === '*') {
-            let ce = text.length
-            if (cc == '*') {
-                ce = text.indexOf('*/')
-                if (ce === -1) ce = text.length
-            }
-            commentAfter = text.substring(ci + 2, ce)
-            text = text.substring(0, ci)
+            commentAfter = this.readCommentForward(this.pos + ci, cc === '*')
         }
+
+        let sc = text.indexOf(';')
+        if(sc !== -1) text = text.substring(0, sc)
+
         let ai = text.indexOf('=')
         if (ai !== -1) {
             rightSide = text.substring(ai + 1)
@@ -744,6 +813,19 @@ export class SourceReader {
         leftSide = leftSide.replace(/\s+/g, ' ')
         leftSide = leftSide.replace(': ', ':')
         if (leftSide == '}') return pi
+        if(leftSide.charAt(leftSide.length-1) === '}') leftSide = leftSide.substring(0,leftSide.length-1)
+        if(leftSide.charAt(leftSide.length-1) === ']') leftSide = leftSide.substring(0,leftSide.length-1)
+
+        let mi = rightSide.indexOf('//')
+        if(mi !== -1) rightSide = rightSide.substring(0, mi)
+        else {
+            mi = rightSide.indexOf("/*")
+            if(mi !== -1) {
+                let me = rightSide.indexOf("*/", mi)
+                rightSide = rightSide.substring(0, mi)+rightSide.substring(me+2)
+            }
+        }
+
 
         let type;
         let name = ''
@@ -826,16 +908,18 @@ export class SourceReader {
             })
         }
 
+        let commentBefore = ""
         if (this.text.substring(si.comEnd, si.decStart).split('\n').length === 2) {
-            pi.description = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
+            commentBefore = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
         }
-        if(pi.description && commentAfter) pi.description += '\n' +commentAfter
-        else if(commentAfter) pi.description = commentAfter
+
+        if(commentAfter) pi.description = commentAfter
+        else if(commentBefore) pi.description = commentBefore
 
 
         // parse out constraints here
         let ctext = pi.description.trim()
-        let result = extractConstraints(ctext, pi.type)
+        let result = extractConstraints(ctext, type)
         if(!result.error) {
             pi.description = result.description
             pi.constraintMap = result.constraintMap
@@ -859,10 +943,15 @@ export class SourceReader {
     // recurses into `getApiInfo` for all entities within the class scope.
     extractClassInfo(si:SourceInfo, isType = false):ClassInfo {
         let ci:ClassInfo = new ClassInfo()
-        const src = this.text.substring(si.decStart, si.decEnd)
+        let src = this.text.substring(si.decStart, si.decEnd)
         if(src.charAt(0) === '/') return ci;
         if(src.substring(0,6) === 'import') return ci;
         if(src.substring(0.7) === 'require') return ci;
+
+        if(isType) {
+            src = src.replace(/,/g, ';')
+            if(src.charAt(0) === '[') src = src.substring(1)
+        }
 
         let scopeKey = this.readNextWord(src, 0)
         let sm = new ScopeModifiers()
@@ -883,7 +972,10 @@ export class SourceReader {
             // or use a mix-in (per style found at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#MixIns
             // to find these, look at our parsed-in extends for constructors
             let {mixins, base} = this.findMixins(rawExtends)
-            if(base) ci.extends = base;
+            if(base) {
+                ci.isMixin = src.indexOf('=>') !== -1
+                ci.extends = base;
+            }
             ci.mixins = mixins
 
             ci.scope = sm
@@ -904,11 +996,13 @@ export class SourceReader {
             }
             // get the full class definition
             if(si.decStart >= si.comEnd) {
-                let {start, end} = this.findBracketBoundaries(si.decStart)
+                let bc
+                if(isType) bc = this.text.charAt(si.decStart)
+                let {start, end} = this.findBracketBoundaries(si.decStart, bc)
                 ci.bodyStart = start;
                 ci.bodyEnd = end;
                 // now we hunt for methods and props
-                ci.internals = this.getApiInfo(start+1, end-1, true)
+                ci.internals = this.getApiInfo(start+1, end-1, true, isType)
             }
         }
         return ci
@@ -1098,11 +1192,12 @@ export class SourceReader {
 
     // Tries to extract TypedefInfo from the given SourceInfo position
     extractTypedefInfo(si:SourceInfo) : TypedefInfo {
+        let name
         const ti = new TypedefInfo()
         let text = this.text.substring(si.decStart, si.decEnd).trim()
         if(text.charAt(0) === '/') return ti;
         if(text.substring(0,6) === 'import') return ti;
-        if(text.substring(0,6) === 'export') return ti;
+  //      if(text.substring(0,6) === 'export') return ti;
         if(text.substring(0.7) === 'require') return ti;
 
         let n = text.indexOf('type ')
@@ -1110,7 +1205,7 @@ export class SourceReader {
             let e = text.indexOf('=')
             if(e < n) return ti // = must be right of 'type ' for a typedef
             if(e === -1) e = text.length;
-            let name = text.substring(n + 4, e).trim()
+            name = text.substring(n + 4, e).trim()
             if(!name) return ti // we must name a type
             if (name.charAt(name.length - 1) === '{') name = name.substring(0, name.length - 1).trim()
             Object.assign(ti, si)
@@ -1120,9 +1215,17 @@ export class SourceReader {
             }
             // read enum symbols and values
             let obi = this.text.indexOf('{', si.decStart)
-            if (obi !== -1) {
-                ti.form = TypedefForm.Object
-                ti.bodyStart = obi
+            if(obi > si.decEnd) obi = -1
+            let sbi = this.text.indexOf('[', si.decStart)
+            if(sbi > si.decEnd) sbi = -1
+            if (obi !== -1 || sbi !==-1) {
+                if(obi !== -1) {
+                    ti.form = TypedefForm.Object
+                    ti.bodyStart = obi
+                } else {
+                    ti.form = TypedefForm.Array
+                    ti.bodyStart = sbi
+                }
                 ti.bodyEnd = si.decEnd
                 let csi = new SourceInfo()
                 csi.comStart = csi.comEnd = ti.bodyStart-1
@@ -1132,14 +1235,14 @@ export class SourceReader {
                 ti.declaration = ci
                 ti.bodyEnd = ci.bodyEnd
             } else {
-               let m = this.text.substring(si.decStart+e+1).match(/\W/)
+               ti.bodyStart = si.decStart+e+1
+               let m = this.text.substring(ti.bodyStart).match(/\W/)
                if(m) {
                    let arm = this.text.substring(ti.bodyStart).match(/=\>/)
-                   // let fnm = this.text.substring(ti.bodyStart).match(/function*\s*/)
-
                    let pbi
                    if(arm) {
                        let iarw = ti.bodyStart + (arm?.index || 0)
+                       if(iarw > si.decEnd) iarw = si.decEnd
                        ti.bodyEnd = this.text.indexOf('\n', iarw)
                        let pbm = this.text.substring(si.decStart + e).match(/[a-z|A-Z]|\(/)
                        pbi = pbm && pbm.index
@@ -1149,6 +1252,8 @@ export class SourceReader {
                            ti.bodyStart = pbi
                            // pbi++
                            // pbe = this.text.indexOf(')', pbi)
+                       } else {
+                           pbi = 0
                        }
                    }
                    // if(fnm) {
@@ -1169,7 +1274,8 @@ export class SourceReader {
                        si.decStart = ti.bodyStart
                        si.decEnd = ti.bodyEnd
                        ti.declaration = this.extractMethodInfo(ti.name, si)
-                       // ti.bodyEnd = ti.declaration.bodyEnd
+                       ti.bodyStart = ti.declaration.bodyStart
+                       ti.bodyEnd = ti.declaration.bodyEnd
 
                    } else {
                        ti.form = TypedefForm.Primitive
@@ -1371,7 +1477,9 @@ export class SourceReader {
                 fi.return.type = type;
             }
         }
+
     }
+
 
     private readCommentBlock(rawBlock:string):string {
         return this.readCommentBlockForm1(rawBlock) || this.readCommentBlockForm2(rawBlock)
@@ -1410,6 +1518,23 @@ export class SourceReader {
             blockPos = n+1
         }
         return clean.join('\n').trim()
+    }
+
+    private readCommentForward(startPos:number, classic = false):string {
+        let out = ''
+        let endPos = -1
+        if(classic) endPos = this.text.indexOf('*/', startPos)
+        if(endPos === -1) endPos = this.text.length
+        let text = this.text.substring(startPos, endPos)
+        let lns = text.split('\n')
+        for(let ln of lns) {
+            ln = ln.trim()
+            if(ln.substring(0,2) === '//') ln = ln.substring(2).trim()
+            else break
+            if(out) out += '\n'
+            out += ln
+        }
+        return out
     }
 }
 
@@ -1550,8 +1675,8 @@ function extractConstraints(description:string, type:string): {description:strin
     try {
         if(constraintDeclaration) {
             result.constraintMap = TypeCheck.parseConstraintsToMap(type, constraintDeclaration)
-            result.description = description
         }
+        result.description = description
     } catch (e) {
         console.error(e)
         result.error = e.message;

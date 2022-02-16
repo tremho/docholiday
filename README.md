@@ -1,5 +1,24 @@
 # Doc Holiday
 
+There are some unresolved issues below.  Tracking now:
+- [X] Callback typedefs need work:
+    - [X] uncommented form now working
+    - [X] commented form has issues that imply similar arrow function would also be a problem
+
+
+- [X] Now have pushmi-pullyu errors in Semicolon tests.
+
+Remaining minutiae:
+- [ ] PropExplorer some unassigned commented docs are whack; Semicolon version fixes it
+
+- __REVERSION!__  <span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
+- [ ] LocObj, LLTuple typedefs no workie.
+- [ ] interface parsing for Hunter/Gatherer example goes awry.
+
+- [ ] get back to documentation... remember multi-dec behavior and stall warnings
+- [ ] document mixins and union interfaces
+- [ ] validate all test comps 
+
 If your documentation pipeline goes earp a bit too much,
 and you need to make it O.K., corral your documentation backlog and 
 take a break from disappointing documentation generation
@@ -75,7 +94,12 @@ Add verbosity logger and do a console sweep_
 
 - [X] Constraints not working (see focus)
 
-<span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
+
+- [-] type defs are not working.  I also have no test for them.
+_partial fix -- still having issues with callbacks_
+
+
+- [ ] double check the output of all the tests to verify all are still okay.
 
 - [X] refactor how constraints are parsed for params/return so that
 we do this at end, after gatherMetadata, and we have the chance 

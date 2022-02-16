@@ -1,7 +1,7 @@
 
 ### The `doc-holiday.conf` configuration file
 
-The behavior of doc-holiday for any given invocation is determieed
+The behavior of doc-holiday for any given invocation is determined
 by the settings within the `doc-holiday.conf` file that resides in the 
 current directory (presumed to be the root directory of a project being 
 documented), or another file if so specified via the _config_ argument passed on the command line.
@@ -151,10 +151,16 @@ This specifies the path to a JSDoc template, if any.
 A template is used to change the appearance of the JSDoc rendered
 output.
 
+A number of templates are available for JSDoc.  Some of the more populare include
+
+    - [better docs](todo)
+    - [blah blah](blah)
+    - [blah blah](blah)
+
 __intermediate__  
 This names a directory, relative to the current directory (e.g. project root),
 that will be used for generated intermediate files.   
-__This directory will be destroyed on each command invocation__, so 
+__This directory will be destroyed on each command invocation__ (unless the _--no-clean_ option is passed), so 
 it should not be one used to store any project files.  
 You should also add this folder to your `.gitignore` list, to keep it excluded
 from your repository.
@@ -169,7 +175,7 @@ documentation pass, as obsolete pages can be left behind from previous runs.
 
 __markdown__  
 This specifies a file path, relative to the current directory (e.g. project root),
-specifying the markdown file to output into (e.g. `booksrc/API `).
+specifying the markdown file to output for the rendered API (e.g. `docs/API.md `).
 
 This file is created if it does not exist. Any existing file will be
 overwritten.
@@ -182,5 +188,6 @@ In any normal circumstance, you will want to keep these values as they are shown
 in the example.
 
 
+##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Generating docs](generating)
 
 

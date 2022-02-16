@@ -45,6 +45,7 @@ export class FunctionInfo extends SourceInfo {
 export class ClassInfo extends SourceInfo {
     public name:string = '';
     public isInterface:boolean
+    public isMixin:boolean
     public extends:string = '';
     public scope:ScopeModifiers = new ScopeModifiers()
     public implements: string[] = []
@@ -95,6 +96,7 @@ export class EnumValueInfo {
 export enum TypedefForm {
     Primitive,
     Object,
+    Array,
     Function,
 }
 

@@ -29,18 +29,16 @@ export type LocObj = {lat:number, lon:number}
 export type LLTuple = [lon:number, lat:number]
 
 
-// // used for intersection example
-// interface Hunter {
-//     hunt(speed: number): number;
-// }
-//
-// // used for intersection example
-// interface Gatherer {
-//     gather(speed: number): number;
-// }
-//
-// // assign intersection type definition to alias interface combo
-// export type HunterGatherer = Hunter & Gatherer;
+// used for intersection example
+interface Hunter {
+    hunt(speed: number): number;
+}
+interface Gatherer {
+    gather(speed: number): number;
+}
+
+// assign intersection type definition to alias interface combo
+export type HunterGatherer = Hunter & Gatherer;
 
 // function typedef (callback)
 export type MyFunction = (str:string, num:number) => boolean

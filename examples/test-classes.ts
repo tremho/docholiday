@@ -71,7 +71,7 @@ export class Construction {
     }
 
     /**
-     * A method documented in classic JSDoc style.  *
+     * A method documented in classic JSDoc style.
      * But we'll let the param types and return be generated
      * @param a // a number we pass in
      */
@@ -132,7 +132,22 @@ export class Container {
     }
 }
 
-// mix-in version
-// other ways of declaring a class
+// define a class on one line
+export class OneLine {one:number; two: number}
 
+
+// used in mix-in example from MDN
+export let calculatorMixin = Base => class extends Base {
+    calc() { }
+};
+
+// used in mix-in example from MDN
+export let randomizerMixin = Base => class extends Base {
+    randomize() { }
+};
+
+// used in mix-in example from MDN
+export class Foo { }
+// This is the [mix-in example from MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins)
+export class MixInExample extends calculatorMixin(randomizerMixin(Foo)) { }
 
