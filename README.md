@@ -9,11 +9,18 @@ There are some unresolved issues below.  Tracking now:
 - [X] Now have pushmi-pullyu errors in Semicolon tests.
 
 Remaining minutiae:
-- [ ] PropExplorer some unassigned commented docs are whack; Semicolon version fixes it
+- [-] PropExplorer some unassigned commented docs are whack; Semicolon version fixes it
+√ _put into category of 'can live with it for now' since the semicolons can be a workaround for the time being_
 
-- __REVERSION!__  <span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
-- [ ] LocObj, LLTuple typedefs no workie.
-- [ ] interface parsing for Hunter/Gatherer example goes awry.
+- __REVERSION!__  
+- [X] LocObj, LLTuple typedefs no workie.
+- [X] interface parsing for Hunter/Gatherer example goes awry.
+
+------------
+##### I look good today <span style="color:darkgreen; font-size:larger"> ☜ You are here</span>
+Double check the output; I'm just accepting the comps on faith at this point
+
+
 
 - [ ] get back to documentation... remember multi-dec behavior and stall warnings
 - [ ] document mixins and union interfaces

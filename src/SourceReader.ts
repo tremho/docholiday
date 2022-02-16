@@ -118,6 +118,9 @@ export class SourceReader {
                 }
             }
         }
+        else {
+            this.pos = this.text.indexOf('\n', this.pos)
+        }
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
         while(this.text.charAt(this.pos) === ';') this.pos++
@@ -206,7 +209,7 @@ export class SourceReader {
         if(n < rt.comEnd) n = rt.comEnd+1
         this.pos = n
         this.skipWhite()
-        n = this.nextEnd()
+        n = this.nextEnd(isType)
         rt.decEnd = n;
         rt.decStart = this.pos;
         if(this.text.substring(rt.decStart, rt.decEnd).trim() === '}') {
@@ -528,23 +531,29 @@ export class SourceReader {
                 let aht = ''
                 if(!btwn) {
                     let ahi = bs
-                    let {end} = this.findBracketBoundaries(ahi)
+                    let {end} = this.findBracketBoundaries(bs)
                     let ahe = end
                     aht = this.text.substring(ahi, ahe+1)
                     bs = this.text.indexOf('{', ahe+1)
                     if(bs === -1) bs = this.text.length
                 }
+                let be = btwn.indexOf('}')
+                let {end} = this.findNobodyBounds(n+1)
+                //let end = this.text.length
+                if(be !== -1) end = n+1+be
                 let c = this.text.indexOf('/', n+1)
+                if(c > end) c = -1
                 let e = Math.min(bs, c)
                 if(e === -1) e = Math.max(bs, c)
+                if(e > end) e = end
                 let rt = this.text.substring(n+1, e)
                 fi.return.type = aht || this.readTypeDef(rt, 0)
                 n += fi.return.type.length
                 let m = this.text.indexOf('/', n+1)
-                if(m !== -1 && m < bs) {
-                    e = bs
+                if(m !== -1 && m < end) {
+                    e = end
                     if(this.text.charAt(m+1) === '*') e = this.text.indexOf('*/',m)
-                    if(e === -1) e = bs
+                    if(e === -1) e = end
                     let t = this.text.substring(m+2, e)
                     if(t.charAt(0) !== '\n') { // break on a blank line
                         fi.return.description = t.trim() || ''
@@ -681,9 +690,12 @@ export class SourceReader {
     findNobodyBounds(start) {
         let cs = this.text.indexOf('/*', start)
         if(cs !== -1) {
-            let ce = this.text.indexOf('*/', cs)
-            if(ce === -1) ce = this.text.length-2
-            start = ce+2
+            let btwn = this.text.substring(start, cs)
+            if(btwn.split('\n').length < 2) {
+                let ce = this.text.indexOf('*/', cs)
+                if (ce === -1) ce = this.text.length - 2
+                start = ce + 2
+            }
         }
         start = this.findWhite(this.text, start)
         let ls = this.text.indexOf('\n', start)+1
@@ -787,6 +799,7 @@ export class SourceReader {
             let pl = pfx.length
             if (text.substring(0, pl) === pfx) ok = true
         }
+        if(ok && text.substring(0,6) === 'export' && this.text.substr(this.pos, 6) !== 'export') ok = false
         if(!ok) return pi
 
         let leftSide = ''
@@ -1213,20 +1226,25 @@ export class SourceReader {
             if (this.text.substring(si.comEnd, si.decStart).split('\n').length === 2) {
                 ti.description = this.readCommentBlock(this.text.substring(si.comStart, si.comEnd))
             }
-            // read enum symbols and values
+            // read type symbols and values
             let obi = this.text.indexOf('{', si.decStart)
             if(obi > si.decEnd) obi = -1
             let sbi = this.text.indexOf('[', si.decStart)
             if(sbi > si.decEnd) sbi = -1
+            let br
             if (obi !== -1 || sbi !==-1) {
                 if(obi !== -1) {
                     ti.form = TypedefForm.Object
                     ti.bodyStart = obi
+                    br = '{'
                 } else {
                     ti.form = TypedefForm.Array
                     ti.bodyStart = sbi
+                    br = '['
                 }
-                ti.bodyEnd = si.decEnd
+                let {start, end} = this.findBracketBoundaries(ti.bodyStart, br)
+                ti.bodyStart = start
+                ti.bodyEnd = end
                 let csi = new SourceInfo()
                 csi.comStart = csi.comEnd = ti.bodyStart-1
                 csi.decStart = ti.bodyStart
@@ -1235,76 +1253,64 @@ export class SourceReader {
                 ti.declaration = ci
                 ti.bodyEnd = ci.bodyEnd
             } else {
-               ti.bodyStart = si.decStart+e+1
-               let m = this.text.substring(ti.bodyStart).match(/\W/)
-               if(m) {
-                   let arm = this.text.substring(ti.bodyStart).match(/=\>/)
-                   let pbi
-                   if(arm) {
-                       let iarw = ti.bodyStart + (arm?.index || 0)
-                       if(iarw > si.decEnd) iarw = si.decEnd
-                       ti.bodyEnd = this.text.indexOf('\n', iarw)
-                       let pbm = this.text.substring(si.decStart + e).match(/[a-z|A-Z]|\(/)
-                       pbi = pbm && pbm.index
-                       // pbe = iarw
-                       if(pbi) pbi += si.decStart+e
-                       if(pbi && this.text.charAt(pbi) === '(') {
-                           ti.bodyStart = pbi
-                           // pbi++
-                           // pbe = this.text.indexOf(')', pbi)
-                       } else {
-                           pbi = 0
+                ti.bodyStart = si.decStart+e+1
+                ti.bodyEnd = this.text.indexOf('\n', ti.bodyStart)
+
+                let pbi
+                let fm
+                try {
+                    fm = this.text.substring(ti.bodyStart).match(/\(\s*.*\s*.*\s*\)\s*=>/)
+                }catch(e) {
+                    console.log(e)
+                }
+                if (fm) {
+                    let {start, end} = this.findBracketBoundaries(ti.bodyStart + (fm.index || 0), '(')
+                    if(start < ti.bodyEnd) {
+                        pbi = start
+                    }
+                }
+
+               // ti.bodyStart = si.decStart + (m.index || e + 1)
+               // m = this.text.substring(ti.bodyStart).match(/=\>/)
+               // if(m && ti.bodyStart + (m?.index||0) < si.decEnd) {
+               if(pbi) {
+                   ti.form = TypedefForm.Function
+                   let si = new SourceInfo()
+                   si.comStart = si.comEnd = ti.bodyStart-1
+                   si.decStart = ti.bodyStart
+                   si.decEnd = ti.bodyEnd
+                   ti.declaration = this.extractMethodInfo(ti.name, si)
+                   ti.bodyStart = ti.declaration.bodyStart
+                   ti.bodyEnd = ti.declaration.bodyEnd
+
+               } else {
+                   ti.form = TypedefForm.Primitive
+                   ti.bodyStart = this.text.indexOf('=', si.decStart) +1
+
+                   let be = this.text.indexOf('\n', ti.bodyStart)
+                   if(be === -1) be = this.text.length
+                   let ci = ti.bodyStart + this.text.substring(be).indexOf('/')
+                   if(ci !== -1) {
+                       let cmt = ''
+                       if (this.text.charAt(ci + 1) === '/') {
+                           be = this.text.indexOf('\n', ci + 2)
+                           cmt = this.text.substring(ci + 3, be).trim()
+                           if (be !== -1) be++
+                           else be = this.text.length
                        }
-                   }
-                   // if(fnm) {
-                   //     let ifn = ti.bodyStart + (fnm?.index || 0)
-                   //     let {end} = this.findBracketBoundaries(ifn)
-                   //     ti.bodyStart = ifn
-                   //     ti.bodyEnd = end
-                   //     pbi = this.text.indexOf('(', ifn)
-                   // }
-
-                   // ti.bodyStart = si.decStart + (m.index || e + 1)
-                   // m = this.text.substring(ti.bodyStart).match(/=\>/)
-                   // if(m && ti.bodyStart + (m?.index||0) < si.decEnd) {
-                   if(pbi) {
-                       ti.form = TypedefForm.Function
-                       let si = new SourceInfo()
-                       si.comStart = si.comEnd = ti.bodyStart-1
-                       si.decStart = ti.bodyStart
-                       si.decEnd = ti.bodyEnd
-                       ti.declaration = this.extractMethodInfo(ti.name, si)
-                       ti.bodyStart = ti.declaration.bodyStart
-                       ti.bodyEnd = ti.declaration.bodyEnd
-
-                   } else {
-                       ti.form = TypedefForm.Primitive
-                       ti.bodyStart = this.text.indexOf('=', si.decStart) +1
-
-                       let be = this.text.indexOf('\n', ti.bodyStart)
-                       if(be === -1) be = this.text.length
-                       let ci = ti.bodyStart + this.text.substring(be).indexOf('/')
-                       if(ci !== -1) {
-                           let cmt = ''
-                           if (this.text.charAt(ci + 1) === '/') {
-                               be = this.text.indexOf('\n', ci + 2)
-                               cmt = this.text.substring(ci + 3, be).trim()
-                               if (be !== -1) be++
-                               else be = this.text.length
-                           }
-                           if (this.text.charAt(ci + 1) === '*') {
-                               be = this.text.indexOf('*/', ci + 2)
-                               cmt = this.text.substring(ci + 3, be).trim()
-                               if (be !== -1) be += 2
-                               else be = this.text.length
-                           }
-                           ti.bodyEnd = be
-                           ti.description += '\n' + cmt
+                       if (this.text.charAt(ci + 1) === '*') {
+                           be = this.text.indexOf('*/', ci + 2)
+                           cmt = this.text.substring(ci + 3, be).trim()
+                           if (be !== -1) be += 2
+                           else be = this.text.length
                        }
-
+                       ti.bodyEnd = be
+                       ti.description += '\n' + cmt
                    }
+
                }
-            }
+           }
+
             let body = this.text.substring(ti.bodyStart, ti.bodyEnd)
             if(ti.form === TypedefForm.Primitive) {
                 let ci = body.indexOf('//')

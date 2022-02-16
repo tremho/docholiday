@@ -33,6 +33,7 @@ export type LLTuple = [lon:number, lat:number]
 interface Hunter {
     hunt(speed: number): number;
 }
+// used for intersection example
 interface Gatherer {
     gather(speed: number): number;
 }

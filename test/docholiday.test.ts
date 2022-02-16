@@ -46,7 +46,7 @@ async function docTests(name:string) {
     await docTests('classes')
     await docTests('commentBlock')
     await docTests('properties')
-    await docTests('typedefs')
+    await docTests('typedef')
     await docTests('propcomments')
     await docTests('publicExport1')
     await docTests('publicExport2')
