@@ -6,7 +6,7 @@ by the settings within the `doc-holiday.conf` file that resides in the
 current directory (presumed to be the root directory of a project being 
 documented), or another file if so specified via the _config_ argument passed on the command line.
 
-This file is a ['h-json'](https://hjson.github.io) file.
+This file is in ['h-json'](https://hjson.github.io) format.
 
 Here is an example file.  Copy and paste this example into your own `doc-holiday.conf`
 text file at the root of your project directory and modify it to suit your preferences.
@@ -151,11 +151,12 @@ This specifies the path to a JSDoc template, if any.
 A template is used to change the appearance of the JSDoc rendered
 output.
 
-A number of templates are available for JSDoc.  Some of the more populare include
+A number of templates are available for JSDoc.  Some of the more popular include
 
-    - [better docs](todo)
-    - [blah blah](blah)
-    - [blah blah](blah)
+- [better docs](https://github.com/SoftwareBrothers/better-docs)
+- [docstrap](https://docstrap.github.io/docstrap/)
+- [minami](https://github.com/Nijikokun/minami)
+- [docdash](http://clenemt.github.io/docdash/)
 
 __intermediate__  
 This names a directory, relative to the current directory (e.g. project root),
@@ -183,11 +184,10 @@ overwritten.
 __remaining settings__  
 The remainder of the configuration file, as shown in the above example,
 is for internal and/or specialized usage, and should not normally be changed.
-
 In any normal circumstance, you will want to keep these values as they are shown
 in the example.
 
 
-##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Generating docs](generating)
+##### Back <==  [Getting Started](Getting+Started) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Generating docs](generating)
 
 

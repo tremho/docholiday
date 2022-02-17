@@ -21,11 +21,15 @@ _with the gunslinger for your documentation needs_
   - [installation and use as a module]() 
   - [API Reference](API)
 
+- [CLI Reference](CLI)
 
+- [Introducing Constraints](constraints)
 
 <hr/>
 
 ##### Other
+- [Rendering irregularities](Render+differences)
+- [Validating Constraints](TypeCheck)
 - [Using JSDoc templates]()
 - [Strategies for CI Deployments]() 
 

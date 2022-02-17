@@ -14,12 +14,15 @@ on a particular bit during development.  The test- prefixed items are used in th
 unit test case, where the output from these are compared to the corresponding
 file in `examples/comp`.
 
-The `gen` folder is the intermediate temporary space where the doc stubs
+The `.dh-temp` folder is the intermediate temporary space where the doc stubs
 are generated.
 
 The `templates` folder contains a `publish.js` file designed to operate as
 an interceptor to whatever template is being used and disabling the default 
 sorting behavior.
+
+The `cases` folder has tcDemo.ts which is a separate runnable script that demonstrates how the `validate`
+function of the TypeCheck module may be used at runtime to validate constraint assertions.
 
 The remaining files I think are self-explanatory.
 

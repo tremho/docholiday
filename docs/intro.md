@@ -48,15 +48,16 @@ This includes side-adjacent comments too, so
 will capture all the relevant information that can be gleaned from this 
 statement in code and produce the JSDoc stub
 
+```
 /**
 * @constant {string} foo
 * defines our FOOBAR constant
 * @default 'FOOBAR'
-*
+* 
 * @public
 */
   var foo = 'FOOBAR'
-
+```
 Which will render according to your rendering engine preferences and chosen template
 to produce something like:
 
@@ -93,21 +94,26 @@ export function computeBiorhythm(
 and get this type of output:
 <hr/>
 
-### computeBiorhythm(timeportionofdateignored) ⇒ `BiorhythmData`
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~computeBiorhythm(name, birthdate) ⇒ `BiorhythmData`</h5>
+
+
 
 <p>Calculates the biorythm of the named indiidual
 using their birthdate as the starting point</p>
 
-**Returns**: `BiorhythmData` - computed object returned  
+**Kind**: inner method of [`example`]()  
+**Returns**: `BiorhythmData` - <p>computed object returned</p>  
 **Access**: public
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | <p>The user's name</p> |
-| birthdate | <code>Date</code> | <p>the user's birthdate (time portion of date ignored)</p> |
+| name | `string` | <p>The user's name</p> |
+| birthdate | `Date` | <p>the user's birthdate (time portion of date ignored)</p> |
+
 <hr/>
 
-## Features
+## Key Features of _Doc-Holiday_
  
 - __Leverages industry standards__
   - Uses standard JSDOC rendering engines, such as
@@ -116,14 +122,11 @@ using their birthdate as the starting point</p>
   [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
   or [Markdown](https://www.markdownguide.org)
   - Markdown files can be organized as part of a full document suite
-  - Can use 
-  [GitBook](https://www.gitbook.com) 
-  or [HonKit](https://github.com/honkit/honkit/blob/master/README) 
-  to publish document suite as html
+
 - __Supports the code you write, the way you write it__ 
   - Supports TypeScript parameters and return types
-  - Also supports JSDoc style @param and @return tags
-  - Comments may be via // /* or /** (jsdoc-style) blocks 
+  - Also supports JSDoc style `@param` and `@return` tags
+  - Comments may be via `//` `/*` or `/**` (jsdoc-style) blocks 
   - Supports descriptions in comments above or to the side
   - Supports Functions, Properties, Classes, Enums, Typedefs, and Interfaces
 - __Constraints__

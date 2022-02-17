@@ -55,7 +55,7 @@ the publishing scheme you will be using.
 ##### installing with npm
 
 Although there is more than one way to install these tools, perhaps the
-most direct is to install them from __npm__.
+most direct is to install them from __[npm](https://npmjs.com)__.
 
 These engines may be installed globally, and thus used for any of your source
 projects (recommended), or may be installed locally for each project.
@@ -84,6 +84,15 @@ when run.
 
 (locally)  
 `npm install --save-dev documentation`
+
+
+###### Installing Doc-Holiday
+Last, but not least, we need to install the doc-holiday command.  
+This is recommended to be installed globally so that it is always available
+at the command prompt for whatever project you are in.
+
+`npm install -g @tremho/doc-holiday`
+
 
 
 ##### Back <==  [Introduction](intro) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Configuration](config)

@@ -10,8 +10,7 @@ Generating the documentation for your project is as simple as:
 Even if you have not formatted descriptions, or parameter / return comments yet, your source code should still be documented according to
 its code signature.  Check the output and see what you ended up with.
 
-Note that unless you have declared your code entities with the keyword 'export', these entities are considered to be private to the module and will not
-appear in the output, unless you are using JSDoc HTML output (without a template).
+Note that only code exported with the `export` keyword may be visible in the output docs (depending on your config choices).
 
 #### Preparing your source code documentation
 
@@ -19,9 +18,14 @@ Doc-holiday assumes each file is to be treated as a module.  Only code entities 
 or else with an explicit @public notation in the comment block) will be marked public and may not appear in the output otherwise (depending upon your 
 output engine and template choices).
 
+Unless you are using JSDoc HTML output (without a template that hides private entities anyway), you will not see private entities in your rendered documentation.
+Consult the documentation for the JSDoc engine and/or template you are using.
+
+Follow the guidelines below for how to best document each of your code entities:
+
 ##### Module Description
 The first lines of the module -- starting with the top line -- are considered the module description.  No @ - style prefix tags are needed to identify this
-as the module description.  Any comment lines that appear here are considered to be the description.
+as the module description.  Any comment lines that appear here are considered to be the description of the module itself.  
 
 There may be multiple lines in contiguous comment block to form this module description.
 
@@ -39,6 +43,8 @@ For example, consider a module file named "UserModule.ts":
 ```
 This description will appear in the docs for UserModule (module). Any exported code entities that follow in the sources 
 will appear within this section of the documentation.
+
+If you do not wish to include a module description, you must leave at least one blank line at the top of the file.
 
 _Note that if the first line of a module contains a "shebang" line (starting with #!), then the module description may start
 on the follwing line_
@@ -259,7 +265,7 @@ Prefix keywords such as `async` are recognized and reflected in the rendered doc
 
 #### Documenting a property
 
-Your module may have an exported property you with to document.  You can do this much the same as how you 
+Your module may have an exported property you wish to document.  You can do this much the same as how you 
 document a function.
 
 ```typescript
@@ -287,7 +293,7 @@ Produces:
 **Default**: <code>&quot;&#x27;en-US&#x27;&quot;</code>  
 **Access**: public  
 
-_Not Supported_ is a multiple declaration or assignment, such as either of the following:
+Something that is ___not supported___ by _Doc-Holiday_ is a multiple declaration or assignment, such as either of the following:
 
 ```typescript
 export let a, b, c
@@ -296,7 +302,7 @@ or
 ```typescript
 export let a=1, b=2, c=3
 ```
-The first case will only capture the first declaration (_a_), and the latter only the last (_c = 3_). 
+These attempts will only capture the first declaration (_a_).  
 Avoid using these types of declarations if you wish these to be properly documented.
 
 #### Documenting Enumerations
@@ -346,19 +352,26 @@ export class Direction {
 
 ```
 
-#### Documenting a type definition
-
 
 ### Documenting a class
 
 When you document a class, the documentation will reflect the aspects and comments of the class itself, as
 well as all of the inner properties, functions, enums and typedefs
 
+
+##### Documenting an interface
+
+##### Documenting a Mix-In
+
+#### Documenting a type definition
+
+##### Documenting an intersection of interfaces
+
+##### Defining a callback function as a type definition
+
 ##### Inner class docmentation representation
 
 
 
-
-
-
+##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Public and Private](public+private)
 
