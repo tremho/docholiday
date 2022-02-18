@@ -356,21 +356,629 @@ export class Direction {
 ### Documenting a class
 
 When you document a class, the documentation will reflect the aspects and comments of the class itself, as
-well as all of the inner properties, functions, enums and typedefs
+well as all of the inner properties, functions, and inner classes.
+
+For example, consider this simple made up class declaration:
+```typescript
+// The Foo class demonstrates
+// how a simple class is documented
+export class Foo {
+    name:string
+    readonly seed:string = "aklafg783yd8jccide-dkhei7s"
+
+    // This class is scoped within the Foo class
+    InnerClass = class {
+        prop1:string // a property of InnerClass
+        prop2:number // another InnerClass property
+
+        // a method of InnerClass
+        method() {
+        }
+    }
+
+    // Compute the sequence over the given time
+    compute(
+        time:number // number of seconds <positive, integer>
+    ): number {
+        // blah blah
+        return 0
+    }
+}
+```
+would render the following:
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Foo</h5>
+
+
+
+<p>The Foo class demonstrates
+how a simple class is documented</p>
+
+**Kind**: inner class of [`example`]()  
+**Access**: public  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | `string` |  | <ul> <li></li> </ul> |
+| seed | `string` | <code>"aklafg783yd8jccide-dkhei7s"</code> | <ul> <li></li> </ul> |
+| Foo.InnerClass | `class` |  | <p>This class is scoped within the Foo class</p> |
+| InnerClass.Foo.InnerClass | `string` |  | <p>a property of InnerClass</p> |
+| InnerClass.Foo.property | `string` |  | <p>another InnerClass property</p> |
+| InnerClass.Foo.method | `method` |  | <p>a method of InnerClass</p> |
+
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    foo.compute(time) ⇒ `number`</h5>
+
+
+
+<p>Compute the sequence over the given time</p>
+
+**Kind**: instance method of [`Foo`]()  
+**Returns**: `number` - <p>blah blah</p>  
+**Access**: public
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | `number` | <p>number of seconds</p>    <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: 33px">         <li>number must be an integer</li>         <li>number must be positive</li>    </ul> |
+
+
+
+<p>Compute the sequence over the given time</p>
+
+**Kind**: instance method of [`Foo`]()  
+**Returns**: `number` - <p>blah blah</p>  
+**Access**: public
+
+| Param | Type | Description |
+| --- | --- | --- |
+| time | `number` | <p>number of seconds</p>    <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: 33px">         <li>number must be an integer</li>         <li>number must be positive</li>    </ul> |
+
+-----
+
+Note how the properties and methods of an inner class are represented within the properties
+block of the parent class itself rather than being represented in their own
+rendered blocks like the first-order entities of the containing class.
+This is how JSDoc is equipped to handle inner classes.
 
 
 ##### Documenting an interface
+Documenting an interface is much the same as documenting a class.
+
+The example below imagines two functional interfaces and an implementing 
+class that uses them.
+
+```typescript
+// Interface for providing print capability
+export interface PrintAction {
+    print(device:string, orientation:PrinterOrientation, pages:number): boolean
+}
+
+// Interface providing persistence capability
+export interface SaveAction {
+    save(device:string):boolean
+}
+
+// An example of implemented interfaces
+export class PrintExample implements PrintAction, SaveAction {
+
+    // Local function to print Example.
+    exmpleLocal(foo:string // device if not default
+    ):boolean {
+        const device = foo || 'default'
+        return this.save(device) && this.print(device, PrinterOrientation.Portrait, 1)
+    }
+
+    // implementation of primt
+    print(device:string, orientation:PrinterOrientation, pages:number): boolean { return true }
+    // implementation of save
+    save(device:string):boolean { return true }
+}
+```
+resulting in the following rendered documentation:
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~PrintAction</h5>
+
+
+
+<p>Interface for providing print capability</p>
+
+**Kind**: inner interface of [`example`](#module_focus)  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    printAction.print(device, orientation, pages) ⇒ `boolean`</h5>
+
+
+
+**Kind**: instance method of [`PrintAction`](#module_focus..PrintAction)  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| device | `string` | 
+| orientation | `PrinterOrientation` | 
+| pages | `number` | 
+
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    focus~SaveAction</h5>
+
+
+
+<p>Interface providing persistence capability</p>
+
+**Kind**: inner interface of [`focus`](#module_focus)  
+**Access**: public
+
+<hr/>
+
+<a name="module_focus..SaveAction+save" id="module_focus..SaveAction+save"></a>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    saveAction.save(device) ⇒ `boolean`</h5>
+
+
+
+**Kind**: instance method of [`SaveAction`](#module_focus..SaveAction)  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| device | `string` | 
+
+
+-----
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    printExample.exmpleLocal(foo) ⇒ `boolean`</h5>
+
+
+
+<p>Local function to print Example.</p>
+
+**Kind**: instance method of [`PrintExample`](#module_focus..PrintExample)  
+**Access**: public
+
+| Param | Type | Description |
+| --- | --- | --- |
+| foo | `string` | <p>device if not default</p> |
+
+
+<hr/>
+
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    printExample.print(device, orientation, pages) ⇒ `boolean`</h5>
+
+
+
+<p>implementation of primt</p>
+
+**Kind**: instance method of [`PrintExample`](#module_focus..PrintExample)  
+**Returns**: `boolean` - <p>implementation of save</p>  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| device | `string` | 
+| orientation | `PrinterOrientation` | 
+| pages | `number` | 
+
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    printExample.save(device) ⇒ `boolean`</h5>
+
+
+
+<p>implementation of save</p>
+
+**Kind**: instance method of [`PrintExample`](#module_focus..PrintExample)  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| device | `string` | 
+
+
+----
+
+
 
 ##### Documenting a Mix-In
 
+If you are not using Typescript, you may not be able to use the `interface` and
+`implements` keywords.  Javascript has long had the ability to mix properties into
+a functional object as a way to emulate interfaces or multiple-inheritance 
+behaviors.  The so-called "Mix-In" pattern, 
+as documented by [this example from MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#mix-ins)
+is recognized and supported by _Doc-Holiday_:
+```typescript
+// used in mix-in example from MDN
+export let calculatorMixin = Base => class extends Base {
+    calc() { }
+};
+
+// used in mix-in example from MDN
+export let randomizerMixin = Base => class extends Base {
+    randomize() { }
+};
+
+// used in mix-in example from MDN
+export class Foo { }
+// This is the class that extends Foo and implements the 2 mixins
+export class MixInExample extends calculatorMixin(randomizerMixin(Foo)) { }
+
+```
+The mixins will be identified as such in the documentation, per JSDoc tag support,
+and the `MixInExample` class that uses them will list these under `mixes`.
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Foo</h5>
+
+
+
+<p>used in mix-in example from MDN</p>
+
+**Kind**: inner class of [`example`](#module_focus)  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~MixInExample ⇐ `Foo`</h5>
+
+
+
+**Kind**: inner class of [`example`](#module_focus)  
+**Extends**: `Foo`  
+**Mixes**: `calculatorMixin`, `randomizerMixin`  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~calculatorMixin ⇐ `Base`</h5>
+
+
+
+**Kind**: inner mixin of [`example`](#module_focus)  
+**Extends**: `Base`  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    calculatorMixin.calc()</h5>
+
+
+
+**Kind**: instance method of [`calculatorMixin`](#module_focus..calculatorMixin)  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~randomizerMixin ⇐ `Base`</h5>
+
+
+
+**Kind**: inner mixin of [`example`](#module_focus)  
+**Extends**: `Base`  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    randomizerMixin.randomize()</h5>
+
+
+
+**Kind**: instance method of [`randomizerMixin`](#module_focus..randomizerMixin)  
+**Access**: public
+
+-------
+
 #### Documenting a type definition
+Type definitions are very useful code constructs, as they allow us
+to define our own types to suit the data we use in our applications
+in the way we think of them.
+
+Type definitions are supported in TypeScript using the `type` keyword.
+
+For example, we might like to define a type that may consist of any of
+a number of types, like this one:
+
+```typescript
+// used to define multi-type aliases
+export type NumberLike = string|number
+```
+
+or to define a type that must be one of a constant set of values, like these:
+```typescript
+// used to define acceptable string values
+export type Office = "Seattle" | "Los Angeles" | "New York" | "London" | "Paris"
+
+// used to define acceptable number values
+export type ValueSet = 0 | 1 | 2 | 4 | 8 | 12 | 16
+```
+
+Often, we use a type definition to define the structure of an
+object, as an alternative to declaring a class to define the type.
+```typescript
+// used to define a complex type
+export type Complex = {
+    name:string, // name of person
+    age: NumberLike, // age of person
+    office:Office, // which office
+    value: ValueSet // which value
+}
+```
+Some geospatial libraries define a Latitude, Longitude coordinate
+a variety of ways.  Sometimes as a object with properties, and other 
+times simply as an array with values in a defined order.  Such a
+case can be handled by type definitions handily:
+```typescript
+// lat, lon as object props
+export type LocObj = {lat:number, lon:number}
+
+// lon, lat as a  2-element array, in that order
+export type LLTuple = [lon:number, lat:number]
+```
+
+The rendered documentation for the typedef examples above would appear
+like this:
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~NumberLike : `string` \| `number`</h5>
+
+
+
+<p>used to define multi-type aliases</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Office : `&quot;Seattle&quot;` \| `&quot;Los Angeles&quot;` \| `&quot;New York&quot;` \| `&quot;London&quot;` \| `&quot;Paris&quot;`</h5>
+
+
+
+<p>used to define acceptable string values</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)
+
+<hr/>
+
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~ValueSet : `0` \| `1` \| `2` \| `4` \| `8` \| `12` \| `16`</h5>
+
+
+
+<p>used to define acceptable number values</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Complex : `object`</h5>
+
+
+
+<p>used to define a complex type</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | `string` | <p>name of person</p> |
+| age | `NumberLike` | <p>age of person</p> |
+| office | `Office` | <p>which office</p> |
+| value | `string` | <p>which value</p> |
+
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~LocObj : `object`</h5>
+
+
+
+<p>lat, lon as object props</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| lat | `number` | <ul> <li></li> </ul> |
+| lon | `number` | <ul> <li></li> </ul> |
+
+
+<hr/>
+
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~LLTuple : `array`</h5>
+
+
+
+<p>lon, lat as a  2-element array, in that order</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| lon | `number` | <ul> <li></li> </ul> |
+| lat | `number` | <ul> <li></li> </ul> |
+
+
+
+-----
+
 
 ##### Documenting an intersection of interfaces
 
+An interface is a kind of type, so in Typescript we can declare a
+combination of interfaces as its own type definition.  Consider the following:
+
+```typescript
+// used for intersection example
+export interface Hunter {
+    hunt(speed: number): number;
+}
+// used for intersection example
+export interface Gatherer {
+    gather(speed: number): number;
+}
+
+// assign intersection type definition to alias interface combo
+export type HunterGatherer = Hunter & Gatherer;
+```
+This form is recognized and supported by _Doc-Holiday_ so the output would 
+appear as you might expect:
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Hunter</h5>
+
+
+
+<p>used for intersection example</p>
+
+**Kind**: inner class of [`example`](#module_focus)  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    hunter.hunt(speed) ⇒ `number`</h5>
+
+
+
+**Kind**: instance method of [`Hunter`](#module_focus..Hunter)  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| speed | `number` | 
+
+
+<hr/>
+
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~Gatherer</h5>
+
+
+
+<p>used for intersection example</p>
+
+**Kind**: inner class of [`example`](#module_focus)  
+**Access**: public
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    gatherer.gather(speed) ⇒ `number`</h5>
+
+
+
+**Kind**: instance method of [`Gatherer`](#module_focus..Gatherer)  
+**Access**: public
+
+| Param | Type |
+| --- | --- |
+| speed | `number` | 
+
+
+<hr/>
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~HunterGatherer : `class`</h5>
+
+
+
+<p>assign intersection type definition to alias interface combo</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)  
+**Implements**: `Hunter`, `Gatherer`
+
+
+-----
+
 ##### Defining a callback function as a type definition
 
-##### Inner class docmentation representation
+It is helpful to define a type for a callback so that code can
+avoid simply declaring an "any" type here as poorly documented and error-prone
+catch-all.  Although there are a couple ways in which a function
+type can be declared, the preferred method supported by _Doc-Holiday_
+is as follows:
 
+```typescript
+// function typedef (callback)
+export type MyFunction = (str:string, num:number) => boolean
+```
+You can also document the parameters and return of such a callback
+declaration:
+
+```typescript
+// commented version
+export type TheCallbck = (
+    str:string, // the string to process
+    num:number // the number to process it with
+) => boolean // false to abort further processing
+
+```
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~MyFunction ⇒ `boolean`</h5>
+
+
+
+<p>function typedef (callback)</p>
+
+**Kind**: inner typedef of [`example`](#module_focus)
+
+| Param | Type |
+| --- | --- |
+| str | `string` | 
+| num | `number` | 
+
+
+<hr/>
+
+
+<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
+    example~TheCallbck ⇒ `boolean`</h5>
+
+
+
+<p>commented version</p>
+
+**Kind**: inner typedef of [`focus`](#module_focus)  
+**Returns**: `boolean` - <p>false to abort further processing</p>
+
+| Param | Type | Description |
+| --- | --- | --- |
+| str | `string` | <p>the string to process</p> |
+| num | `number` | <p>the number to process it with</p> |
+
+-------
 
 
 ##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Public and Private](public+private)

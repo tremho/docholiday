@@ -1358,7 +1358,12 @@ export class SourceReader {
             fi.error = 'Comment block is not recognized as JSDoc form'
         }
         // Process the comment block as JSDOC even if it's not in that form.
-        let xi = this.text.indexOf('@public', n)
+        let xi = this.text.indexOf('@private', n)
+        if(xi !== -1 && xi < fi.comEnd) {
+            fi.scope.public = false;
+            fi.scope.private = true;
+        }
+        xi = this.text.indexOf('@public', n)
         if(xi !== -1 && xi < fi.comEnd ) {
             fi.scope.public = true
         }

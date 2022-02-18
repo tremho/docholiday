@@ -9,16 +9,16 @@ _with the gunslinger for your documentation needs_
 
 ## Main documentation
 - [Introduction](intro)
-- [Getting Started](Getting Started)
-- [Documenting code elements]()
-- [Public and private]()
-- [JSDoc Tags]()
-- [Using Markdown]()
-- [Diagramming with PlantUML]()
+- [Getting Started](Getting+Started)
+- [Documenting code elements](generating)
+- [Public and private](public+private)
+- [JSDoc Tags](JSDoc)
+- [Using Markdown](markdown)
+- [Diagramming with PlantUML](plantUML)
 - [Publishing](publish)
 
 - __Using doc-holiday as an NPM module__
-  - [installation and use as a module]() 
+  - [installation and use as a module](module) 
   - [API Reference](API)
 
 - [CLI Reference](CLI)

@@ -21,6 +21,11 @@ Markdown.  This may appear as `string `\  instead.
 An array type that should display as `Array<type>` may appear in a mangled
 form, such as `Array.&lt;type&gt;`
 
+###### Other cases of improper XML escapes or quotes
+Unwanted XML escapes, such as &quote; or &lt; or &gt; may appear around constant declarations, 
+or strings may be represented with an unneccesary extra set of quote marks, such as `'"this is a string"'`
+because the jsdoc2md escape handler may be rendering these types improperly.
+
 ###### Default `new Class()` and arrays in properties
 Declaring a class property with a default value, where the
 default value uses the `new` keyword will display incorrectly with the default

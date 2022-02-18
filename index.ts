@@ -1,7 +1,19 @@
 #!/usr/bin/env node
-/*
-The cli executor and the main API import for Doc-holiday
- */
+
+// The cli executor and the main API import for Doc-holiday
+//
+// ##### Prime Export
+//
+// This is the prime module for import, and although other code modules are listed in the documentation
+// as the source modules, do not try to import these modules directly.  All symbols can be found at the
+// prime `index` root.
+//
+// _for example_:
+//
+// ```
+// import {SourceInfo, analysisJSON} from "@tremho/doc-holiday"
+// ```
+// will work to bring in `SourceInfo` (from `types`) and `analysisJSON` (from `Output`)
 
 import * as path from "path"
 import * as fs from 'fs-extra'
@@ -11,6 +23,34 @@ import { processSourceFile, processSource } from './src/ProcessFiles'
 import {recordInfo, sortRecorded, clearRecorded, analysisJSON, writeStubFile, readModuleDescription} from "./src/Output";
 import {getGlobbedFiles} from "./src/Globber";
 import {executeCommand} from "./src/execCmd";
+
+// [documented in types](#module_types..SourceInfo)
+export {SourceInfo as SourceInfo}
+// [documented in types](#module_types..FunctionInfo)
+export {FunctionInfo as FunctionInfo}
+// [documented in types](#module_types..PropertyInfo)
+export {PropertyInfo as PropertyInfo}
+// [documented in types](#module_types..ClassInfo)
+export {ClassInfo as ClassInfo}
+// [documented in types](#module_types..EnumInfo)
+export {EnumInfo as EnumInfo}
+// [documented in types](#module_types..TypedefInfo)
+export {TypedefInfo as TypedefInfo}
+// [documented in ProcessFiles](#module_ProcessFiles..processSourceFile)
+export {processSourceFile as processSourceFile}
+// [documented in ProcessFiles](#module_ProcessFiles..processSource)
+export {processSource as processSource}
+export {recordInfo as recordInfo}
+export {sortRecorded as sortRecorded}
+export {clearRecorded as clearRecorded}
+export {analysisJSON as analysisJSON}
+export {writeStubFile as writeStubFile}
+export {readModuleDescription as readModuleDescription}
+// [documented in types](#module_Globber..getGlobbedFiles)
+export {getGlobbedFiles as getGlobbedFiles}
+// [documented in execCmd](#module_execCmd..executeCommand)
+export {executeCommand as executeCommand}
+
 
 import * as hjson from 'hjson'
 import {exec} from "child_process";
@@ -174,9 +214,6 @@ export function docstub(content:string, options?:DocOptions) {
   if(!options) options = new DocOptions()
   return processSource(content, options.sourceType, recordModuleFunc, recordProperty, recordClass, recordEnum, recordTypedef)
 }
-
-export {processSource}
-export {processSourceFile}
 
 
 function recordModuleFunc(fi: FunctionInfo, source: string) {
