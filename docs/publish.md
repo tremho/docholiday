@@ -89,4 +89,13 @@ That's it!  Your docs should be publicly viewable by pointing a browser to https
 _(If you revisit this Pages section of your repository settings, you will see the status report that your docs are being published,
 and it will show the URL.)_
 
+#### Some notes about links
+For Github pages, a link to another page must not include the `.md` suffix to the
+file name.  However, for many local Markdown editors 
+(such as the one in my IDE), this suffix is
+required.  This presents a minor problem when creating the docs and
+testing the links locally.  
+No solution per se is offered here except to be aware of this and
+be careful to remove any `.md` suffixes  when you are done testing.
+
 

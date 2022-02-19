@@ -19,37 +19,29 @@ import * as path from "path"
 import * as fs from 'fs-extra'
 
 import {FunctionInfo, PropertyInfo, ClassInfo, SourceInfo, EnumInfo, TypedefInfo} from './src/types'
-import { processSourceFile, processSource } from './src/ProcessFiles'
+import {processSourceFile, processSource} from './src/ProcessFiles'
 import {recordInfo, sortRecorded, clearRecorded, analysisJSON, writeStubFile, readModuleDescription} from "./src/Output";
 import {getGlobbedFiles} from "./src/Globber";
 import {executeCommand} from "./src/execCmd";
+import {validate} from "./src/TypeCheck"
 
-// [documented in types](#module_types..SourceInfo)
-export {SourceInfo as SourceInfo}
-// [documented in types](#module_types..FunctionInfo)
-export {FunctionInfo as FunctionInfo}
-// [documented in types](#module_types..PropertyInfo)
-export {PropertyInfo as PropertyInfo}
-// [documented in types](#module_types..ClassInfo)
-export {ClassInfo as ClassInfo}
-// [documented in types](#module_types..EnumInfo)
-export {EnumInfo as EnumInfo}
-// [documented in types](#module_types..TypedefInfo)
-export {TypedefInfo as TypedefInfo}
-// [documented in ProcessFiles](#module_ProcessFiles..processSourceFile)
-export {processSourceFile as processSourceFile}
-// [documented in ProcessFiles](#module_ProcessFiles..processSource)
-export {processSource as processSource}
-export {recordInfo as recordInfo}
-export {sortRecorded as sortRecorded}
-export {clearRecorded as clearRecorded}
-export {analysisJSON as analysisJSON}
-export {writeStubFile as writeStubFile}
-export {readModuleDescription as readModuleDescription}
-// [documented in types](#module_Globber..getGlobbedFiles)
-export {getGlobbedFiles as getGlobbedFiles}
-// [documented in execCmd](#module_execCmd..executeCommand)
-export {executeCommand as executeCommand}
+export {FunctionInfo}
+export {PropertyInfo}
+export {ClassInfo}
+export {SourceInfo}
+export {EnumInfo}
+export {TypedefInfo}
+export {processSourceFile}
+export {processSource}
+export {recordInfo}
+export {sortRecorded}
+export {clearRecorded}
+export {analysisJSON}
+export {writeStubFile}
+export {readModuleDescription}
+export {getGlobbedFiles}
+export {executeCommand}
+export {validate}
 
 
 import * as hjson from 'hjson'
@@ -68,7 +60,7 @@ let i = 0
 let f:string
 // If there are no args, we are either importing or else wee ran the executable without passing any args
 if(!args.length) {
-  if(process.argv[1] === __filename) { // true if we ran the executable
+  if(process.argv[1].substring(process.argv[1].lastIndexOf('/')+1) === 'doc-holiday') { // run as CLI
     showHelp()
     process.exit(1)
   }
@@ -89,6 +81,10 @@ while((f = args[i])) {
   else if(f.substring(0,13) === '--render-only') opts.renderOnly = opts.noClean = true
   else if(f.substring(0,12) === '--analysis') opts.analyseOnly = true
 
+  else if(f.substring(0,5) === 'help'|| f.substring(0,7) === '--help') {
+    showHelp()
+    process.exit(1)
+  }
 
   // if(f.substring(0,9) === 'verbosity') opts['verbosity'] = args[i+1]
   // if(f.substring(0,10) === 'verbosity=') opts['verbosity'] = f.substring(10)

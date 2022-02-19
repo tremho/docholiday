@@ -31,6 +31,6 @@ documentation to render as a separately styled list of restrictions upon the val
 reading the documentation.
 
 If you are looking for a corresponding validation library you can use at runtime to enforce this in your code, we have
-that too! [the `validate` function]() can be imported into your sources and used to check that a value passed at 
+that too! [the validate function](TypeCheck#validate) can be imported into your sources and used to check that a value passed at 
 runtime meets the specification documented.
 

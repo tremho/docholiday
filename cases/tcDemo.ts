@@ -2,7 +2,7 @@
 Case study for typecheck runtime
  */
 
-import {validate} from "../src/TypeCheck";
+import {validate} from "../index";
 
 
 /*

@@ -42,6 +42,6 @@ jsdoc2md behavior_
 Consider using Documentation JS (engine: 'docjs') if you have problems like the ones
 listed above, since this engine outputs to markdown without these issues.
 
-Alternately, you may be able to find templates that 
+Alternately, you may be able to find templates for JSDoc that handle inconsistencies like these better than others.
 
 
