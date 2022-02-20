@@ -33,13 +33,14 @@ with ##DH-ON:
 `// ##DH-ON` or 
 `// ##DH-ON Resume documentation parsing`
 
+_Using directives to avoid parsing errors_:  
 Some declarations may be mistaken for other types of entities by the parser
 and thus generate incorrect or garbled stub output.
 
 For example, this code defines some HTML markup as a string.
-However, the notation confuses the _Doc-Holiday_ parser, so it is surrounded
-with // ##DH-OFF and // ##DH-ON directives to exclude it from the
-parser.
+However, the html notation confuses the _Doc-Holiday_ parser, so it is surrounded
+with // ##DH-OFF and // ##DH-ON directives to exclude it from parsing.
+
 ```typescript
 // ##DH-OFF
 const markup = `<span style="float:right; margin-top:-15px; font-size:smaller; color:darkred;">${content}</span>`
