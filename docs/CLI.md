@@ -91,6 +91,24 @@ from all the sources.
 ---
 ### Options
 
+There are a few options that can be used to adjust the behavior
+of _doc-holiday_ when run.
+
+Options may appear in any order, or before or after any
+file globs provided with the command.
+
+###### title [=] _"title to use"_
+__Provide a title to appear in Markdown output__
+_(markdown only)_
+
+The default title is simply "API".
+
+If the title is more than one word, you will need to place the
+string within quotation marks.
+
+`doc-holiday --title="My Custom Title"  src/**`
+
+
 ###### _[config | -c]_ [=] _file_
 
 __Specify which _doc-holiday_ config file to use__  

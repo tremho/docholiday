@@ -10,9 +10,9 @@ It is.  findBracketBoundaries has a mess of brackets in the declaration and I ca
 parse is doing with it.  Problem is with the ad-hoc return dec (I believe) so it becomes a false body boundary.
 
 
-
-
-- [ ] get rid of Not-JSDOC form 'errors'
+- [X] get rid of Not-JSDOC form 'errors'
+- [X] put a title at the top of the API.md output and remove the DocJS TOC.
+- 
 - [ ] verify that unrecognized constraint keyword results in error
 - [ ] verify use of <list> with comma delimeters in contraints (e.g. object hasProperties)
 - [ ] verify array processing, especially 'each'

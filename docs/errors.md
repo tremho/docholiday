@@ -58,4 +58,23 @@ so you may be able to discern more about the cause of the error by
 looking at the stub file.  If you can fix the stub file, you 
 may be able to continue by running again with the `--render-only` option.
 
+##### Using ##DH-OFF
+
+If you encounter some code that is problematic, you may wish to 
+exclude that section of your source code with the ##DH-OFF
+directive, such as:
+
+```typescript
+// ##DH-OFF
+
+ -- any code in this section is excluded from Doc-Holiday parsing --
+
+// ##DH-ON
+
+// We can enable Doc-Holiday parsing again with ##DH-ON
+export function backToNormal() {
+    
+}
+```
+
 

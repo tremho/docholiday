@@ -447,7 +447,8 @@ class ObjectConstraint extends TypeConstraint {
 }
 
 /**
- * Enumeration of checkType parsed results
+ * Enumeration of checkType parsed results.
+ *
  * parameters (p1, p2) are parsed at same time, and meaning does vary per checkType.
  */
 export enum ElementCheckType {

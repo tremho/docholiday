@@ -144,6 +144,20 @@ export class SourceReader {
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
     }
+    skipDHOFF() {
+        let eol = this.text.indexOf('\n', this.pos)
+        if(eol === -1) eol = this.text.length
+        let dhoff = this.text.substring(this.pos, eol).trim()
+        while(dhoff.substr(0,2) === '//' || dhoff.substr(0,2) === '/*') dhoff = dhoff.substring(2).trim()
+        if(dhoff.substr(0,8) === '##DH-OFF') {
+            let end = this.text.indexOf('##DH-ON', eol)
+            if(end !== -1) {
+                end = this.text.indexOf('\n', end)
+                if(end === -1) end = this.text.length
+                this.pos = end
+            }
+        }
+    }
     // finds the next end of line or start of comment
     nextEnd(isType = false) {
         let lnEnd = this.text.indexOf('\n', this.pos)
@@ -179,6 +193,7 @@ export class SourceReader {
         while(this.text.substring(this.pos,this.pos+6) === 'import') this.skipImport()
         if(this.text.substring(this.pos,this.pos+6) === 'export') this.skipExport()
         while(this.text.substring(this.pos,this.pos+7) === 'require') this.skipRequire()
+        this.skipDHOFF()
         let n = this.nextEnd(isType)
         // let c = this.text.substring(this.pos, n) // this is the comment block above the source
         rt.comStart = this.pos;
@@ -1018,10 +1033,10 @@ export class SourceReader {
             if (this.text.substring(ci.comEnd, ci.decStart).split('\n').length === 2) {
                 ci.description = this.readCommentBlock(this.text.substring(n, nd))
             }
-            if(!jsDocSignature) {
-                ci.status = SpecificationStatus.NoDoc // not JSDoc format anyway
-                ci.error = 'Comment block is not recognized as JSDoc form'
-            }
+            // if(!jsDocSignature) {
+            //     ci.status = SpecificationStatus.NoDoc // not JSDoc format anyway
+            //     ci.error = 'Comment block is not recognized as JSDoc form'
+            // }
             // get the full class definition
             if(si.decStart >= si.comEnd) {
                 let bc
@@ -1368,10 +1383,10 @@ export class SourceReader {
         if(this.text.substring(fi.comEnd, fi.decStart).split('\n').length === 2) {
             fi.description = this.readCommentBlock(this.text.substring(n, nd))
         }
-        if(!jsDocSignature) {
-            fi.status = SpecificationStatus.NoDoc // not JSDoc format anyway
-            fi.error = 'Comment block is not recognized as JSDoc form'
-        }
+        // if(!jsDocSignature) {
+        //     fi.status = SpecificationStatus.NoDoc // not JSDoc format anyway
+        //     fi.error = 'Comment block is not recognized as JSDoc form'
+        // }
         // Process the comment block as JSDOC even if it's not in that form.
         let xi = this.text.indexOf('@private', n)
         if(xi !== -1 && xi < fi.comEnd) {

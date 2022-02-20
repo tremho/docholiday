@@ -3,6 +3,9 @@
 
 import {ParameterInfo, ReturnInfo, ScopeModifiers, SourceInfo, SpecificationStatus} from "../src/types";
 
+export function ontostart() {}
+// ##DH-OFF
+
 /**
  * Information about a function within the source
  */
@@ -17,3 +20,8 @@ export class FunctionInfo extends SourceInfo {
   public status:SpecificationStatus = SpecificationStatus.None;
   public error?:string; // if defined, holds error detail. status is probably MISMATCH.
 }
+
+// ##DH-ON
+export function backon() {}
+
+

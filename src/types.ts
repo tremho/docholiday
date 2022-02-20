@@ -18,43 +18,43 @@ export class ScopeModifiers {
  * Information of where in the source file this entity exists
  */
 export class SourceInfo {
-    public decStart:number = -1;
-    public decEnd: number = -1;
-    public comStart: number = -1;
-    public comEnd: number = -1;
+    public decStart:number = -1;    // source position where declaration begins
+    public decEnd: number = -1;     // source position where declaration ends
+    public comStart: number = -1;   // source position where associated comment begins
+    public comEnd: number = -1;     // source position where associated comment ends
 }
 
 /**
  * Information about a function within the source
  */
 export class FunctionInfo extends SourceInfo {
-    public name:string = '';
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string;
-    public params: ParameterInfo[] = []
-    public return?: ReturnInfo;
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-    public status:SpecificationStatus = SpecificationStatus.None;
-    public error?:string; // if defined, holds error detail. status is probably MISMATCH.
+    public name:string = '';                                // Name of the function
+    public scope:ScopeModifiers = new ScopeModifiers()      // The scope modifiers of the function
+    public description:string;                              // the comment description of this function
+    public params: ParameterInfo[] = []                     // array of the function parameters
+    public return?: ReturnInfo;                             // return information of this function
+    public bodyStart: number = -1;                          // source position where body of function starts
+    public bodyEnd:number = -1;                             // source position where body of function ends
+    public status:SpecificationStatus = SpecificationStatus.None; // status of the parse
+    public error?:string; // if defined, holds error detail. status will hold the coded value.
 }
 
 /**
  * Information about a class within the source
  */
 export class ClassInfo extends SourceInfo {
-    public name:string = '';
-    public isInterface:boolean
-    public isMixin:boolean
-    public extends:string = '';
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public implements: string[] = []
-    public mixins: string[] = []
-    public description:string = ''
-    public internals:APIInfo = new APIInfo()
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
-    public status:SpecificationStatus = SpecificationStatus.None;
+    public name:string = '';                                // name of this class
+    public isInterface:boolean                              // true if this is an interface rather than a class
+    public isMixin:boolean                                  // true if this is a mixin rather than an interface or class
+    public extends:string = '';                             // name of class this class extends, if any
+    public scope:ScopeModifiers = new ScopeModifiers()      // the scope modifiers for this class
+    public implements: string[] = []                        // names of interfaces this class implements
+    public mixins: string[] = []                            // names of mixins this class mixes
+    public description:string = ''                          // comment description of this class
+    public internals:APIInfo = new APIInfo()                // contains all the inner entities belonging to this class
+    public bodyStart: number = -1;                          // source position of class body start
+    public bodyEnd:number = -1;                             // source position of class body end
+    public status:SpecificationStatus = SpecificationStatus.None; // status of the parse
     public error?:string; // if defined, holds error detail
 }
 
@@ -62,53 +62,53 @@ export class ClassInfo extends SourceInfo {
  * Information about a non-function property within a source file or within a class
  */
 export class PropertyInfo extends SourceInfo {
-    public name:string = "";
-    public type:string = "";
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string = ''
-    public assignStart:number = -1
-    public default:string = ''
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
+    public name:string = "";                                // name of this property
+    public type:string = "";                                // type of property
+    public scope:ScopeModifiers = new ScopeModifiers()      // scope modifiers of the property
+    public description:string = ''                          // comment dsescription of property
+    public assignStart:number = -1                          // source position where assignment to value begins
+    public default:string = ''                              // the default value assigned to this property
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>() // any constraints assigned to this property
 }
 
 /**
  * Information about an enum
  */
 export class EnumInfo extends SourceInfo {
-    public name:string
-    public scope:ScopeModifiers = new ScopeModifiers()
-    public description:string = ''
-    public values:EnumValueInfo[] = []
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
+    public name:string                                     // name of this Enum
+    public scope:ScopeModifiers = new ScopeModifiers()     // scope modifiers of this Enum
+    public description:string = ''                         // comment description
+    public values:EnumValueInfo[] = []                     // details on each enumerated value
+    public bodyStart: number = -1;                         // source position body start
+    public bodyEnd:number = -1;                            // source position body end
 }
 
 /**
  * Information about a single enum value
  */
 export class EnumValueInfo {
-    public name:string
-    public type:string
-    public value:string|number
-    public description:string
+    public name:string                                      // name of enum value
+    public type:string                                      // type of enum value
+    public value:string|number                              // the value of this enum
+    public description:string                               // comment description of this enum value
 }
 
 export enum TypedefForm {
-    Primitive,
-    Object,
-    Array,
-    Function,
+    Primitive,                                          // describes an alias to one or more primitive types
+    Object,                                             // describes a typedef to an object
+    Array,                                              // describes a typedef to an array
+    Function,                                           // a typedef function (aka Callback)
 }
 
 export class TypedefInfo extends SourceInfo {
-    public name:string
-    public form:TypedefForm
-    public type:string
-    public description:string = ''
-    public declaration:FunctionInfo|ClassInfo
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public bodyStart: number = -1;
-    public bodyEnd:number = -1;
+    public name:string                                      // Name of this typedef
+    public form:TypedefForm                                 // Form of this typedef
+    public type:string                                      // Type assigned to this typedef
+    public description:string = ''                          // comment description
+    public declaration:FunctionInfo|ClassInfo               // for object or function types, the declared structure
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>() // any constraints applied
+    public bodyStart: number = -1;                          // source position of body start
+    public bodyEnd:number = -1;                             // source position of body end
 }
 
 /**
@@ -129,7 +129,9 @@ export enum SpecificationStatus {
     None ="",   // not analyzed
     Okay ="Okay",   // documented and reconciled
     BadConstraint = "BadConstraint", // syntax error processing constraint declaration
-    NoDoc = "NoDoc", // function not documented in JSDoc format
+
+    // NoDoc = "NoDoc", // function not documented in JSDoc format (no longer used)
+
     Mismatch = "Mismatch", // JSDoc does not match typescript declaration
 
     // these two are not needed and can be assumed by the absence of the associated properties
@@ -142,14 +144,14 @@ export enum SpecificationStatus {
  * Information about a parameter
  */
 export class ParameterInfo {
-    public type:string = ''
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public ordinal: number;
-    public name:string;
-    public description:string;
-    public optional: boolean;
-    public default:string = ''
-    public status: SpecificationStatus = SpecificationStatus.None;
+    public type:string = ''                                 // type of parameter
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>() // any constraints applied to parameter value
+    public ordinal: number;                                 // which parameter in series is this one?
+    public name:string;                                     // name of the parameter
+    public description:string;                              // comment description of parameter
+    public optional: boolean;                               // true if this is an optional parameter
+    public default:string = ''                              // defined if there is a default value assigned
+    public status: SpecificationStatus = SpecificationStatus.None; // parse status
     public error:string; // if defined, holds error detail. status is probably MISMATCH.
 }
 
@@ -157,49 +159,42 @@ export class ParameterInfo {
  * Information about a return value
  */
 export class ReturnInfo {
-    public type:string = ''
-    public description:string;
-    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()
-    public status: SpecificationStatus = SpecificationStatus.None;
+    public type:string = ''                 // Type being returned
+    public description:string;              // comment description of return value
+    public constraintMap: Map<string, TypeConstraint> = new Map<string, TypeConstraint>()  // any constraints applied to return value
+    public status: SpecificationStatus = SpecificationStatus.None; // parse status
 }
 
 /**
  * Callback for source reader.
  * Calls back with FunctionInfo and associated text for each function in source
  */
-export interface FICallback {
-    (fi:FunctionInfo, text?:string):void
-}
+export type FICallback = (fi:FunctionInfo, text?:string) => void
+
 
 /**
  * Callback for source reader.
  * Calls back with PropertyInfo and associated text for each property in source
  */
-export interface PICallback {
-    (pi:PropertyInfo, text?:string):void
-}
+export type PICallback = (pi:PropertyInfo, text?:string) => void
+
 
 /**
  * Callback for source reader.
  * Calls back with EnumInfo and associated text for each enum in source
  */
-export interface EICallback {
-    (ei:EnumInfo, text?:string):void
-}
+export type EICallback = (ei:EnumInfo, text?:string) => void
 
 /**
  * Callback for source reader.
  * Calls back with TypedefInfo and associated text for each type definition in source
  */
-export interface TICallback {
-    (ti:TypedefInfo, text?:string): void
-}
+export type TICallback = (ti:TypedefInfo, text?:string) => void
 
 /**
  * Callback for source reader.
  * Calls back with ClassInfo and associated text for each class in source
  */
-export interface CICallback {
-    (ci:ClassInfo, text?:string):void
-}
+export type CICallback = (ci:ClassInfo, text?:string) => void
+
 

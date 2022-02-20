@@ -54,6 +54,7 @@ export function handleInternalCustom(name:string, argMap:any, text:string):strin
 export async function handleExternalCustom(name:string, args:string[], text:string):Promise<string> {
     args.push(text)
     console.warn(`TODO: launch command ${name} ${args}`)
-    return executeCommand(name, args)
+    await executeCommand(name, args)
+    return ""
 
 }

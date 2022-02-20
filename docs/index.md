@@ -11,11 +11,14 @@ _with the gunslinger for your documentation needs_
 - [Introduction](intro)
 - [Getting Started](Getting+Started)
 - [Documenting code elements](generating)
+- [Introducing Constraints](constraints)
 - [Public and private](public+private)
 - [JSDoc Tags](JSDoc)
 - [Using Markdown](markdown)
 - [Diagramming with PlantUML](plantUML)
 - [Publishing](publish)
+- [directives](directives)
+- [extensions](extensions)
 
 - __Using doc-holiday as an NPM module__
   - [installation and use as a module](module) 
@@ -23,7 +26,6 @@ _with the gunslinger for your documentation needs_
 
 - [CLI Reference](CLI)
 
-- [Introducing Constraints](constraints)
 
 <hr/>
 
