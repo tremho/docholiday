@@ -4,7 +4,14 @@ See the Github issues list for the official open-source project list of open ite
 
 But as we prep:
 
-- [ ] review docs. SourceReader class looks bunged up.
+- [X] review docs. SourceReader class looks bunged up.
+
+It is.  findBracketBoundaries has a mess of brackets in the declaration and I can't seem to figure out what the 
+parse is doing with it.  Problem is with the ad-hoc return dec (I believe) so it becomes a false body boundary.
+
+
+
+
 - [ ] get rid of Not-JSDOC form 'errors'
 - [ ] verify that unrecognized constraint keyword results in error
 - [ ] verify use of <list> with comma delimeters in contraints (e.g. object hasProperties)

@@ -63,143 +63,135 @@
 -   [SourceReader][59]
     -   -   [SourceReader (Module)][60]
     -   [skipTop][61]
-    -   [skipWhite][62]
-    -   [findWhite][63]
-        -   [Parameters][64]
-    -   [readNextWord][65]
+    -   [pastWhite][62]
+        -   [Parameters][63]
+    -   [skipWhite][64]
+    -   [findWhite][65]
         -   [Parameters][66]
-    -   [skipImport][67]
-    -   [skipExport][68]
-    -   [skipRequire][69]
-    -   [readTypeDef][70]
-        -   [Parameters][71]
-    -   [getFunctionName][72]
+    -   [readNextWord][67]
+        -   [Parameters][68]
+    -   [skipImport][69]
+    -   [skipExport][70]
+    -   [skipRequire][71]
+    -   [nextEnd][72]
         -   [Parameters][73]
-    -   [extractFunctionInfo][74]
+    -   [readSourceLine][74]
         -   [Parameters][75]
-    -   [extractPropertyInfo][76]
+    -   [readTypeDef][76]
         -   [Parameters][77]
-    -   [getClassName][78]
+    -   [getFunctionName][78]
         -   [Parameters][79]
-    -   [getExtends][80]
+    -   [extractMethodInfo][80]
         -   [Parameters][81]
-    -   [getImplements][82]
+    -   [deriveTypeFromValue][82]
         -   [Parameters][83]
-    -   [findMixins][84]
+    -   [myBracketExtract][84]
         -   [Parameters][85]
-    -   [extractEnumInfo][86]
+    -   [extractConstraints][86]
         -   [Parameters][87]
-    -   [extractTypedefInfo][88]
-        -   [Parameters][89]
-    -   [gatherCommentMeta][90]
-        -   [Parameters][91]
--   [SourceReader][92]
-    -   [Parameters][93]
-    -   [Properties][94]
-    -   [skipTop][95]
-    -   [skipWhite][96]
-    -   [findWhite][97]
-        -   [Parameters][98]
-    -   [readNextWord][99]
-        -   [Parameters][100]
-    -   [skipImport][101]
-    -   [skipExport][102]
-    -   [skipRequire][103]
-    -   [readTypeDef][104]
-        -   [Parameters][105]
-    -   [getFunctionName][106]
-        -   [Parameters][107]
-    -   [extractFunctionInfo][108]
-        -   [Parameters][109]
-    -   [extractPropertyInfo][110]
-        -   [Parameters][111]
-    -   [getClassName][112]
-        -   [Parameters][113]
-    -   [getExtends][114]
-        -   [Parameters][115]
-    -   [getImplements][116]
-        -   [Parameters][117]
-    -   [findMixins][118]
-        -   [Parameters][119]
-    -   [extractEnumInfo][120]
-        -   [Parameters][121]
-    -   [extractTypedefInfo][122]
-        -   [Parameters][123]
-    -   [gatherCommentMeta][124]
-        -   [Parameters][125]
--   [TypeCheck][126]
-    -   -   [TypeCheck (Module)][127]
--   [ValueType][128]
-    -   [none][129]
-    -   [number][130]
-    -   [string][131]
-    -   [boolean][132]
-    -   [object][133]
-    -   [array][134]
-    -   [regex][135]
--   [TypeConstraint][136]
-    -   [Properties][137]
-    -   [test][138]
-        -   [Parameters][139]
-    -   [toString][140]
-    -   [describe][141]
--   [ElementCheckType][142]
-    -   [none][143]
-    -   [all][144]
-    -   [random][145]
-    -   [step][146]
-    -   [firstThenStep][147]
-    -   [firstThenRandom][148]
--   [valueTypeFromString][149]
+-   [SourceReader][88]
+    -   [Parameters][89]
+    -   [skipTop][90]
+    -   [pastWhite][91]
+        -   [Parameters][92]
+    -   [skipWhite][93]
+    -   [findWhite][94]
+        -   [Parameters][95]
+    -   [readNextWord][96]
+        -   [Parameters][97]
+    -   [skipImport][98]
+    -   [skipExport][99]
+    -   [skipRequire][100]
+    -   [nextEnd][101]
+        -   [Parameters][102]
+    -   [readSourceLine][103]
+        -   [Parameters][104]
+    -   [readTypeDef][105]
+        -   [Parameters][106]
+    -   [getFunctionName][107]
+        -   [Parameters][108]
+    -   [extractMethodInfo][109]
+        -   [Parameters][110]
+    -   [deriveTypeFromValue][111]
+        -   [Parameters][112]
+    -   [myBracketExtract][113]
+        -   [Parameters][114]
+    -   [extractConstraints][115]
+        -   [Parameters][116]
+-   [TypeCheck][117]
+    -   -   [TypeCheck (Module)][118]
+-   [ValueType][119]
+    -   [none][120]
+    -   [number][121]
+    -   [string][122]
+    -   [boolean][123]
+    -   [object][124]
+    -   [array][125]
+    -   [regex][126]
+-   [TypeConstraint][127]
+    -   [Parameters][128]
+    -   [Properties][129]
+    -   [test][130]
+        -   [Parameters][131]
+    -   [toString][132]
+    -   [describe][133]
+-   [ElementCheckType][134]
+    -   [none][135]
+    -   [all][136]
+    -   [random][137]
+    -   [step][138]
+    -   [firstThenStep][139]
+    -   [firstThenRandom][140]
+-   [valueTypeFromString][141]
+    -   [Parameters][142]
+-   [stringFromValueType][143]
+    -   [Parameters][144]
+-   [parseConstraintsToMap][145]
+    -   [Parameters][146]
+-   [parseConstraints][147]
+    -   [Parameters][148]
+-   [validate][149]
     -   [Parameters][150]
--   [stringFromValueType][151]
-    -   [Parameters][152]
--   [parseConstraintsToMap][153]
-    -   [Parameters][154]
--   [parseConstraints][155]
-    -   [Parameters][156]
--   [validate][157]
-    -   [Parameters][158]
--   [types][159]
-    -   -   [types (Module)][160]
--   [ScopeModifiers][161]
+-   [types][151]
+    -   -   [types (Module)][152]
+-   [ScopeModifiers][153]
+    -   [Properties][154]
+-   [SourceInfo][155]
+    -   [Properties][156]
+-   [FunctionInfo][157]
+    -   [Properties][158]
+-   [ClassInfo][159]
+    -   [Properties][160]
+-   [PropertyInfo][161]
     -   [Properties][162]
--   [SourceInfo][163]
+-   [EnumInfo][163]
     -   [Properties][164]
--   [FunctionInfo][165]
+-   [EnumValueInfo][165]
     -   [Properties][166]
--   [ClassInfo][167]
-    -   [Properties][168]
--   [PropertyInfo][169]
-    -   [Properties][170]
--   [EnumInfo][171]
-    -   [Properties][172]
--   [EnumValueInfo][173]
-    -   [Properties][174]
--   [TypedefForm][175]
-    -   [Primitive][176]
-    -   [Object][177]
-    -   [Array][178]
-    -   [Function][179]
--   [TypedefInfo][180]
-    -   [Properties][181]
--   [APIInfo][182]
+-   [TypedefForm][167]
+    -   [Primitive][168]
+    -   [Object][169]
+    -   [Array][170]
+    -   [Function][171]
+-   [TypedefInfo][172]
+    -   [Properties][173]
+-   [APIInfo][174]
+    -   [Properties][175]
+-   [SpecificationStatus][176]
+    -   [None][177]
+    -   [Okay][178]
+    -   [BadConstraint][179]
+    -   [NoDoc][180]
+    -   [Mismatch][181]
+-   [ParameterInfo][182]
     -   [Properties][183]
--   [SpecificationStatus][184]
-    -   [None][185]
-    -   [Okay][186]
-    -   [BadConstraint][187]
-    -   [NoDoc][188]
-    -   [Mismatch][189]
--   [ParameterInfo][190]
-    -   [Properties][191]
--   [ReturnInfo][192]
-    -   [Properties][193]
--   [FICallback][194]
--   [PICallback][195]
--   [EICallback][196]
--   [TICallback][197]
--   [CICallback][198]
+-   [ReturnInfo][184]
+    -   [Properties][185]
+-   [FICallback][186]
+-   [PICallback][187]
+-   [EICallback][188]
+-   [TICallback][189]
+-   [CICallback][190]
 
 ## CommentBlock
 
@@ -215,8 +207,8 @@ Renders the comment block for the entity, and its associated stub code
 
 ### Parameters
 
--   `entityInfo` **([FunctionInfo][199] \| [ClassInfo][200] \| [PropertyInfo][201] \| [EnumInfo][202] \| [TypedefInfo][203])** SourceInfo-derived data object of the parsed code entity
--   `indent` **[number][204]** indent margin where the comment block begins
+-   `entityInfo` **([FunctionInfo][191] \| [ClassInfo][192] \| [PropertyInfo][193] \| [EnumInfo][194] \| [TypedefInfo][195])** SourceInfo-derived data object of the parsed code entity
+-   `indent` **[number][196]** indent margin where the comment block begins
 
 ## renderClassStub
 
@@ -226,9 +218,9 @@ inner members of this class.
 
 ### Parameters
 
--   `ci` **[ClassInfo][200]** 
--   `indent` **[number][204]** 
--   `forClass` **[string][205]**  (optional, default `''`)
+-   `ci` **[ClassInfo][192]** 
+-   `indent` **[number][196]** 
+-   `forClass` **[string][197]**  (optional, default `''`)
 
 ## renderFunctionStub
 
@@ -239,9 +231,9 @@ Nevertheless, this rendering outputs the parameters and returns a value represen
 
 ### Parameters
 
--   `fi` **[FunctionInfo][199]** 
--   `indent` **[number][204]** 
--   `forClass` **[string][205]**  (optional, default `''`)
+-   `fi` **[FunctionInfo][191]** 
+-   `indent` **[number][196]** 
+-   `forClass` **[string][197]**  (optional, default `''`)
 
 ## renderPropertyStub
 
@@ -249,8 +241,8 @@ Renders a code stub for a declared property.
 
 ### Parameters
 
--   `pi` **[PropertyInfo][201]** 
--   `indent` **[number][204]** 
+-   `pi` **[PropertyInfo][193]** 
+-   `indent` **[number][196]** 
 
 ## renderTypedefStub
 
@@ -259,8 +251,8 @@ No stub is necessary for a typedef
 
 ### Parameters
 
--   `ti` **[TypedefInfo][203]** 
--   `indent` **[number][204]** 
+-   `ti` **[TypedefInfo][195]** 
+-   `indent` **[number][196]** 
 
 ## renderEnumStub
 
@@ -268,8 +260,8 @@ Renders a code stub for an Enumeration
 
 ### Parameters
 
--   `ei` **[EnumInfo][202]** 
--   `indent` **[number][204]** 
+-   `ei` **[EnumInfo][194]** 
+-   `indent` **[number][196]** 
 
 ## CustomRender
 
@@ -287,11 +279,11 @@ This is called by the CommentBlock processing when it detects a
 
 ### Parameters
 
--   `name` **[string][205]** 
+-   `name` **[string][197]** 
 -   `argMap` **any** 
--   `text` **[string][205]** 
+-   `text` **[string][197]** 
 
-Returns **[string][205]** 
+Returns **[string][197]** 
 
 ## handleExternalCustom
 
@@ -302,11 +294,11 @@ This is called by the CommentBlock processing when it detects a
 
 ### Parameters
 
--   `name` **[string][205]** 
--   `args` **[Array][206]&lt;[string][205]>** 
--   `text` **[string][205]** 
+-   `name` **[string][197]** 
+-   `args` **[Array][198]&lt;[string][197]>** 
+-   `text` **[string][197]** 
 
-Returns **[Promise][207]&lt;[string][205]>** 
+Returns **[Promise][199]&lt;[string][197]>** 
 
 ## execCmd
 
@@ -322,13 +314,13 @@ Optionally allow command to echo to console in real time, or run silent.
 
 ### Parameters
 
--   `cmd` **[string][205]** command to execute
--   `args` **[Array][206]&lt;any>** to pass to command, as an array
--   `cwd` **[string][205]** working directory to run command, if not the currently set one (optional, default `''`)
--   `consolePass` **[boolean][208]** `true` to allow command to echo its output in real time (optional, default `false`)
+-   `cmd` **[string][197]** command to execute
+-   `args` **[Array][198]&lt;any>** to pass to command, as an array
+-   `cwd` **[string][197]** working directory to run command, if not the currently set one (optional, default `''`)
+-   `consolePass` **[boolean][200]** `true` to allow command to echo its output in real time (optional, default `false`)
 -   `env` **any** any environment values, in key=value form. (optional, default `{}`)
 
-Returns **[Promise][207]&lt;any>** 
+Returns **[Promise][199]&lt;any>** 
 
 ## Globber
 
@@ -342,9 +334,9 @@ Returns a list of files matching glob expression
 
 ### Parameters
 
--   `globexp` **[string][205]** 
+-   `globexp` **[string][197]** 
 
-Returns **[Array][206]&lt;[string][205]>** 
+Returns **[Array][198]&lt;[string][197]>** 
 
 ## index
 
@@ -370,8 +362,8 @@ Options for stub generation
 
 ### Properties
 
--   `sourceType` **[string][205]** ='ts' - either 'ts' (typescript) or 'js' (javascript)
--   `stubExtension` **[string][205]** ='.docstub.js' -
+-   `sourceType` **[string][197]** ='ts' - either 'ts' (typescript) or 'js' (javascript)
+-   `stubExtension` **[string][197]** ='.docstub.js' -
 
 ## processFileList
 
@@ -380,10 +372,10 @@ output to an output path or generating an analysis JSON yield for each file proc
 
 ### Parameters
 
--   `files` **[Array][206]&lt;[string][205]>** 
--   `outPath` **[string][205]** if '', analysis JSON will be emitted instead on each yield (optional, default `''`)
+-   `files` **[Array][198]&lt;[string][197]>** 
+-   `outPath` **[string][197]** if '', analysis JSON will be emitted instead on each yield (optional, default `''`)
 
-Returns **Generator&lt;[string][205]>** 
+Returns **Generator&lt;[string][197]>** 
 
 ## docstub
 
@@ -391,8 +383,8 @@ Convert source text into documentation stub output
 
 ### Parameters
 
--   `content` **[string][205]** The original source to convert
--   `options` **[DocOptions][209]?** Options affecting stub creation
+-   `content` **[string][197]** The original source to convert
+-   `options` **[DocOptions][201]?** Options affecting stub creation
 
 ## execute
 
@@ -423,8 +415,8 @@ Records the information of a parsed entity into the collection
 
 ### Parameters
 
--   `info` **([ClassInfo][200] \| [FunctionInfo][199] \| [PropertyInfo][201] \| [EnumInfo][202] \| [TypedefInfo][203])** 
--   `source` **[string][205]** 
+-   `info` **([ClassInfo][192] \| [FunctionInfo][191] \| [PropertyInfo][193] \| [EnumInfo][194] \| [TypedefInfo][195])** 
+-   `source` **[string][197]** 
 
 ## findSourceIndent
 
@@ -433,8 +425,8 @@ _Note: Does not consider tab expansion_
 
 ### Parameters
 
--   `si` **[SourceInfo][210]** 
--   `source` **[string][205]** 
+-   `si` **[SourceInfo][202]** 
+-   `source` **[string][197]** 
 
 ## readModuleDescription
 
@@ -448,7 +440,7 @@ first line, the module description comment block can begin on the second line_
 
 ### Parameters
 
--   `source` **[string][205]** 
+-   `source` **[string][197]** 
 
 ## sortRecorded
 
@@ -459,7 +451,7 @@ source code order
 
 Outputs all the recorded entities for a parsed module as a series of comment blocks and code stubs
 
-Returns **[string][205]** 
+Returns **[string][197]** 
 
 ## writeStubFile
 
@@ -467,9 +459,9 @@ Writes the stubbed version of af module source to the stub file
 
 ### Parameters
 
--   `filePath` **[string][205]** 
--   `moduleName` **[string][205]** 
--   `moduleDescription` **[string][205]** 
+-   `filePath` **[string][197]** 
+-   `moduleName` **[string][197]** 
+-   `moduleDescription` **[string][197]** 
 
 ## ProcessFiles
 
@@ -484,12 +476,12 @@ emit each instance of FunctionInfo via the given callback
 
 ### Parameters
 
--   `srcPath` **[string][205]** The path to the source file to read
--   `fncallback` **[FICallback][211]** the function that will receive the FunctionInfo instances emitted by the parse.
--   `prcallback` **[PICallback][212]** the function that will receive the PropertyInfo instances emitted by the parse.
--   `clscallback` **[CICallback][213]** the function that will receive the ClassInfo instances emitted by the parse.
--   `encallback` **[EICallback][214]** the function that will receive the EnumInfo instances emitted by the parse.
--   `tdcallback` **[TICallback][215]** 
+-   `srcPath` **[string][197]** The path to the source file to read
+-   `fncallback` **[FICallback][203]** the function that will receive the FunctionInfo instances emitted by the parse.
+-   `prcallback` **[PICallback][204]** the function that will receive the PropertyInfo instances emitted by the parse.
+-   `clscallback` **[CICallback][205]** the function that will receive the ClassInfo instances emitted by the parse.
+-   `encallback` **[EICallback][206]** the function that will receive the EnumInfo instances emitted by the parse.
+-   `tdcallback` **[TICallback][207]** 
 
 ## processSource
 
@@ -497,13 +489,13 @@ Process source as text
 
 ### Parameters
 
--   `contents` **[string][205]** to process
--   `ext` **[string][205]** or 'ts' for javascript or typescript source
--   `fncallback` **[FICallback][211]** to call on each FunctionInfo parse
--   `prcallback` **[PICallback][212]** to call on each PropertyInfo parse
--   `clscallback` **[CICallback][213]** to call on each ClassInfo parse
--   `encallback` **[EICallback][214]** to call on each EnumInfo parse
--   `tdcallback` **[TICallback][215]** 
+-   `contents` **[string][197]** to process
+-   `ext` **[string][197]** or 'ts' for javascript or typescript source
+-   `fncallback` **[FICallback][203]** to call on each FunctionInfo parse
+-   `prcallback` **[PICallback][204]** to call on each PropertyInfo parse
+-   `clscallback` **[CICallback][205]** to call on each ClassInfo parse
+-   `encallback` **[EICallback][206]** to call on each EnumInfo parse
+-   `tdcallback` **[TICallback][207]** 
 
 ## SourceReader
 
@@ -515,6 +507,15 @@ Source code reader and parser to identify code entities and extract metadata
 
 Skip things line "use strict" at the top.
 
+### pastWhite
+
+returns the position past skipped white space in a given string
+
+#### Parameters
+
+-   `str` **[string][197]** 
+-   `startIndex` **[number][196]**  (optional, default `0`)
+
 ### skipWhite
 
 advance past white space in parsing
@@ -549,6 +550,22 @@ skips past an export statement
 
 skips past a require statement
 
+### nextEnd
+
+finds the next end of line or start of comment
+
+#### Parameters
+
+-   `isType` **[boolean][200]**  (optional, default `false`)
+
+### readSourceLine
+
+Reads the next line of source, discrening the start and end of the comment block and code declaration.
+
+#### Parameters
+
+-   `isType` **[boolean][200]**  (optional, default `false`)
+
 ### readTypeDef
 
 Read a type description. Includes support for template types.
@@ -565,102 +582,68 @@ Otherwise an empty string ('') is returned.
 
 #### Parameters
 
--   `inClass` **[boolean][208]** if we are parsing a class
--   `text` **[string][205]** 
+-   `inClass` **[boolean][200]** if we are parsing a class
+-   `text` **[string][197]** 
 
-Returns **[string][205]** 
+Returns **[string][197]** 
 
-### extractFunctionInfo
+### extractMethodInfo
 
-First step in identifying a function from the given SourceInfo
-before possibly handing off to `extractMethodInfo`
-
-#### Parameters
-
--   `inClass` **[boolean][208]** 
--   `si` **[SourceInfo][210]** 
-
-Returns **[FunctionInfo][199]** 
-
-### extractPropertyInfo
-
-tries to extract PropertyInfo information from the given SourceInfo position
+Try to build a valid FunctionInfo entity from the given SourceInfo
 
 #### Parameters
 
--   `si` **[SourceInfo][210]** 
--   `inClass` **[boolean][208]** 
+-   `name` **[SourceInfo][202]** ,si
+-   `si`  
+-   `longsrc` **[string][197]**  (optional, default `''`)
 
-Returns **[PropertyInfo][201]** 
+Returns **[FunctionInfo][191]** 
 
-### getClassName
+### deriveTypeFromValue
 
-Used to determine the name of a class or interface
-
-#### Parameters
-
--   `text` **[string][205]** 
-
-Returns **[string][205]** 
-
-### getExtends
-
-if the class extends another, the base class name is returned here
+returns the associated primitive type for a value represented by the given value string
 
 #### Parameters
 
--   `text` **[string][205]** 
+-   `value` **[string][197]** 
 
-Returns **[string][205]** 
+### myBracketExtract
 
-### getImplements
+My own bracket matching algorithm
 
-If the class implements one or more interfaces, the array of names is returned here
+Tried using libraries from npm, such as
+`parenthesis`, `g2-bracket-parser` and `peeler`
+but each of these had some failing or another that prevented it from
+working as I needed it.
 
-#### Parameters
+This version works, although it is not elegant.
+It parses one character at a time, which thankfully turns out to run faster than
+I originally feared.
+This allows treating the problem from a state-machine perspective, and
+there is no chance of skipping a stateful event
+(although I suppose an optimization could be made to skip whitespace, or clearly defined comment blocks).
 
--   `text` **[string][205]** 
+This simply counts brackets and levels until we return to level 0
+it statefully ignores brackets that are out of scope, including cases for:
 
-Returns **[Array][206]&lt;[string][205]>** 
-
-### findMixins
-
-legacy method to recognize mix-in patterns (alternative to implements)
-
-#### Parameters
-
--   `extDec` **[string][205]** 
-
-### extractEnumInfo
-
-Tries to extract EnumInfo from the given SourceInfo position
-
-#### Parameters
-
--   `si` **[SourceInfo][210]** 
-
-Returns **[EnumInfo][202]** 
-
-### extractTypedefInfo
-
-Tries to extract TypedefInfo from the given SourceInfo position
+-   comments
+-   quoted strings (single, double, and backtick)
+-   handles escapes for quote scope recognition
 
 #### Parameters
 
--   `si` **[SourceInfo][210]** 
+-   `src` **[string][197]** bracketed source
+-   `pair` **[string][197]** matching pair that define the bracket delimiters
 
-Returns **[TypedefInfo][203]** 
-
-### gatherCommentMeta
-
-Reads comment block
-
--   reads primary description
--   reads JSDoc values from param or return blocks, and use if we don't have these from code parse
+### extractConstraints
 
 #### Parameters
 
--   `fi` **[FunctionInfo][199]** 
+-   `description` **[string][197]** 
+-   `type` **[string][197]** 
+
+Returns **[object][208]** constraints >>>  Object detail:
+    {description:string, constraintMap:any, error:string, status:SpecificationStatus}
 
 ## SourceReader
 
@@ -671,26 +654,23 @@ Call `getApiInfo` to receive a full analysis of the given source.
 
 ### Parameters
 
--   `srcText` **any** 
--   `ext` **any** 
-
-### Properties
-
--   `startIndex` **[number][204]** returns the position past skipped white space in a given string
--   `nextEnd` **[string][205]** (isType - finds the next end of line or start of comment
--   `readSourceLine` **[string][205]** (isType - Reads the next line of source, discrening the start and end of the comment block and code declaration.
--   `longsrc` **[string][205]** Try to build a valid FunctionInfo entity from the given SourceInfo
--   `bracket` **[string][205]** Find the start and end positions of potentially nested source code brackets
--   `ls` **[string][205]** =le+1 -
--   `ls` **[string][205]** =this.text.indexOf('\\n', start) -
--   `if` **[string][205]** (ls=== -1) ls = this.text.length -
--   `end` **ls** \-
--   `getApiInfo` **[string][205]** (fromPos - Returns the collected analysis of source code entities
--   `isType` **[string][205]** recurses into `getApiInfo` for all entities within the class scope.
+-   `srcText` **[string][197]** the source code content
+-   `ext` **[string][197]** either '.js' for javascript or '.ts' for typescript    <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: 33px">
+            <li>No Constraint</li>
+       </ul>
 
 ### skipTop
 
 Skip things line "use strict" at the top.
+
+### pastWhite
+
+returns the position past skipped white space in a given string
+
+#### Parameters
+
+-   `str` **[string][197]** 
+-   `startIndex` **[number][196]**  (optional, default `0`)
 
 ### skipWhite
 
@@ -726,6 +706,22 @@ skips past an export statement
 
 skips past a require statement
 
+### nextEnd
+
+finds the next end of line or start of comment
+
+#### Parameters
+
+-   `isType` **[boolean][200]**  (optional, default `false`)
+
+### readSourceLine
+
+Reads the next line of source, discrening the start and end of the comment block and code declaration.
+
+#### Parameters
+
+-   `isType` **[boolean][200]**  (optional, default `false`)
+
 ### readTypeDef
 
 Read a type description. Includes support for template types.
@@ -742,102 +738,68 @@ Otherwise an empty string ('') is returned.
 
 #### Parameters
 
--   `inClass` **[boolean][208]** if we are parsing a class
--   `text` **[string][205]** 
+-   `inClass` **[boolean][200]** if we are parsing a class
+-   `text` **[string][197]** 
 
-Returns **[string][205]** 
+Returns **[string][197]** 
 
-### extractFunctionInfo
+### extractMethodInfo
 
-First step in identifying a function from the given SourceInfo
-before possibly handing off to `extractMethodInfo`
-
-#### Parameters
-
--   `inClass` **[boolean][208]** 
--   `si` **[SourceInfo][210]** 
-
-Returns **[FunctionInfo][199]** 
-
-### extractPropertyInfo
-
-tries to extract PropertyInfo information from the given SourceInfo position
+Try to build a valid FunctionInfo entity from the given SourceInfo
 
 #### Parameters
 
--   `si` **[SourceInfo][210]** 
--   `inClass` **[boolean][208]** 
+-   `name` **[SourceInfo][202]** ,si
+-   `si`  
+-   `longsrc` **[string][197]**  (optional, default `''`)
 
-Returns **[PropertyInfo][201]** 
+Returns **[FunctionInfo][191]** 
 
-### getClassName
+### deriveTypeFromValue
 
-Used to determine the name of a class or interface
-
-#### Parameters
-
--   `text` **[string][205]** 
-
-Returns **[string][205]** 
-
-### getExtends
-
-if the class extends another, the base class name is returned here
+returns the associated primitive type for a value represented by the given value string
 
 #### Parameters
 
--   `text` **[string][205]** 
+-   `value` **[string][197]** 
 
-Returns **[string][205]** 
+### myBracketExtract
 
-### getImplements
+My own bracket matching algorithm
 
-If the class implements one or more interfaces, the array of names is returned here
+Tried using libraries from npm, such as
+`parenthesis`, `g2-bracket-parser` and `peeler`
+but each of these had some failing or another that prevented it from
+working as I needed it.
 
-#### Parameters
+This version works, although it is not elegant.
+It parses one character at a time, which thankfully turns out to run faster than
+I originally feared.
+This allows treating the problem from a state-machine perspective, and
+there is no chance of skipping a stateful event
+(although I suppose an optimization could be made to skip whitespace, or clearly defined comment blocks).
 
--   `text` **[string][205]** 
+This simply counts brackets and levels until we return to level 0
+it statefully ignores brackets that are out of scope, including cases for:
 
-Returns **[Array][206]&lt;[string][205]>** 
-
-### findMixins
-
-legacy method to recognize mix-in patterns (alternative to implements)
-
-#### Parameters
-
--   `extDec` **[string][205]** 
-
-### extractEnumInfo
-
-Tries to extract EnumInfo from the given SourceInfo position
-
-#### Parameters
-
--   `si` **[SourceInfo][210]** 
-
-Returns **[EnumInfo][202]** 
-
-### extractTypedefInfo
-
-Tries to extract TypedefInfo from the given SourceInfo position
+-   comments
+-   quoted strings (single, double, and backtick)
+-   handles escapes for quote scope recognition
 
 #### Parameters
 
--   `si` **[SourceInfo][210]** 
+-   `src` **[string][197]** bracketed source
+-   `pair` **[string][197]** matching pair that define the bracket delimiters
 
-Returns **[TypedefInfo][203]** 
-
-### gatherCommentMeta
-
-Reads comment block
-
--   reads primary description
--   reads JSDoc values from param or return blocks, and use if we don't have these from code parse
+### extractConstraints
 
 #### Parameters
 
--   `fi` **[FunctionInfo][199]** 
+-   `description` **[string][197]** 
+-   `type` **[string][197]** 
+
+Returns **[object][208]** constraints >>>  Object detail:
+    {description:string, constraintMap:any, error:string, status:SpecificationStatus}
 
 ## TypeCheck
 
@@ -858,54 +820,57 @@ Enumeration of basic types
 
 <b><i>(value = 0)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### number
 
 <b><i>(value = 1)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### string
 
 <b><i>(value = 2)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### boolean
 
 <b><i>(value = 3)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### object
 
 <b><i>(value = 4)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### array
 
 <b><i>(value = 5)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### regex
 
 <b><i>(value = 6)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ## TypeConstraint
 
 Base form of TypeConstraint.
 Defines the base type and the test method.
 
+### Parameters
+
+-   `typeString` **[string][197]**  (optional, default `''`)
+
 ### Properties
 
--   `type` **[string][205]** The type this constraint applies to
--   `note` **[string][205]?** a freeform note that appears in comments. No runtime verification.
--   `constructor` **[string][205]** (typeString -
+-   `type` **[string][197]** The type this constraint applies to
+-   `note` **[string][197]?** a freeform note that appears in comments. No runtime verification.
 
 ### test
 
@@ -927,42 +892,42 @@ parameters (p1, p2) are parsed at same time, and meaning does vary per checkType
 don't test the elements
  <b><i>(value = 0)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### all
 
 test all the elements
  <b><i>(value = 1)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### random
 
 test up to a given number (p1) of elements, randomly chosen
  <b><i>(value = 2)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### step
 
 test every (p1) elements
  <b><i>(value = 3)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### firstThenStep
 
 test all up to (p1) elements, then every (p2) thereafter
  <b><i>(value = 4)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### firstThenRandom
 
 test all up to (p1) elements, then up to (p2) of the remaining, chosen at random
  <b><i>(value = 5)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ## valueTypeFromString
 
@@ -971,9 +936,9 @@ Note that strings beside none, array, and regex are synonymous with the `typeof`
 
 ### Parameters
 
--   `str` **[string][205]** 
+-   `str` **[string][197]** 
 
-Returns **[ValueType][216]** 
+Returns **[ValueType][209]** 
 
 ## stringFromValueType
 
@@ -982,9 +947,9 @@ Note that strings beside none, array, and regex are synonymous with the `typeof`
 
 ### Parameters
 
--   `vt` **[ValueType][216]** 
+-   `vt` **[ValueType][209]** 
 
-Returns **[string][205]** 
+Returns **[string][197]** 
 
 ## parseConstraintsToMap
 
@@ -992,10 +957,10 @@ parse constraints from what may be more than one type (e.g. string|number)
 
 ### Parameters
 
--   `typeString` **[string][205]** 
--   `blockSet` **[string][205]**  (optional, default `''`)
+-   `typeString` **[string][197]** 
+-   `blockSet` **[string][197]**  (optional, default `''`)
 
-Returns **[Map][217]&lt;[string][205], [TypeConstraint][218]>** 
+Returns **[Map][210]&lt;[string][197], [TypeConstraint][211]>** 
 
 ## parseConstraints
 
@@ -1007,7 +972,7 @@ otherwise, return ConstraintStatus.NotConstraint  to signify this is a descripti
 -   `type` **any** the block of text to evaluate
 -   `block` **any** the type parsed from the param or return declaration
 
-Returns **[TypeConstraint][218]** 
+Returns **[TypeConstraint][211]** 
 
 ## validate
 
@@ -1016,9 +981,9 @@ Simple test to see if a value adheres to a set of constraints
 ### Parameters
 
 -   `value` **any** The value to test for constraints. Must be one of the basic types supported by contraints
--   `constraintString` **[string][205]** the constraints to test it against. Constraints listed must match the type being tested. Do not include &lt;> brackets.
+-   `constraintString` **[string][197]** the constraints to test it against. Constraints listed must match the type being tested. Do not include &lt;> brackets.
 
-Returns **[boolean][208]** returns true if value passes all constraint tests.
+Returns **[boolean][200]** returns true if value passes all constraint tests.
 
 ## types
 
@@ -1042,13 +1007,13 @@ Details about the scope of an entity
 
 ### Properties
 
--   `static` **[boolean][208]?** \-
--   `public` **[boolean][208]?** \-
--   `private` **[boolean][208]?** \-
--   `optional` **[boolean][208]?** \-
--   `const` **[boolean][208]?** \-
--   `async` **[boolean][208]?** \-
--   `generator` **[boolean][208]?** \-
+-   `static` **[boolean][200]?** \-
+-   `public` **[boolean][200]?** \-
+-   `private` **[boolean][200]?** \-
+-   `optional` **[boolean][200]?** \-
+-   `const` **[boolean][200]?** \-
+-   `async` **[boolean][200]?** \-
+-   `generator` **[boolean][200]?** \-
 
 ## SourceInfo
 
@@ -1056,10 +1021,10 @@ Information of where in the source file this entity exists
 
 ### Properties
 
--   `decStart` **[number][204]** =-1 -
--   `decEnd` **[number][204]** =-1 -
--   `comStart` **[number][204]** =-1 -
--   `comEnd` **[number][204]** =-1 -
+-   `decStart` **[number][196]** =-1 -
+-   `decEnd` **[number][196]** =-1 -
+-   `comStart` **[number][196]** =-1 -
+-   `comEnd` **[number][196]** =-1 -
 
 ## FunctionInfo
 
@@ -1069,15 +1034,15 @@ Information about a function within the source
 
 ### Properties
 
--   `name` **[string][205]** ='' -
--   `scope` **[ScopeModifiers][219]** =new ScopeModifiers() -
--   `description` **[string][205]** \-
--   `params` **[Array][206]&lt;[ParameterInfo][220]>** =\[] -
--   `return` **[ReturnInfo][221]?** \-
--   `bodyStart` **[number][204]** =-1 -
--   `bodyEnd` **[number][204]** =-1 -
--   `status` **[SpecificationStatus][222]** =SpecificationStatus.None -
--   `error` **[string][205]?** if defined, holds error detail. status is probably MISMATCH.
+-   `name` **[string][197]** ='' -
+-   `scope` **[ScopeModifiers][212]** =new ScopeModifiers() -
+-   `description` **[string][197]** \-
+-   `params` **[Array][198]&lt;[ParameterInfo][213]>** =\[] -
+-   `return` **[ReturnInfo][214]?** \-
+-   `bodyStart` **[number][196]** =-1 -
+-   `bodyEnd` **[number][196]** =-1 -
+-   `status` **[SpecificationStatus][215]** =SpecificationStatus.None -
+-   `error` **[string][197]?** if defined, holds error detail. status is probably MISMATCH.
 
 ## ClassInfo
 
@@ -1087,19 +1052,19 @@ Information about a class within the source
 
 ### Properties
 
--   `name` **[string][205]** ='' -
--   `isInterface` **[boolean][208]** \-
--   `isMixin` **[boolean][208]** \-
--   `extends` **[string][205]** ='' -
--   `scope` **[ScopeModifiers][219]** =new ScopeModifiers() -
--   `implements` **[Array][206]&lt;[string][205]>** =\[] -
--   `mixins` **[Array][206]&lt;[string][205]>** =\[] -
--   `description` **[string][205]** ='' -
--   `internals` **[APIInfo][223]** =new APIInfo() -
--   `bodyStart` **[number][204]** =-1 -
--   `bodyEnd` **[number][204]** =-1 -
--   `status` **[SpecificationStatus][222]** =SpecificationStatus.None -
--   `error` **[string][205]?** if defined, holds error detail
+-   `name` **[string][197]** ='' -
+-   `isInterface` **[boolean][200]** \-
+-   `isMixin` **[boolean][200]** \-
+-   `extends` **[string][197]** ='' -
+-   `scope` **[ScopeModifiers][212]** =new ScopeModifiers() -
+-   `implements` **[Array][198]&lt;[string][197]>** =\[] -
+-   `mixins` **[Array][198]&lt;[string][197]>** =\[] -
+-   `description` **[string][197]** ='' -
+-   `internals` **[APIInfo][216]** =new APIInfo() -
+-   `bodyStart` **[number][196]** =-1 -
+-   `bodyEnd` **[number][196]** =-1 -
+-   `status` **[SpecificationStatus][215]** =SpecificationStatus.None -
+-   `error` **[string][197]?** if defined, holds error detail
 
 ## PropertyInfo
 
@@ -1109,13 +1074,13 @@ Information about a non-function property within a source file or within a class
 
 ### Properties
 
--   `name` **[string][205]** ="" -
--   `type` **[string][205]** ="" -
--   `scope` **[ScopeModifiers][219]** =new ScopeModifiers() -
--   `description` **[string][205]** ='' -
--   `assignStart` **[number][204]** =-1 -
--   `default` **[string][205]** ='' -
--   `TypeConstraint` **[string][205]** > =new Map&lt;string, TypeConstraint>() -
+-   `name` **[string][197]** ="" -
+-   `type` **[string][197]** ="" -
+-   `scope` **[ScopeModifiers][212]** =new ScopeModifiers() -
+-   `description` **[string][197]** ='' -
+-   `assignStart` **[number][196]** =-1 -
+-   `default` **[string][197]** ='' -
+-   `TypeConstraint` **[string][197]** > =new Map&lt;string, TypeConstraint>() -
 
 ## EnumInfo
 
@@ -1125,12 +1090,12 @@ Information about an enum
 
 ### Properties
 
--   `name` **[string][205]** \-
--   `scope` **[ScopeModifiers][219]** =new ScopeModifiers() -
--   `description` **[string][205]** ='' -
--   `values` **[Array][206]&lt;[EnumValueInfo][224]>** =\[] -
--   `bodyStart` **[number][204]** =-1 -
--   `bodyEnd` **[number][204]** =-1 -
+-   `name` **[string][197]** \-
+-   `scope` **[ScopeModifiers][212]** =new ScopeModifiers() -
+-   `description` **[string][197]** ='' -
+-   `values` **[Array][198]&lt;[EnumValueInfo][217]>** =\[] -
+-   `bodyStart` **[number][196]** =-1 -
+-   `bodyEnd` **[number][196]** =-1 -
 
 ## EnumValueInfo
 
@@ -1138,10 +1103,10 @@ Information about a single enum value
 
 ### Properties
 
--   `name` **[string][205]** \-
--   `type` **[string][205]** \-
--   `value` **([string][205] \| [number][204])** \-
--   `description` **[string][205]** \-
+-   `name` **[string][197]** \-
+-   `type` **[string][197]** \-
+-   `value` **([string][197] \| [number][196])** \-
+-   `description` **[string][197]** \-
 
 ## TypedefForm
 
@@ -1149,25 +1114,25 @@ Information about a single enum value
 
 <b><i>(value = 0)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### Object
 
 <b><i>(value = 1)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### Array
 
 <b><i>(value = 2)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### Function
 
 <b><i>(value = 3)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ## TypedefInfo
 
@@ -1175,14 +1140,14 @@ Type: [number][204]
 
 ### Properties
 
--   `name` **[string][205]** \-
--   `form` **[TypedefForm][225]** \-
--   `type` **[string][205]** \-
--   `description` **[string][205]** ='' -
--   `declaration` **([FunctionInfo][199] \| [ClassInfo][200])** \-
--   `TypeConstraint` **[string][205]** > =new Map&lt;string, TypeConstraint>() -
--   `bodyStart` **[number][204]** =-1 -
--   `bodyEnd` **[number][204]** =-1 -
+-   `name` **[string][197]** \-
+-   `form` **[TypedefForm][218]** \-
+-   `type` **[string][197]** \-
+-   `description` **[string][197]** ='' -
+-   `declaration` **([FunctionInfo][191] \| [ClassInfo][192])** \-
+-   `TypeConstraint` **[string][197]** > =new Map&lt;string, TypeConstraint>() -
+-   `bodyStart` **[number][196]** =-1 -
+-   `bodyEnd` **[number][196]** =-1 -
 
 ## APIInfo
 
@@ -1190,11 +1155,11 @@ Top-level collection of all functions, classes, and properties
 
 ### Properties
 
--   `functions` **[Array][206]&lt;[FunctionInfo][199]>** =\[] -
--   `classes` **[Array][206]&lt;[ClassInfo][200]>** =\[] -
--   `properties` **[Array][206]&lt;[PropertyInfo][201]>** =\[] -
--   `enums` **[Array][206]&lt;[EnumInfo][202]>** =\[] -
--   `typedefs` **[Array][206]&lt;[TypedefInfo][203]>** =\[] -
+-   `functions` **[Array][198]&lt;[FunctionInfo][191]>** =\[] -
+-   `classes` **[Array][198]&lt;[ClassInfo][192]>** =\[] -
+-   `properties` **[Array][198]&lt;[PropertyInfo][193]>** =\[] -
+-   `enums` **[Array][198]&lt;[EnumInfo][194]>** =\[] -
+-   `typedefs` **[Array][198]&lt;[TypedefInfo][195]>** =\[] -
 
 ## SpecificationStatus
 
@@ -1205,31 +1170,31 @@ Parse error status for parameter constraints
 not analyzed
  <b><i>(value = 0)</i></b>
 
-Type: [number][204]
+Type: [number][196]
 
 ### Okay
 
 documented and reconciled
 
-Type: [string][205]
+Type: [string][197]
 
 ### BadConstraint
 
 syntax error processing constraint declaration
 
-Type: [string][205]
+Type: [string][197]
 
 ### NoDoc
 
 function not documented in JSDoc format
 
-Type: [string][205]
+Type: [string][197]
 
 ### Mismatch
 
 JSDoc does not match typescript declaration
 
-Type: [string][205]
+Type: [string][197]
 
 ## ParameterInfo
 
@@ -1237,15 +1202,15 @@ Information about a parameter
 
 ### Properties
 
--   `type` **[string][205]** ='' -
--   `TypeConstraint` **[string][205]** > =new Map&lt;string, TypeConstraint>() -
--   `ordinal` **[number][204]** \-
--   `name` **[string][205]** \-
--   `description` **[string][205]** \-
--   `optional` **[boolean][208]** \-
--   `default` **[string][205]** ='' -
--   `status` **[SpecificationStatus][222]** =SpecificationStatus.None -
--   `error` **[string][205]** if defined, holds error detail. status is probably MISMATCH.
+-   `type` **[string][197]** ='' -
+-   `TypeConstraint` **[string][197]** > =new Map&lt;string, TypeConstraint>() -
+-   `ordinal` **[number][196]** \-
+-   `name` **[string][197]** \-
+-   `description` **[string][197]** \-
+-   `optional` **[boolean][200]** \-
+-   `default` **[string][197]** ='' -
+-   `status` **[SpecificationStatus][215]** =SpecificationStatus.None -
+-   `error` **[string][197]** if defined, holds error detail. status is probably MISMATCH.
 
 ## ReturnInfo
 
@@ -1253,10 +1218,10 @@ Information about a return value
 
 ### Properties
 
--   `type` **[string][205]** ='' -
--   `description` **[string][205]** \-
--   `TypeConstraint` **[string][205]** > =new Map&lt;string, TypeConstraint>() -
--   `status` **[SpecificationStatus][222]** =SpecificationStatus.None -
+-   `type` **[string][197]** ='' -
+-   `description` **[string][197]** \-
+-   `TypeConstraint` **[string][197]** > =new Map&lt;string, TypeConstraint>() -
+-   `status` **[SpecificationStatus][215]** =SpecificationStatus.None -
 
 ## FICallback
 
@@ -1405,330 +1370,316 @@ Calls back with ClassInfo and associated text for each class in source
 
 [61]: #skiptop
 
-[62]: #skipwhite
+[62]: #pastwhite
 
-[63]: #findwhite
+[63]: #parameters-18
 
-[64]: #parameters-18
+[64]: #skipwhite
 
-[65]: #readnextword
+[65]: #findwhite
 
 [66]: #parameters-19
 
-[67]: #skipimport
+[67]: #readnextword
 
-[68]: #skipexport
+[68]: #parameters-20
 
-[69]: #skiprequire
+[69]: #skipimport
 
-[70]: #readtypedef
+[70]: #skipexport
 
-[71]: #parameters-20
+[71]: #skiprequire
 
-[72]: #getfunctionname
+[72]: #nextend
 
 [73]: #parameters-21
 
-[74]: #extractfunctioninfo
+[74]: #readsourceline
 
 [75]: #parameters-22
 
-[76]: #extractpropertyinfo
+[76]: #readtypedef
 
 [77]: #parameters-23
 
-[78]: #getclassname
+[78]: #getfunctionname
 
 [79]: #parameters-24
 
-[80]: #getextends
+[80]: #extractmethodinfo
 
 [81]: #parameters-25
 
-[82]: #getimplements
+[82]: #derivetypefromvalue
 
 [83]: #parameters-26
 
-[84]: #findmixins
+[84]: #mybracketextract
 
 [85]: #parameters-27
 
-[86]: #extractenuminfo
+[86]: #extractconstraints
 
 [87]: #parameters-28
 
-[88]: #extracttypedefinfo
+[88]: #sourcereader-1
 
 [89]: #parameters-29
 
-[90]: #gathercommentmeta
+[90]: #skiptop-1
 
-[91]: #parameters-30
+[91]: #pastwhite-1
 
-[92]: #sourcereader-1
+[92]: #parameters-30
 
-[93]: #parameters-31
+[93]: #skipwhite-1
 
-[94]: #properties-1
+[94]: #findwhite-1
 
-[95]: #skiptop-1
+[95]: #parameters-31
 
-[96]: #skipwhite-1
+[96]: #readnextword-1
 
-[97]: #findwhite-1
+[97]: #parameters-32
 
-[98]: #parameters-32
+[98]: #skipimport-1
 
-[99]: #readnextword-1
+[99]: #skipexport-1
 
-[100]: #parameters-33
+[100]: #skiprequire-1
 
-[101]: #skipimport-1
+[101]: #nextend-1
 
-[102]: #skipexport-1
+[102]: #parameters-33
 
-[103]: #skiprequire-1
+[103]: #readsourceline-1
 
-[104]: #readtypedef-1
+[104]: #parameters-34
 
-[105]: #parameters-34
+[105]: #readtypedef-1
 
-[106]: #getfunctionname-1
+[106]: #parameters-35
 
-[107]: #parameters-35
+[107]: #getfunctionname-1
 
-[108]: #extractfunctioninfo-1
+[108]: #parameters-36
 
-[109]: #parameters-36
+[109]: #extractmethodinfo-1
 
-[110]: #extractpropertyinfo-1
+[110]: #parameters-37
 
-[111]: #parameters-37
+[111]: #derivetypefromvalue-1
 
-[112]: #getclassname-1
+[112]: #parameters-38
 
-[113]: #parameters-38
+[113]: #mybracketextract-1
 
-[114]: #getextends-1
+[114]: #parameters-39
 
-[115]: #parameters-39
+[115]: #extractconstraints-1
 
-[116]: #getimplements-1
+[116]: #parameters-40
 
-[117]: #parameters-40
+[117]: #typecheck
 
-[118]: #findmixins-1
+[118]: #typecheck-module
 
-[119]: #parameters-41
+[119]: #valuetype
 
-[120]: #extractenuminfo-1
+[120]: #none
 
-[121]: #parameters-42
+[121]: #number
 
-[122]: #extracttypedefinfo-1
+[122]: #string
 
-[123]: #parameters-43
+[123]: #boolean
 
-[124]: #gathercommentmeta-1
+[124]: #object
 
-[125]: #parameters-44
+[125]: #array
 
-[126]: #typecheck
+[126]: #regex
 
-[127]: #typecheck-module
+[127]: #typeconstraint
 
-[128]: #valuetype
+[128]: #parameters-41
 
-[129]: #none
+[129]: #properties-1
 
-[130]: #number
+[130]: #test
 
-[131]: #string
+[131]: #parameters-42
 
-[132]: #boolean
+[132]: #tostring
 
-[133]: #object
+[133]: #describe
 
-[134]: #array
+[134]: #elementchecktype
 
-[135]: #regex
+[135]: #none-1
 
-[136]: #typeconstraint
+[136]: #all
 
-[137]: #properties-2
+[137]: #random
 
-[138]: #test
+[138]: #step
 
-[139]: #parameters-45
+[139]: #firstthenstep
 
-[140]: #tostring
+[140]: #firstthenrandom
 
-[141]: #describe
+[141]: #valuetypefromstring
 
-[142]: #elementchecktype
+[142]: #parameters-43
 
-[143]: #none-1
+[143]: #stringfromvaluetype
 
-[144]: #all
+[144]: #parameters-44
 
-[145]: #random
+[145]: #parseconstraintstomap
 
-[146]: #step
+[146]: #parameters-45
 
-[147]: #firstthenstep
+[147]: #parseconstraints
 
-[148]: #firstthenrandom
+[148]: #parameters-46
 
-[149]: #valuetypefromstring
+[149]: #validate
 
-[150]: #parameters-46
+[150]: #parameters-47
 
-[151]: #stringfromvaluetype
+[151]: #types
 
-[152]: #parameters-47
+[152]: #types-module
 
-[153]: #parseconstraintstomap
+[153]: #scopemodifiers
 
-[154]: #parameters-48
+[154]: #properties-2
 
-[155]: #parseconstraints
+[155]: #sourceinfo
 
-[156]: #parameters-49
+[156]: #properties-3
 
-[157]: #validate
+[157]: #functioninfo
 
-[158]: #parameters-50
+[158]: #properties-4
 
-[159]: #types
+[159]: #classinfo
 
-[160]: #types-module
+[160]: #properties-5
 
-[161]: #scopemodifiers
+[161]: #propertyinfo
 
-[162]: #properties-3
+[162]: #properties-6
 
-[163]: #sourceinfo
+[163]: #enuminfo
 
-[164]: #properties-4
+[164]: #properties-7
 
-[165]: #functioninfo
+[165]: #enumvalueinfo
 
-[166]: #properties-5
+[166]: #properties-8
 
-[167]: #classinfo
+[167]: #typedefform
 
-[168]: #properties-6
+[168]: #primitive
 
-[169]: #propertyinfo
+[169]: #object-1
 
-[170]: #properties-7
+[170]: #array-1
 
-[171]: #enuminfo
+[171]: #function
 
-[172]: #properties-8
+[172]: #typedefinfo
 
-[173]: #enumvalueinfo
+[173]: #properties-9
 
-[174]: #properties-9
+[174]: #apiinfo
 
-[175]: #typedefform
+[175]: #properties-10
 
-[176]: #primitive
+[176]: #specificationstatus
 
-[177]: #object-1
+[177]: #none-2
 
-[178]: #array-1
+[178]: #okay
 
-[179]: #function
+[179]: #badconstraint
 
-[180]: #typedefinfo
+[180]: #nodoc
 
-[181]: #properties-10
+[181]: #mismatch
 
-[182]: #apiinfo
+[182]: #parameterinfo
 
 [183]: #properties-11
 
-[184]: #specificationstatus
+[184]: #returninfo
 
-[185]: #none-2
+[185]: #properties-12
 
-[186]: #okay
+[186]: #ficallback
 
-[187]: #badconstraint
+[187]: #picallback
 
-[188]: #nodoc
+[188]: #eicallback
 
-[189]: #mismatch
+[189]: #ticallback
 
-[190]: #parameterinfo
+[190]: #cicallback
 
-[191]: #properties-12
+[191]: #functioninfo
 
-[192]: #returninfo
+[192]: #classinfo
 
-[193]: #properties-13
+[193]: #propertyinfo
 
-[194]: #ficallback
+[194]: #enuminfo
 
-[195]: #picallback
+[195]: #typedefinfo
 
-[196]: #eicallback
+[196]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[197]: #ticallback
+[197]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[198]: #cicallback
+[198]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[199]: #functioninfo
+[199]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[200]: #classinfo
+[200]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[201]: #propertyinfo
+[201]: #docoptions
 
-[202]: #enuminfo
+[202]: #sourceinfo
 
-[203]: #typedefinfo
+[203]: #ficallback
 
-[204]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[204]: #picallback
 
-[205]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[205]: #cicallback
 
-[206]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[206]: #eicallback
 
-[207]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[207]: #ticallback
 
-[208]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[208]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[209]: #docoptions
+[209]: #valuetype
 
-[210]: #sourceinfo
+[210]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map
 
-[211]: #ficallback
+[211]: #typeconstraint
 
-[212]: #picallback
+[212]: #scopemodifiers
 
-[213]: #cicallback
+[213]: #parameterinfo
 
-[214]: #eicallback
+[214]: #returninfo
 
-[215]: #ticallback
+[215]: #specificationstatus
 
-[216]: #valuetype
+[216]: #apiinfo
 
-[217]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map
+[217]: #enumvalueinfo
 
-[218]: #typeconstraint
-
-[219]: #scopemodifiers
-
-[220]: #parameterinfo
-
-[221]: #returninfo
-
-[222]: #specificationstatus
-
-[223]: #apiinfo
-
-[224]: #enumvalueinfo
-
-[225]: #typedefform
+[218]: #typedefform

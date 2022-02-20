@@ -87,11 +87,8 @@ export function readModuleDescription(source:string) {
         if(reading) {
             if(!ln) break;
             if (ln.charAt(0) === '*') ln = ln.substring(1).trim()
-            let eol = ln.length
-            if (ln.charAt(1) === '*') {
-                eol = ln.indexOf('*/')
-                if(eol == -1) eol = ln.length
-            }
+            let eol = ln.indexOf('*/')
+            if(eol == -1) eol = ln.length;
             let dl = ln.substring(0, eol)
             while(dl.charAt(0) === '/') dl = dl.substring(1)
             while(dl.charAt(0) === '*') dl = dl.substring(1)

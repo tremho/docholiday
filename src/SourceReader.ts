@@ -44,7 +44,10 @@ export class SourceReader {
         ['/*', '*/']
     ]
 
-    constructor(srcText, ext) {
+    constructor(
+        srcText:string, // the source code content
+        ext:string // either '.js' for javascript or '.ts' for typescript <oneOf=".ts, .js>
+    ) {
         this.text = srcText
         this.fileType = ext == '.js' ? 'javascript' : ext === '.ts' ? 'typescript' : 'unknown'
         this.skipTop()
@@ -382,7 +385,12 @@ export class SourceReader {
         // }
         let pdec = this.text.substring(opi+1, cpi)
         let oti = pdec.indexOf('<')
-        let ahi = pdec.indexOf('{')
+        let ahi = -1
+        let am = pdec.match(/:\s*{/)
+        if(am) {
+            ahi = pdec.indexOf('{',am.index)
+        }
+
         if(oti === -1) oti = ahi
         if(oti !== -1) {
             // craziness if we have to handle a template
@@ -518,6 +526,7 @@ export class SourceReader {
             if(this.text.charAt(n) === ')') n++
             this.skipWhite()
             if (this.text.charAt(n) === ':' || this.text.substr(n, 2) === '=>') {
+                // n = this.pastWhite(this.text, n+1)
                 let bs = this.text.indexOf('{', n+1)
                 if(bs === -1) bs = this.text.length
                 if(this.text.charAt(n) === '=') {
@@ -531,7 +540,7 @@ export class SourceReader {
                 let aht = ''
                 if(!btwn) {
                     let ahi = bs
-                    let {end} = this.findBracketBoundaries(bs)
+                    let {start, end} = this.findBracketBoundaries(bs)
                     let ahe = end
                     aht = this.text.substring(ahi, ahe+1)
                     bs = this.text.indexOf('{', ahe+1)
@@ -643,8 +652,14 @@ export class SourceReader {
             fullsrc = this.text.substring(this.pos, n)
         }
         let name = this.getFunctionName(inClass, fullsrc)
+        if(inClass && name && name.indexOf('=') !== -1) return fi
         if (name || (inClass && fullsrc.trim().charAt(0) === '(')) {
-            if(inClass && fullsrc.indexOf('=') !== -1) {
+            let ei = fullsrc.indexOf('=')
+            let pi = fullsrc.indexOf('(')
+            let pe = fullsrc.indexOf(')', pi+1)
+            if(pe === -1) pe = fullsrc.length
+            if(ei >= pi+1 || ei < pe) ei = -1
+            if(inClass && ei !== -1) {
                 return fi
             }
             let longSrc = fullsrc.trim().substring(0, fullsrc.indexOf(name))
