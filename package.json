@@ -1,6 +1,6 @@
 {
   "name": "@tremho/doc-holiday",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -17,7 +17,7 @@
     "moduleDemo": "npm run build && node build/cases/moduleDemo.js",
     "selfdoc": "npm run go index.ts src/** --title=\"Doc-Holiday API\" "
   },
-  "keywords": [],
+  "keywords": ["documentation","javascript", "typescript", "jsdoc", "markdown", "html", "specifications", "diagrams", "API"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
