@@ -22,7 +22,7 @@ import * as TypeCheck from "./TypeCheck"
 import {TypeConstraint} from "./TypeCheck";
 
 // RegExp pattern for recognizing a constraint declaration
-const constraintRE = /<.+>/g
+const constraintRE = /<[^>]+>/g
 
 /**
  * The primary source parsing object.

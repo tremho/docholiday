@@ -145,6 +145,9 @@ class ConstraintConflictError extends ConstraintError {
 export class TypeConstraint {
     /** The type this constraint applies to */
     public readonly type:string;
+
+    public badName?:string; // defined only if we encounter an unrecognized constraint keyword
+
     /** a freeform note that appears in comments. No runtime verification. */
     public note?:string
 
@@ -159,10 +162,12 @@ export class TypeConstraint {
     }
 
     toString() {
+        if(this.badName) return `"${this.badName}" is not a recognized constraint for ${this.type}`
         if(this.note) return this.note;
         return `- No Constraint`
     }
     describe() {
+        if(this.badName) return `"${this.badName}" is not a recognized constraint for ${this.type}`
         if(this.note) return this.note;
         return 'No Constraint'
     }
@@ -270,7 +275,7 @@ class NumberConstraint extends TypeConstraint {
         if(this.min !== undefined) keys.push(`Minimum value is ${this.min}`)
         if(this.max !== undefined) keys.push(`Maximum value is ${this.max}`)
         if(this.maxx !== undefined) keys.push(`Maximum value is less than ${this.maxx}`)
-        if(this.note) keys.push(this.note)
+        if(this.note || this.badName) keys.push(super.describe())
         return keys.length ? keys.join('\n') : super.describe()
 
     }
@@ -385,7 +390,7 @@ class StringConstraint extends TypeConstraint {
         if(this.notContains) keys.push(`must NOT contain substring "${this.notContains}"`)
         if(this.match) keys.push(`must match Regular Expression "${this.match}"`)
         if(this.notMatch) keys.push(`must NOT match RegExp "${this.notMatch}"`)
-        if(this.note) keys.push(this.note)
+        if(this.note || this.badName) keys.push(super.describe())
         return keys.length ? keys.join('\n') : super.describe()
     }
 
@@ -405,14 +410,110 @@ class ObjectConstraint extends TypeConstraint {
     public canSerialize?:boolean // object must survive standard js (structured clone) serialization (i.e. stringify w/o error)
     public noFalseyProps?:boolean // all property values must evaluate at truthy
     public noTruthyProps?:boolean // all property values must evaluate as falsey
-    public instanceOf?:string // object must pass the instanceof test on this value
+    public instanceOf?:string // object must have been constructed as this object name
+    public notInstanceOf?: string // object must not be of this instance type name
 
     constructor() {
         super('object')
     }
     test(value) {
         super.test(value)
-    }
+
+        if(this.empty && this.notEmpty) {
+            throw new ConstraintConflictError('empty')
+        }
+        if(this.hasProperties && this.notHasProperties) {
+            let collisions:string[] = []
+            for(let has of this.hasProperties) {
+                if(this.notHasProperties.indexOf(has) !== -1) {
+                    collisions.push(has)
+                }
+            }
+            if(collisions.length) {
+                throw new ConstraintConflictError('hasProperties "'+collisions.join(',')+'"')
+            }
+        }
+        if(this.empty) {
+            if(Object.getOwnPropertyNames(value).length) {
+                throw new ConstraintFail('empty', value)
+            }
+        }
+        if(this.notEmpty) {
+            if(!Object.getOwnPropertyNames(value).length) {
+                throw new ConstraintFail('!empty', value)
+            }
+        }
+        if(this.hasProperties) {
+            for(let has of this.hasProperties) {
+                if(!value.hasOwnProperty(has)) {
+                    throw new ConstraintFail('hasProperties', has)
+                }
+            }
+        }
+        if(this.notHasProperties) {
+            for(let hasnot of this.notHasProperties) {
+                if(value.hasOwnProperty(hasnot)) {
+                    throw new ConstraintFail('!hasProperties', hasnot)
+                }
+            }
+        }
+        if(this.notNested) {
+            for(let p of Object.getOwnPropertyNames(value)) {
+                let v = value[p]
+                if(typeof v === 'object') {
+                    if(!Array.isArray(v)) {
+                        throw new ConstraintFail('notNested', p)
+                    }
+                }
+            }
+        }
+        if(this.noPrototype) {
+            let prot = Object.getPrototypeOf(value)
+            let name = prot && prot.constructor.name
+            if(name && name !=='Object') {
+                throw new ConstraintFail('noPrototype', value)
+            }
+        }
+        if(this.canSerialize) {
+            let json;
+            try {
+                json = JSON.stringify(value)
+            } catch(e) {
+            }
+            if(!json) {
+                throw new ConstraintFail('canSerialize', value)
+            }
+
+        }
+        if(this.noFalseyProps) {
+            for(let p of Object.getOwnPropertyNames(value)) {
+                let v = value[p]
+                if(!v) {
+                    throw new ConstraintFail('noFalseyProps', p)
+                }
+            }
+        }
+        if(this.noTruthyProps) {
+            for(let p of Object.getOwnPropertyNames(value)) {
+                let v = value[p]
+                if(v) {
+                    throw new ConstraintFail('noTruthyProps', p)
+                }
+            }
+
+        }
+        if(this.instanceOf) {
+            if(value.constructor.name !== this.instanceOf) {
+                throw new ConstraintFail('instanceOf ('+this.instanceOf+')', value.constructor.name)
+            }
+        }
+        if(this.notInstanceOf) {
+            if(value.constructor.name === this.notInstanceOf) {
+                throw new ConstraintFail('!instanceOf', this.notInstanceOf)
+            }
+
+        }
+     }
     toString() {
         const keys:string[] = []
         if(this.empty) keys.push(`Empty`)
@@ -425,6 +526,7 @@ class ObjectConstraint extends TypeConstraint {
         if(this.noFalseyProps) keys.push(`No Falsey Props`)
         if(this.noTruthyProps) keys.push(`No Truthy Props`)
         if(this.instanceOf) keys.push(`Instance Of = ${this.instanceOf}`)
+        if(this.notInstanceOf) keys.push(`Not an instance of ${this.notInstanceOf}`)
         if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
@@ -440,7 +542,8 @@ class ObjectConstraint extends TypeConstraint {
         if(this.noFalseyProps) keys.push(`object can contain no properties that evaluate as false`)
         if(this.noTruthyProps) keys.push(`object can contain no properties that evaluate as true`)
         if(this.instanceOf) keys.push(`object must be an instance of "${this.instanceOf}"`)
-        if(this.note) keys.push(this.note)
+        if(this.notInstanceOf) keys.push(`object must not be an instance of "${this.notInstanceOf}"`)
+        if(this.note || this.badName) keys.push(super.describe())
         return keys.length ? keys.join('\n') : super.describe()
     }
 
@@ -456,6 +559,9 @@ export enum ElementCheckType {
     all,    // test all the elements
     random, // test up to a given number (p1) of elements, randomly chosen
     step,   // test every (p1) elements
+    first,  // test all up to (p1) elements, then stop
+    last,   // test all of the last (p1) elements
+    firstThenLast, // Test the first (p1) elements, and the last (p2) elements
     firstThenStep, // test all up to (p1) elements, then every (p2) thereafter
     firstThenRandom// test all up to (p1) elements, then up to (p2) of the remaining, chosen at random
 }
@@ -480,6 +586,131 @@ class ArrayConstraint extends TypeConstraint {
         if(!Array.isArray(value)) {
             throw new ConstraintBasicTypeError(value,'array')
         }
+        let length = value.length
+        if(this.minLength) {
+            if(length < this.minLength) {
+                throw new RangeConstraintError(length, this.minLength, 'Array Length')
+            }
+        }
+        if(this.maxLength) {
+            if(length > this.maxLength) {
+                throw new RangeConstraintError(length, this.maxLength, 'Array Length')
+            }
+        }
+        if(this.contains && this.notContains) {
+            throw new ConstraintConflictError('contains')
+        }
+        if(this.contains || this.notContains) {
+            let comp = this.contains || this.notContains
+            let not = !!this.notContains
+            if(value.indexOf(comp) !== -1) {
+                if(not) throw new ConstraintFail('!contains', this.notContains)
+            } else {
+                if(!not) throw new ConstraintFail('contains', this.contains)
+            }
+        }
+        if(this.elementConstraints || this.elementCheckType) {
+            let checkType = this.elementCheckType === undefined ? ElementCheckType.all : this.elementCheckType
+            let i = 0;
+            let count = 0;
+            let step = 1;
+            let firstCount = 0;;
+            let thenCount = 0;
+            let counting = false;
+            let tested = {}
+            switch(checkType) {
+                case ElementCheckType.none:
+                    firstCount = 0;
+                    thenCount = 0;
+                    counting = false;
+                    break;
+                case ElementCheckType.all:
+                    firstCount = length;
+                    step = 1;
+                    thenCount = 0;
+                    counting = true;
+                    break;
+                case ElementCheckType.first:
+                    firstCount = parseInt(''+this.elementCheckParameter)
+                    step = 1;
+                    thenCount = 0;
+                    counting = true;
+                    break;
+                case ElementCheckType.last:
+                    firstCount = 0;
+                    step = 1;
+                    thenCount = length - this.elementCheckParameter
+                    counting = false;
+                    break;
+                case ElementCheckType.firstThenLast:
+                    firstCount = parseInt(''+this.elementCheckParameter)
+                    thenCount = length - this.elementCheckParameter
+                    if(thenCount < 0) thenCount = length;
+                    step = 1;
+                    counting = true;
+                    break;
+                case ElementCheckType.step:
+                    firstCount = length;
+                    thenCount = 0;
+                    counting = true;
+                    step = parseInt(''+this.elementCheckParameter)
+                    break;
+                case ElementCheckType.random:
+                    firstCount = 0;
+                    thenCount = parseInt(''+this.elementCheckParameter)
+                    step = 0;
+                    counting = true;
+                    break;
+                case ElementCheckType.firstThenStep:
+                    firstCount = parseInt(''+this.elementCheckParameter)
+                    thenCount = length - firstCount
+                    step = parseInt(''+this.elementCheckParameter2)
+                    counting = true;
+                    break;
+                case ElementCheckType.firstThenRandom:
+                    firstCount = parseInt(''+this.elementCheckParameter)
+                    thenCount = parseInt(''+this.elementCheckParameter2)
+                    step = 0
+                    counting = true;
+                    break;
+            }
+            while(i < length) {
+                if(counting) {
+                    let ev = value[i]
+                    let t:string = typeof ev
+                    if(Array.isArray(ev)) t = 'array'
+                    let m = (this.elementConstraints as unknown as Map<string, TypeConstraint>)
+                    let c = m && m.get(t)
+                    let tc = c || parseConstraints(t, '')
+                    if(tc) tc.test(ev)
+                    count++
+                }
+                if((checkType === ElementCheckType.last || checkType === ElementCheckType.firstThenLast) && i === thenCount) {
+                    counting = true
+                }
+                if(checkType === ElementCheckType.firstThenLast && i === firstCount) {
+                    counting = false
+                }
+
+                if(count >= firstCount) {
+                    if(count >= firstCount+thenCount) {
+                        break
+                    }
+                }
+                if(step) {
+                    i += step
+                } else {
+                    while(true) {
+                        let rr = Math.floor(Math.random() * (length-count))
+                        i = count+rr
+                        if(i < length && !tested[i]) {
+                            tested[i] = true
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
     toString() {
         const keys:string[] = []
@@ -487,9 +718,8 @@ class ArrayConstraint extends TypeConstraint {
         if(this.maxLength) keys.push(`Max Length = ${this.maxLength}`)
         if(this.contains) keys.push(`Contains = ${this.contains}`)
         if(this.notContains) keys.push(`!Contains = ${this.notContains}`)
-        if(this.elementConstraints && this.elementConstraints.length) keys.push(`Each = ${this.elementConstraints}`)
-        if(this.elementCheckType) keys.push(`Check Type = ${checkTypeToString(this.elementCheckType, this.elementCheckParameter, this.elementCheckParameter2)}`)
-        if(this.elementConstraints) keys.push(`Each = ${this.elementConstraints.toString().substring(2).replace(/,/g, ',')}`)
+        if(this.elementConstraints) keys.push(`each element of the array has the following constraints by type ${listEachConstraints(this.elementConstraints)}`)
+        if(this.elementCheckType) keys.push(`(elements will be tested using the ${checkTypeToString(this.elementCheckType,this.elementCheckParameter,this.elementCheckParameter2)} method)`)
         if(this.note) keys.push(this.note)
         return keys.length ? '- '+keys.join(',') : super.toString()
     }
@@ -499,11 +729,23 @@ class ArrayConstraint extends TypeConstraint {
         if(this.maxLength) keys.push(`array must contain no more than ${this.maxLength} elements`)
         if(this.contains) keys.push(`array must contain element value "${this.contains}"`)
         if(this.notContains) keys.push(`array must not contain an element value "${this.notContains}"`)
-        if(this.elementConstraints && this.elementConstraints.length) keys.push(`each element of the array has the following constraints: "${this.elementConstraints.toString().substring(2).replace(/,/g, ',')}`)
-        if(this.elementCheckType) keys.push(`(elements will be tested using the ${checkTypeToString(this.elementCheckType)} method)`)
-        if(this.note) keys.push(this.note)
+        if(this.elementConstraints) keys.push(`each element of the array has the following constraints by type ${listEachConstraints(this.elementConstraints)}`)
+        if(this.elementCheckType) keys.push(`(elements will be tested using the ${checkTypeToString(this.elementCheckType,this.elementCheckParameter,this.elementCheckParameter2)} method)`)
+        if(this.note || this.badName) keys.push(super.describe())
         return keys.length ? keys.join('\n') : super.describe()
     }
+}
+
+function listEachConstraints(cmap) {
+    let out = ''
+    let types = cmap.keys()
+    let entries = cmap.entries()
+    let entry;
+    while((entry = entries.next().value)) {
+        out += '<br/><b>'+entry[0]+ ' elements:</b><br/>&nbsp;&nbsp; -'
+        out += entry[1].describe().replace(/\n/g, '<br/>&nbsp;&nbsp; - ')
+    }
+    return out
 }
 
 /**
@@ -544,9 +786,7 @@ export function stringFromValueType(vt:ValueType): string {
 }
 
 /**
- * Read either a value or a list from a the right-side string parsed from an assignment expression.
- * N.B.:  Quotes will be stripped, but note that the first parsing split that called us here does not respect the quotes, // todo
- * so unexpected results may occur.
+ * Read either a value or a list from an expression value
  * @param str
  */
 function constraintListParse(str = '') {
@@ -554,7 +794,7 @@ function constraintListParse(str = '') {
     if(str.charAt(0) === '"' || str.charAt(0) === "'") {
         str = str.substring(1, str.length-1)
     }
-    if(str.indexOf('|') !== -1) {
+    if(str.indexOf(',') !== -1) {
         return str.split(',') // return the split array
     }
     if (isFinite(Number(str))) {
@@ -563,13 +803,32 @@ function constraintListParse(str = '') {
     return str; // return the unquoted string value
 }
 
+/**
+ * Used to parse the type+constraints blocks from an "each" directive list
+ * @param str
+ */
+function eachListParse(str = '') {
+    let map = new Map<string, TypeConstraint>()
+    let esplit = str.split('|')
+    for(let tblock of esplit) {
+        let ci = tblock.indexOf(',')
+        if(ci !== -1) {
+            let type = tblock.substring(0, ci).trim()
+            let cdef = tblock.substring(ci+1)
+            let constraint = parseConstraints(type, cdef) || new TypeConstraint()
+            map.set(type, constraint)
+        }
+    }
+    return map
+}
+
 
 /**
  * Parse out the checkType and return the resulting type name and the parsed parameters in a structure.
  * @param ctStr
  * @return {{string}name,{number}[p1],{number}[p2]}
  */
-function parseCheckType(ctStr:string): {name:string, p1?:number, p2?:number} {
+function parseCheckType(ctStr:string = ''): {name:string, p1?:number, p2?:number} {
     let opi = ctStr.indexOf('(')
     if(opi === -1) opi = ctStr.length
     let name = ctStr.substring(0,opi)
@@ -590,6 +849,12 @@ function checkTypeToString(ct:ElementCheckType, p1?:number|string, p2?:number|st
             return `random(${p1})`
         case ElementCheckType.step:
             return `step(${p1})`
+        case ElementCheckType.first:
+            return `first(${p1})`
+        case ElementCheckType.last:
+            return `last(${p1})`
+        case ElementCheckType.firstThenLast:
+            return `firstThenLast(${p1},${p2})`
         case ElementCheckType.firstThenStep:
             return `firstThenStep(${p1},${p2})`
         case ElementCheckType.firstThenRandom:
@@ -605,6 +870,9 @@ function checkTypeFromString(ctstr:string) : ElementCheckType {
     switch(ctstr.trim().toLowerCase()) {
         case 'random': return ElementCheckType.random;
         case 'step': return ElementCheckType.step;
+        case 'first': return ElementCheckType.first;
+        case 'last': return ElementCheckType.last;
+        case 'firstthenlast': return ElementCheckType.firstThenLast;
         case 'firstthenstep': return ElementCheckType.firstThenStep;
         case 'firstthenrandom': return ElementCheckType.firstThenRandom;
         case 'none': return ElementCheckType.none
@@ -639,19 +907,33 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
     let valueType = valueTypeFromString(type)
     let cblock = block.trim()
     // get any constraint parameters
-    let fpi = cblock.indexOf(('('))
-    if(fpi !== -1) {
+    let fpi = cblock.indexOf('(')
+    while(fpi !== -1) {
         let cpi = cblock.indexOf(')', fpi)
         if(cpi === -1) cpi = cblock.length;
         let swap = cblock.substring(fpi, cpi).replace(/,/g, ';;')
         cblock = cblock.substring(0,fpi) + swap + cblock.substring(cpi)
+        fpi = cblock.indexOf('(', cpi)
     }
 
     const expressions = cblock .split(',')
-    expressions.forEach(expr => {
+    for(let expr of expressions) {
         let expVal;
+        let params;
         let not = false;
         expr = expr.trim()
+        let cpi = expr.indexOf('(')
+        if(cpi !== -1) {
+            params = expr.substring(cpi).replace(/;;/g, ',').trim()
+            if(params.charAt(0) === '(') params = params.substring(1)
+            if(params.charAt(params.length-1) === ')') params = params.substring(0, params.length-1)
+            expr = expr.substring(0,cpi).trim()
+            if(expr === 'each') {
+                expVal = eachListParse(params)
+            } else {
+                expVal = constraintListParse(params)
+            }
+        }
         if(expr.charAt(0) === '!') {
             not = true;
             expr = expr.substring(1)
@@ -661,8 +943,12 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
             if(p.length > 2) {
                 p[1] = p.slice(1).join('=')
             }
-            expr = p[0]
-            expVal = constraintListParse(p[1].replace(/;;/g, ',')) // fix hack
+            expr = p[0].trim()
+            if(expr === 'each') {
+                expVal = eachListParse(p[1])
+            } else {
+                expVal = constraintListParse(p[1])
+            }
 
         }
         expr = expr.trim().toLowerCase()
@@ -698,6 +984,13 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                     case 'maxx':
                         constraint.maxx = expVal;
                         break;
+
+                    case 'note':
+                        constraint.note = expVal
+                        break;
+                    default:
+                        constraint.badName = expr
+                        break;
                 }
 
                 break;
@@ -708,10 +1001,6 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                     case 'noconstraint':
                     case 'no constraint':
                         return constraint; // early exit if we encounter "- No Constraint"
-
-                    case 'note':
-                        constraint.note = expVal
-                        break;
 
                     case 'minlength':
                         constraint.minLength = expVal
@@ -731,6 +1020,12 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                     case 'match':
                         not ? constraint.notMatch = expVal : constraint.match = expVal
                         break;
+                    case 'note':
+                        constraint.note = expVal
+                        break;
+                    default:
+                        constraint.badName = expr
+                        break;
                 }
                 break;
             case ValueType.object:
@@ -747,6 +1042,7 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                         break;
                     case 'hasproperties':
                     case 'has properties':
+                        if(typeof expVal === 'string') expVal = [expVal]
                         not ? constraint.notHasProperties = expVal : constraint.hasProperties = expVal;
                         break;
                     case 'notnested':
@@ -771,7 +1067,14 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                         break;
                     case 'instanceof':
                     case 'instance of':
-                        constraint.instanceOf = expVal
+                        if(not) constraint.notInstanceOf = expVal
+                        else constraint.instanceOf = expVal
+                        break;
+                    case 'note':
+                        constraint.note = expVal
+                        break;
+                    default:
+                        constraint.badName = expr
                         break;
 
                 }
@@ -797,15 +1100,21 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                         break;
                     case 'checktype':
                     case 'check type':
-                        const pct = parseCheckType(expVal)
+                        let psplit = (params || '').split(',')
+                        const pct = parseCheckType(''+expVal)
                         constraint.elementCheckType = checkTypeFromString(pct.name)
-                        constraint.elementCheckParameter = pct.p1
-                        constraint.elementCheckParameter2 = pct.p2
+                        constraint.elementCheckParameter = psplit[0] || pct.p1
+                        constraint.elementCheckParameter2 = psplit[1] || pct.p2
                         break;
                     case 'each':
-                        let type = expVal[0]
-                        let eCons = parseConstraints(type, '- '+ expVal.slice(1).join(','))
-                        constraint.elementConstraints = eCons;
+                        let type = 'any'
+                        constraint.elementConstraints = expVal
+                        break;
+                    case 'note':
+                        constraint.note = expVal
+                        break;
+                    default:
+                        constraint.badName = expr
                         break;
                 }
                 break;
@@ -814,7 +1123,7 @@ export function parseConstraints(type, block):TypeConstraint | undefined {
                 constraint = constraint || new TypeConstraint(stringFromValueType(valueType))
                 break;
         }
-    })
+    }
     return constraint || undefined
 
 }
@@ -829,7 +1138,11 @@ export function validate(
 
 ):boolean // returns true if value passes all constraint tests.
 {
-    let tc = parseConstraints(typeof value, constraintString || '')
+    let type:string = typeof value
+    if(type === 'object') {
+        if(Array.isArray(value)) type = 'array'
+    }
+    let tc = parseConstraints(type, constraintString || '')
     let ok:boolean = true
     try {
         if(tc) tc.test(value)

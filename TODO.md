@@ -13,15 +13,26 @@ parse is doing with it.  Problem is with the ad-hoc return dec (I believe) so it
 - [X] get rid of Not-JSDOC form 'errors'
 - [X] put a title at the top of the API.md output and remove the DocJS TOC.
 - 
-- [ ] verify that unrecognized constraint keyword results in error
-- [ ] verify use of <list> with comma delimeters in contraints (e.g. object hasProperties)
-- [ ] verify array processing, especially 'each'
+- [X] verify that unrecognized constraint keyword results in error
+- [X] verify use of <list> with comma delimeters in contraints (e.g. object hasProperties)
+- [X] verify array processing, especially 'each' -- define what this is better.
+- [X] fix the rendering of an each constraint
+
+Yeah, there's some fubar going on here.  Gonna refactor TypeCheck:
+- [X] note the badName on an unrecognized expr and report it accordingly
+- [X] change the forEach loops to for of
+- [X] make sure we handle note in each type group
+- [X] protect list delimiters inside quotes
+
+- [X] first, last, and firstThenLast added
+- [X] document these. Also - conflicts only throw at runtime.  Constraint docs may state contradictory values.
+- [X] test() for Object and Array types
 
 ##### Readiness for first publish
 
-- [ ] Finish docs and organize doc suite, API, readmes, etc.
-- [ ] Clean up scripts 
-- [ ] prepare and attach to Travis
+- [X] Finish docs and organize doc suite, API, readmes, etc.
+- [X] Clean up scripts 
+- [X] prepare and attach to Travis
 - [ ] verify clean tests
 - [ ] Prepare for npm publish
 - [ ] publish and check at npm
@@ -61,3 +72,6 @@ TODO - weird parsing stuff happening here.  Try other forms.
 - incremental stub creation and index to individually rendered module docs
 - post process to (a) remove ToC (b) rearrange order
 
+
+#### To read when I do the blog
+https://medium.com/swlh/why-is-nobody-talking-about-this-passive-income-method-85791d5350fc

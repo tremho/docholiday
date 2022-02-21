@@ -30,6 +30,9 @@ in a concise format in your comments.  This is expanded upon in the final
 documentation to render as a separately styled list of restrictions upon the value that is easy to note by those
 reading the documentation.
 
+Learn about constraints and how to use them [here](TypeCheck)
+
+
 If you are looking for a corresponding validation library you can use at runtime to enforce this in your code, we have
 that too! [the validate function](TypeCheck#validate) can be imported into your sources and used to check that a value passed at 
 runtime meets the specification documented.
