@@ -33,14 +33,15 @@ Yeah, there's some fubar going on here.  Gonna refactor TypeCheck:
 - [X] Finish docs and organize doc suite, API, readmes, etc.
 - [X] Clean up scripts 
 - [X] prepare and attach to Travis
-- [ ] verify clean tests
-- [ ] Prepare for npm publish
-- [ ] publish and check at npm
-- [ ] verify our module example is valid
-- [ ] make sure issues list is clean and has proper tags
+- [X] verify clean tests
+- [X] Prepare for npm publish
+- [X] publish and check at npm
+- [X] verify our module example is valid
+- [X] make sure issues list is clean and has proper tags
 
 ##### Use for Jove
 
+- [ ] start with Planet Facts
 - [ ] do Jove API docs with this
 - [ ] verify working well / add to issues list if not
 - [ ] write a blog-style article for Medium as announcement

@@ -1,6 +1,6 @@
 {
   "name": "@tremho/doc-holiday",
-  "version": "0.1.0-prerelease.5",
+  "version": "1.0.0"
   "description": "",
   "main": "index.js",
   "bin": {
@@ -37,6 +37,7 @@
   },
   "files": [
     "build/**/*",
+    "index.ts",
     "package.json",
     "README.md"
   ]

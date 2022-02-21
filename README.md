@@ -9,9 +9,9 @@ in a sensible fashion_
 [![TotalDownloads][total-downloads-image]][npm-url]
 [![Twitter Follow][twitter-image]][twitter-url]
 
-[build-status]: https://travis-ci.com/tremho/docholiday.svg?branch=master
+[build-status]: https://travis-ci.com/tremho/docholiday.svg?branch=main
 
-[build-url]: https://travis-ci.com/tremho/docholiday
+[build-url]: https://github.com/tremho/docholiday
 
 [npm-image]: http://img.shields.io/npm/v/@tremho/doc-holiday.svg
 
