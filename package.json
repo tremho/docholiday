@@ -7,7 +7,7 @@
     "doc-holiday": "build/index.js"
   },
   "scripts": {
-    "build": "rm -fr build && tsc && chmod +x build/index.js",
+    "build": "rm -fr build && tsc && chmod +x build/index.js && tsc -d index.ts && rm src/*.d.ts src/*.js index.js",
     "go": "npm run build && node build/index.js $*",
     "examples": "npm run go examples/*.ts",
     "focus": "npm run go examples/focus.ts",
@@ -37,7 +37,7 @@
   },
   "files": [
     "build/**/*",
-    "index.ts",
+    "index.d.ts",
     "package.json",
     "README.md"
   ]
