@@ -3,6 +3,30 @@
 _Simplified and organized documentation solution for Javascript and Typescript using existing JSDoc technologies
 in a sensible fashion_
 
+[![Build Status][build-status]][build-url]
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![TotalDownloads][total-downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[build-status]: https://travis-ci.com/tremho/docholiday.svg?branch=master
+
+[build-url]: https://travis-ci.com/tremho/docholiday
+
+[npm-image]: http://img.shields.io/npm/v/@tremho/doc-holiday.svg
+
+[npm-url]: https://npmjs.org/package/@tremho/doc-holiday
+
+[downloads-image]: http://img.shields.io/npm/dm/@tremho/doc-holiday.svg
+
+[total-downloads-image]: http://img.shields.io/npm/dt/@tremho/doc-holiday.svg?label=total%20downloads
+
+[twitter-image]: https://img.shields.io/twitter/follow/Tremho1.svg?style=social&label=Follow%20me
+
+[twitter-url]: https://twitter.com/Tremho1
+
+
+
 ### Avoid "Documentation Disillusionment"
 Perhaps you've lived this scenario, or are living it now: You have created your masterwork of code and have been
 generally good at commenting your functions, classes, and types using JSDoc syntax. Then you run it through JSDoc and
