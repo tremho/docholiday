@@ -5,6 +5,6 @@ templates/static
 templates/tmpl
 build/
 .dh-temp/
-examples/comp/
+docs/html
 node_modules/
 package-lock.json
