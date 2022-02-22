@@ -4,67 +4,24 @@
 
  ---------
 
+## focus
 
-<hr/>
+#### focus (Module)
 
-<a name="module_focus" id="module_focus"></a>
+doc checks
 
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    focus</h5>
+## addedFoobar
 
+Do something important
+blah blah blah
+This was added in version 7.3 to support foobars
 
+**Meta**
 
-<h4>focus (Module)</h4>
-<p>doc checks</p>
+-   **since**: 7.3
 
+[1]: #focus
 
-* [focus](#module_focus)
-    * [~Foo](#module_focus..Foo)
-        * [.compute(time)](#module_focus..Foo+compute) ⇒ `number`
+[2]: #focus-module
 
-
-<hr/>
-
-<a name="module_focus..Foo" id="module_focus..Foo"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    focus~Foo</h5>
-
-
-
-<p>The Foo class demonstrates
-how a simple class is documented</p>
-
-**Kind**: inner class of [`focus`](#module_focus)  
-**Access**: public  
-**Properties**
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| name | `string` |  | <ul> <li></li> </ul> |
-| seed | `string` | <code>&quot;\&quot;aklafg783yd8jccide-dkhei7s\&quot;&quot;</code> | <ul> <li></li> </ul> |
-| Foo.InnerClass | `class` |  | <p>This class is scoped within the Foo class</p> |
-| InnerClass.Foo.InnerClass | `string` |  | <p>a property of InnerClass</p> |
-| InnerClass.Foo.property | `string` |  | <p>another InnerClass property</p> |
-| InnerClass.Foo.method | `method` |  | <p>a method of InnerClass</p> |
-
-
-<hr/>
-
-<a name="module_focus..Foo+compute" id="module_focus..Foo+compute"></a>
-
-<h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    foo.compute(time) ⇒ `number`</h5>
-
-
-
-<p>Compute the sequence over the given time</p>
-
-**Kind**: instance method of [`Foo`](#module_focus..Foo)  
-**Returns**: `number` - <p>blah blah</p>  
-**Access**: public  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | `number` | <p>number of seconds</p>    <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: 33px">         <li>number must be an integer</li>         <li>number must be positive</li>    </ul> |
-
+[3]: #addedfoobar

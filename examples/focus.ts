@@ -1,27 +1,11 @@
 // doc checks
 
 
-// The Foo class demonstrates
-// how a simple class is documented
-export class Foo {
-    name:string
-    readonly seed:string = "aklafg783yd8jccide-dkhei7s"
 
-    // This class is scoped within the Foo class
-    InnerClass = class {
-        prop1:string // a property of InnerClass
-        prop2:number // another InnerClass property
+// Do something important
+// blah blah blah
+// This was added in version 7.3 to support foobars
+// {{{jsdoc tag="since"}}} 7.3
+export function addedFoobar() {
 
-        // a method of InnerClass
-        method() {
-        }
-    }
-
-    // Compute the sequence over the given time
-    compute(
-        time:number // number of seconds <positive, integer>
-    ): number {
-        // blah blah
-        return 0
-    }
 }

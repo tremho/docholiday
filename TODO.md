@@ -4,15 +4,16 @@ See the Github issues list for the official open-source project list of open ite
 
 ###### Post-first-publish review
 
-- [ ] d.ts file needed ◊
+- [X] d.ts file needed
 - [X] doc examples c&p errors from Foo.compute example -- is this a rendering issue or a stub problem? (if former, update rendering errata docs, if latter, fix)
 
 - [-] also in typedef examples... looks like rendering, but the LocObject and LLTuples examples are particularly irksome.  
 _this turns out to be artifacts introduced by GitHub pages._
 
-- [ ] linkage to filenames with spaces is broken.
-- [ ] jsdoc tag example does not show a jsdoc tag (and I'm not sure the example is proven, either)
-- [ ] the triple curly bracket seems to disappear. It is missing in extensions.md too.  backtick these puppies. also customRender api doc.
+- [X] linkage to filenames with spaces is broken.
+- [X] jsdoc tag example does not show a jsdoc tag (and I'm not sure the example is proven, either)
+- [X] Yep, turns out there's a bug.  Emitting @undefined 7.3 
+- [X] the triple curly bracket seems to disappear. It is missing in extensions.md too.  backtick these puppies. also customRender api doc.
 - [ ] plantUML should have a next link to publishing, and _that_ should have the next link to TOC.
 - [ ] publishing: _index.hd_ should say _index.md_
 - [ ] note the caveat about spaces in names in publishing edit while you are at it.
