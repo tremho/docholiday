@@ -34,7 +34,7 @@ For example:
 // Do something important
 // blah blah blah
 // This was added in version 7.3 to support foobars
-// <code><pre>{{{jsdoc tag="since"}}} 7.3 </pre></code>
+// &#123;&#123;&#123;jsdoc tag="since"&#125;&#125;&#125; 7.3 
 export function addedFoobar() {
 
 }
