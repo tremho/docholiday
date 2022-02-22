@@ -48,4 +48,9 @@ Alternately, you may be able to find templates for JSDoc that handle inconsisten
 It has been observed that DocumentationJS may duplicate the documentation for a class.  This behavior is being investigated,
 and may be addressed in a future update.
 
+##### GitHub Pages rendering
+As noted at the end of the [Publishing](publish) discusssion, the Markdown-to-HTML conversion of a GitHub pages publish operation
+may introduce unwanted literal html tags in its rendering that do not appear in a conventional markdown viewer.  This is independent
+of which JSDoc engine was used to generate the markdown output.  No particular workaround is known at this time.
+
 
