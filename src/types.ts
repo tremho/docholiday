@@ -1,3 +1,6 @@
+/*
+Type and Class structures of Doc-Holiday
+ */
 
 import {TypeConstraint} from "./TypeCheck";
 

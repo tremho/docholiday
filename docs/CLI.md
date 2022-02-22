@@ -44,7 +44,7 @@ typing `doc-holiday` without any arguments will give you the following help
 listing:
 
 ```
-doc-holiday                   
+ doc-holiday
 
 ------------------------
      doc-holiday
@@ -59,6 +59,9 @@ and [options] is one of:
  config=<file> -- same as above
  -c <file> -- same as above
  -c=<file> -- same as above
+
+--title <title> title to appear in API doc (markdown only)
+--title=<title> -- same as above
 
  --stubs-only -- Generate stubs to intermediate directory only
  --no-clean -- Do not clear intermediate directory before generation
@@ -97,7 +100,7 @@ of _doc-holiday_ when run.
 Options may appear in any order, or before or after any
 file globs provided with the command.
 
-###### title [=] _"title to use"_
+###### --title [=] _"title to use"_
 __Provide a title to appear in Markdown output__
 _(markdown only)_
 

@@ -4,8 +4,9 @@ Module for Constraint definitions and TypeCheck support
 
 /**
  * Enumeration of basic types
- * @see stringFromValueType
- * @see valueTypeFromString
+ *
+ * - see [stringFromValueType](#module_TypeCheck..stringFromValueType)
+ * - see [valueTypeFromString](#module_TypeCheck..valueTypeFromString)
  */
 export enum ValueType {
     none,
@@ -71,7 +72,6 @@ class RangeConstraintError extends ConstraintError {
         } else {
             this.message += `${rangeType} ${value} exceeds range maximum of ${comp}`
         }
-        this.message += 'Value is outside of range'
     }
 }
 
@@ -155,17 +155,28 @@ export class TypeConstraint {
         this.type = typeString.trim().toLowerCase()
     }
 
+    /**
+     * Perform a runtime test of the value
+
+     * returns without throw if test was okay, otherwise throws a ConstraintError explaining the violation.
+     *
+     * @param value - value to test against this constraint
+     *
+     * @throws {ConstraintError} Error is thrown if test fails its constraints
+     */
     test(value:any):void | never  {
         if(typeof value !== this.type) {
             throw new ConstraintBasicTypeError(value, this.type)
         }
     }
 
+    // Describes the constraint in printable terms (not really used, a bit redundant to describe)
     toString() {
         if(this.badName) return `"${this.badName}" is not a recognized constraint for ${this.type}`
         if(this.note) return this.note;
         return `- No Constraint`
     }
+    // describe the constraints in human terms.
     describe() {
         if(this.badName) return `"${this.badName}" is not a recognized constraint for ${this.type}`
         if(this.note) return this.note;
@@ -435,7 +446,7 @@ class ObjectConstraint extends TypeConstraint {
         }
         if(this.empty) {
             if(Object.getOwnPropertyNames(value).length) {
-                throw new ConstraintFail('empty', value)
+                throw new ConstraintFail('empty', 'object contains '+Object.getOwnPropertyNames(value).length+' props')
             }
         }
         if(this.notEmpty) {
@@ -1136,18 +1147,18 @@ export function validate(
     value:any, // The value to test for constraints. Must be one of the basic types supported by contraints
     constraintString:string // the constraints to test it against. Constraints listed must match the type being tested. Do not include < > brackets.
 
-):boolean // returns true if value passes all constraint tests.
+):string // returns '' if no violation, otherwise returns the error string of the ConstraintError encountered
 {
     let type:string = typeof value
     if(type === 'object') {
         if(Array.isArray(value)) type = 'array'
     }
     let tc = parseConstraints(type, constraintString || '')
-    let ok:boolean = true
+    let ok:string = ''
     try {
         if(tc) tc.test(value)
-    } catch(e) {
-        ok = false
+    } catch(e:any) {
+        ok = e.message || e.toString()
     }
     return ok
 

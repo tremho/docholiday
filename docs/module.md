@@ -11,7 +11,7 @@ to do what you want? Perhaps as part of a larger processing script?
 #### Installing and importing the module
 
 First, install doc-holiday locally into the project that will be using it:
-```typescript
+```
 install @tremho/doc-holiday
 ```
 

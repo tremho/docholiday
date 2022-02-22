@@ -46,7 +46,7 @@ export class SourceReader {
 
     constructor(
         srcText:string, // the source code content
-        ext:string // either '.js' for javascript or '.ts' for typescript <oneOf=".ts, .js>
+        ext:string // either '.js' for javascript or '.ts' for typescript
     ) {
         this.text = srcText
         this.fileType = ext == '.js' ? 'javascript' : ext === '.ts' ? 'typescript' : 'unknown'
@@ -1699,8 +1699,9 @@ function myBracketExtract(src:string, pair:string) {
     return extract.length
 }
 
+// Extracts the constraints from the description. Returns a formatted object with results.
 function extractConstraints(description:string, type:string): {description:string, constraintMap:any, error:string, status:SpecificationStatus} {
-    // constraints >>>
+
     let result:any = {}
     // parse out constraints here
     let ctext = (description?.replace(/;;/g, ',') || '')
@@ -1726,6 +1727,5 @@ function extractConstraints(description:string, type:string): {description:strin
         result.status = SpecificationStatus.BadConstraint
     }
     return result
-    // <<<
 
 }

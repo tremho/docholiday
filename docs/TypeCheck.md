@@ -207,6 +207,10 @@ This crude example simply uses validate as an assertion, and throws
 an Error if the assertion fails.  More nuanced use of `validate` can allow for
 more sophisticated error management in other scenarios.
 
+`validate` will return a string.  It will be an empty string ('') if the value passes
+validation, or it will contain the error message of the constraint violation that
+occurred. 
+
 Of course, you don't need to use `validate` to check your values.
 As a good programmer,  you've probably already done that, after all. 
 

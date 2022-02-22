@@ -16,14 +16,18 @@ export function typeCheckCase1(
 ):string // <minLength=4 match=[okay|bad \w+]
 {
     let out = ''
-    if(!validate(name,'minLength=4, maxLength=32')) {
-        out += 'bad name '
+    let err = ''
+    err = validate(name,'minLength=4, maxLength=32')
+    if(err) {
+        out += '"'+err + '" '
     }
-    if(!validate(age, 'positive, integer, nonzero, maxx=100')) {
-        out += 'bad age '
+    err = validate(age, 'positive, integer, nonzero, maxx=100')
+    if(err) {
+        out += '"'+err + '" '
     }
-    if(!validate(phone, 'match=\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}')) {
-        out +='bad phone '
+    err = validate(phone, 'match=\([0-9]{3}\) [0-9]{3}-[0-9]{4}')
+    if(err) {
+        out += '"'+err + '" '
     }
     if(!out) out = "okay"
     return out
@@ -35,14 +39,18 @@ export function typeCheckCase2(
     arrayParam:any[], // <minLength=100, maxLength=1000, contains="Foobar", checkType=all, each(string,minLength=3, maxLength=10|number, min=0, max=100)>
 ) {
     let out = ''
-    if (!validate(objectParam, '!empty, !hasProperties(foo,bar,baz), hasProperties(name), noPrototype, notNested, canSerialize, noFalseyProps')) {
-        out += 'bad object 1 '
+    let err = ''
+    err = validate(objectParam, '!empty, !hasProperties(foo,bar,baz), hasProperties(name), noPrototype, notNested, canSerialize, noFalseyProps');
+    if(err) {
+        out += '"'+err + '" '
     }
-    if (!validate(emptyObject, 'empty, noTruthyProps')) {
-        out += 'bad object 2 '
+    err = validate(emptyObject, 'empty, noTruthyProps')
+    if (err) {
+        out += '"'+err + '" '
     }
-    if(!validate(arrayParam, 'minLength=100, maxLength=1000, contains="Foobar", checkType=all, each(string,minLength=3, maxLength=10|number, min=0, max=100)')) {
-        out += 'bad array '
+    err = validate(arrayParam, 'minLength=100, maxLength=1000, contains="Foobar", checkType=all, each(string,minLength=3, maxLength=10|number, min=0, max=100)')
+    if(err) {
+        out += '"'+err + '" '
     }
 
     if(!out) out = "okay"

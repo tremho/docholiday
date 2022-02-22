@@ -38,10 +38,14 @@ _This occurs with JSDoc HTML output as well and is not limited to the
 jsdoc2md behavior_
 
 
-#### Use Documentation JS
+#### Using Documentation JS
 Consider using Documentation JS (engine: 'docjs') if you have problems like the ones
 listed above, since this engine outputs to markdown without these issues.
 
 Alternately, you may be able to find templates for JSDoc that handle inconsistencies like these better than others.
+
+###### Double documentation of classes with docjs
+It has been observed that DocumentationJS may duplicate the documentation for a class.  This behavior is being investigated,
+and may be addressed in a future update.
 
 

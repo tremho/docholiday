@@ -14,20 +14,23 @@ _this turns out to be artifacts introduced by GitHub pages._
 - [X] jsdoc tag example does not show a jsdoc tag (and I'm not sure the example is proven, either)
 - [X] Yep, turns out there's a bug.  Emitting @undefined 7.3 
 - [X] the triple curly bracket seems to disappear. It is missing in extensions.md too.  backtick these puppies. also customRender api doc.
-- [ ] plantUML should have a next link to publishing, and _that_ should have the next link to TOC.
-- [ ] publishing: _index.hd_ should say _index.md_
-- [ ] note the caveat about spaces in names in publishing edit while you are at it.
-- [ ] module.md color coding on cli code is whack.
-- [ ] cli doc needs updated help output (since we've added title)
-- [ ] --title doc needs the prefix dashes.  others _appear_ to have only one dash.
-- [ ] using jsdoc templates has no document
-- [ ] nor does strategies for CI deployment (I think this can be removed)
-- [ ] SourceReader constructor 'ext' parameter reveals a bug where markup is being parsed as a constraint.
-- [ ] SourceReader repeats its documentation.  Is this a docJS thing?
-- [ ] what's up with Typecheck ValueType See references?
-- [ ] TypeCheck TypeContraint describe and toString are undocumented
-- [ ] TypeCheck parseConstraintsToMap has odd-looking comment (indent?)
-- [ ] types module doc collides with first comments
+- [X] plantUML should have a next link to publishing, and _that_ should have the next link to TOC.
+- [X] publishing: _index.hd_ should say _index.md_
+- [X] note the caveat about spaces in names in publishing edit while you are at it.
+- [X] module.md color coding on cli code is whack.
+- [X] cli doc needs updated help output (since we've added title)
+- [X] --title doc needs the prefix dashes.  others _appear_ to have only one dash.
+- [X] using jsdoc templates has no document
+- [X] nor does strategies for CI deployment (I think this can be removed)
+- [X] SourceReader constructor 'ext' parameter reveals a bug where markup is being parsed as a constraint.
+- [X] SourceReader repeats its documentation.  Is this a docJS thing?
+- [X] what's up with Typecheck ValueType See references?
+- [X] TypeCheck TypeContraint describe and toString are undocumented
+- [X] TypeCheck parseConstraintsToMap has odd-looking comment (indent?)
+- [X] types module doc collides with first comments
+- [X] refactor validate to return string
+- [X] update tcDemo and test comp
+- [X] update validate usage docs
 - 
 ##### Readiness for first publish
 

@@ -42,7 +42,7 @@ You can then choose to publish this html elsewhere in a conventional fashion, or
 This is similar to the html process, except in this scheme all the supporting pages are written using Markdown.
 This may be a little easier to work with for most project documentation scenarios.  Markdown is directly supported by GitHub Pages.
 
-Simply create additional Markdown (.md) files within your docs/ folder.  For GitHub Pages compatibility, name the opening page `index.hd`
+Simply create additional Markdown (.md) files within your docs/ folder.  For GitHub Pages compatibility, name the opening page `index.md`
 and have it look something like this to start:
 
 ```markdown
@@ -53,7 +53,7 @@ and have it look something like this to start:
 ```
 
 You can create the "intro.md" and "Getting_Started.md" and/or other pages that make up your documentation suite.
-Also note that this assumes your API has been generated as "API.md".
+Also note that this assumes your API has been generated as "API.md" in this folder.
 
 ### Using GitHub Pages for your project documentation
 Your project is probably already hosted in a GitHub repository.  If your project is not in a repository at all, you should really reconsider
@@ -109,4 +109,6 @@ html markup tags may appear displayed literally in the GitHub view.
 This is due to the way the GitHub pages markdown-to-html conversion
 works, and is unfortunate. 
 
+-----
 
+##### Back <==  [PlantUML](plantUML) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [return to Table of Contents](index)
