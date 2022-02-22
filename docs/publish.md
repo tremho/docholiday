@@ -48,11 +48,11 @@ and have it look something like this to start:
 ```markdown
 ## Main documentation
 - [Introduction](intro)
-- [Getting Started](Getting Started)
+- [Getting Started](Getting_Started)
 - [API Reference](API)
 ```
 
-You can create the "intro.md" and "Getting Started.md" and/or other pages that make up your documentation suite.
+You can create the "intro.md" and "Getting_Started.md" and/or other pages that make up your documentation suite.
 Also note that this assumes your API has been generated as "API.md".
 
 ### Using GitHub Pages for your project documentation
@@ -97,5 +97,16 @@ required.  This presents a minor problem when creating the docs and
 testing the links locally.  
 No solution per se is offered here except to be aware of this and
 be careful to remove any `.md` suffixes  when you are done testing.
+
+Also - avoid spaces in your file names, as these do not fare well for links.
+
+##### Appearance of markdown APIs in GitHub pages
+Sometimes the rendering choices used by the JSDoc rendering engine
+and templates may produce markdown that appears one way in a 
+local markdown viewer, but differently when shown on GitHub Pages, and 
+html markup tags may appear displayed literally in the GitHub view.
+
+This is due to the way the GitHub pages markdown-to-html conversion
+works, and is unfortunate. 
 
 

@@ -204,12 +204,14 @@ And get all of the members documented without having to have created a redundant
 <p>Adds two numbers and returns the result</p>
 
 **Kind**: inner method of [`exampleModule`]()  
+**Returns**: `number` - <p>the resulting sum of the addition.</p>  
 **Access**: public
 
-| Param | Type |
-| --- | --- |
-| num1 | `number` | 
-| num2 | `number` | 
+| Param | Type | Description |
+| --- | --- | --- |
+| num1 | `number` | <p>The first number to add</p> |
+| num2 | `number` | <p>The second number to add</p> |
+
 
 If you declare parameter and/or return values in _both_ a JSDoc comment block _and_ use Typescript types and/or comments, 
 the Typescript types and the associated comments will be used instead of the JSDoc entries.  The JSDoc entries will be used
@@ -387,6 +389,7 @@ export class Foo {
 ```
 would render the following:
 
+
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
     example~Foo</h5>
 
@@ -395,7 +398,7 @@ would render the following:
 <p>The Foo class demonstrates
 how a simple class is documented</p>
 
-**Kind**: inner class of [`example`]()  
+**Kind**: inner class of [`example`](#module_focus)  
 **Access**: public  
 **Properties**
 
@@ -418,19 +421,7 @@ how a simple class is documented</p>
 
 <p>Compute the sequence over the given time</p>
 
-**Kind**: instance method of [`Foo`]()  
-**Returns**: `number` - <p>blah blah</p>  
-**Access**: public
-
-| Param | Type | Description |
-| --- | --- | --- |
-| time | `number` | <p>number of seconds</p>    <ul class="doc-constraints" style="font-style:italic; margin-top: 0; margin-left: 33px">         <li>number must be an integer</li>         <li>number must be positive</li>    </ul> |
-
-
-
-<p>Compute the sequence over the given time</p>
-
-**Kind**: instance method of [`Foo`]()  
+**Kind**: instance method of [`Foo`](#module_focus..Foo)  
 **Returns**: `number` - <p>blah blah</p>  
 **Access**: public
 
@@ -511,18 +502,16 @@ resulting in the following rendered documentation:
 <hr/>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
-    focus~SaveAction</h5>
+    example~SaveAction</h5>
 
 
 
 <p>Interface providing persistence capability</p>
 
-**Kind**: inner interface of [`focus`](#module_focus)  
+**Kind**: inner interface of [`example`](#module_focus)  
 **Access**: public
 
 <hr/>
-
-<a name="module_focus..SaveAction+save" id="module_focus..SaveAction+save"></a>
 
 <h5 style="margin: 10px 0px; border-width: 5px 0px; padding: 5px; border-style: solid;">
     saveAction.save(device) ⇒ `boolean`</h5>
@@ -981,5 +970,5 @@ export type TheCallbck = (
 -------
 
 
-##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Public and Private](public+private)
+##### Back <==  [Configuration](config) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Public and Private](public_private)
 

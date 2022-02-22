@@ -54,7 +54,7 @@ export class SourceReader {
     }
 
     /**
-     * Skip things line "use strict" at the top.
+     * Skip things like "use strict" at the top.
      */
     skipTop() {
         this.skipWhite();
@@ -144,6 +144,8 @@ export class SourceReader {
         while(this.text.charAt(this.pos) === ';') this.pos++
         this.skipWhite()
     }
+
+    // Skips code excluded from parsing between ##DH-OFF --> ##DH-ON comments
     skipDHOFF() {
         let eol = this.text.indexOf('\n', this.pos)
         if(eol === -1) eol = this.text.length

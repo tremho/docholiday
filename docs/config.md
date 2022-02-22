@@ -12,7 +12,7 @@ Here is an example file.  Copy and paste this example into your own `doc-holiday
 text file at the root of your project directory and modify it to suit your preferences.
 ```json5
 
-// This is the configuation file for Doc Holiday
+// This is the configuration file for Doc Holiday
 // It is in JSON5 format, supporting comments
 // such as per HJSON or JSON5
 // As such, note also that key identifiers need not be quoted
@@ -25,8 +25,7 @@ text file at the root of your project directory and modify it to suit your prefe
     Output format(s)
       May be "html" or "markdown" or "html,markdown" for both
   */
-  format: "markdown",
-
+  format: "markdown, html",
 
   /*
    Which primary documentation engine to use.
@@ -35,7 +34,17 @@ text file at the root of your project directory and modify it to suit your prefe
     - "docjs" (Documentation JS) Simplified JSDOC alternative to HTML or Markdown
     - "other" (???) The enginePath option specifies an executable by absolute path to run.
   */
-  engine: "jsdoc",
+  engine: "docjs",
+
+  /*
+  Whether or not to allow the default sorting of the JSDoc template.
+    Default JSDoc behavior is to order document entities alphabetically by type.
+    To retain this behavior, set sort to `true`.
+    To have your documented entries be ordered as they appear in the source code,
+    set sort to `false` (the default).
+    Note this does not apply to Documentation JS or to JSDoc templates that disable sorting themselves.
+  */
+  sort: false,
 
   /*
    The chosen engine executable is expected to exist in the system path at runtime.
@@ -49,41 +58,38 @@ text file at the root of your project directory and modify it to suit your prefe
 
   /*
     Which template to use (per the engine chosen)
-      If the template is locally installed in the project,
-      specify a path relative to the project (e.g. "node_modules/<template_name>")
+      If the template is locally installed in the project, specify as "node_modules/<template_name>"
       For templates outside of the project tree, use an absolute path.
       Defaults to "templates/default"
   */
-  template: "",
+  template: "node_modules/better-docs",
 
   /*
    Folder to generate intermediate stub files into.
    Relative to project root, or an absolute path
   */
-  intermediate: "gen",
+  intermediate: ".dh-temp",
 
   /*
    Folder to output HTML files (if not using Markdown)
    Relative to project root, or an absolute path
   */
-  html: "doc",
+  html: "docs/html",
 
   /*
    Output location for Markdown output
-   Specify the file path (e.g. booksrc/API) to receive this output
-   Or if set up for GitBook (HonKit) output / publish
+   Specify the file path (e.g. docs/API.md) to receive this output
   */
-  markdown: "booksrc/API ",
+  markdown: "docs/API.md",
 
   /*
-    intermal JSDOC configuration file location, if applicable
-    Not normally recommended to modify by user.
+    JSDOC configuration file location, if applicable
   */
   jsdocConfig: "jsdoc-conf.json",
 
   /*
    Executable info
-   Not normally recommended to modify by user.
+   Not normally recommended to modify by user, unless you are sure of what you are doing.
   */
   execInfo: {
     jsdoc: {
@@ -91,10 +97,8 @@ text file at the root of your project directory and modify it to suit your prefe
         exec: "jsdoc -p -d %html% -r -c %intermediate%/jsdoc.conf %intermediate%"
       },
       markdown: {
-        // normal jsdoc2md output (not used)
-        // exec: "jsdoc2md --configure %intermediate%/jsdoc.conf --files %intermediate%/**/*.js > %markdown%"
-        // This one uses modified hbs templates per Kevin Bridges (https://medium.com/@kevinast/integrate-gitbook-jsdoc-974be8df6fb3) 
-        exec: "jsdoc2md --global-index-format none --module-index-format table --partial tooling/j2mdhbs/header.hbs --partial tooling/jdmdhbs/link.hbs --partial tooling/jdmdhbs/body.hbs --configure %intermediate%/jsdoc.conf --files %intermediate%/**/*.js > %markdown%"
+//        exec: "jsdoc2md --configure %intermediate%/jsdoc.conf --files %intermediate%/**/*.js > %markdown%"
+        exec: "jsdoc2md --global-index-format none --module-index-format table --partial tooling/j2mdhbs/returns.hbs --partial tooling/j2mdhbs/link.hbs --partial tooling/j2mdhbs/header.hbs --partial tooling/jdmdhbs/link.hbs --partial tooling/jdmdhbs/body.hbs --configure %intermediate%/jsdoc.conf --files %intermediate%/**/*.js > %markdown%"
       },
     },
     docjs: {
@@ -128,7 +132,7 @@ __engine__
 Specifies which rendering engine to use.  
 Supported documentation rendering comes from separately installed
 versions of `jsdoc`, `jsdoc2md`, and/or `documentation`, as detailed
-in the [Getting Started](Getting Started) section.  
+in the [Getting Started](Getting_Started) section.  
 Values here may be:
 - "jsdoc" to use JSDoc or JSDoc2md
 - "docjs" to use DocumentationJS
@@ -188,6 +192,6 @@ In any normal circumstance, you will want to keep these values as they are shown
 in the example.
 
 
-##### Back <==  [Getting Started](Getting+Started) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Generating docs](generating)
+##### Back <==  [Getting Started](Getting_Started) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Next  ==>  [Generating docs](generating)
 
 

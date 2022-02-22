@@ -9,14 +9,15 @@ _with the gunslinger for your documentation needs_
 
 ## Main documentation
 - [Introduction](intro)
-- [Getting Started](Getting+Started)
+- [Getting Started](Getting_Started)
 - [Documenting code elements](generating)
 - [Introducing Constraints](constraints)
-- [Public and private](public+private)
+- [Public and private](public_private)
 - [JSDoc Tags](JSDoc)
 - [Using Markdown](markdown)
 - [Diagramming with PlantUML](plantUML)
 - [Publishing](publish)
+- [Public and private](public_private)
 - [directives](directives)
 - [extensions](extensions)
 
@@ -30,10 +31,9 @@ _with the gunslinger for your documentation needs_
 <hr/>
 
 ##### Other
-- [Rendering irregularities](Render+differences)
+- [Rendering irregularities](Render_differences)
 - [Validating Constraints](TypeCheck)
-- [Using JSDoc templates]()
-- [Strategies for CI Deployments]() 
+- [Using JSDoc templates](templates)
 
 
 - [Project Repository on GitHub](https://github.com/tremho/docholiday)

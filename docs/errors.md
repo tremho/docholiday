@@ -7,7 +7,7 @@ It is possible to create source code that is not handled well by the _Doc-Holida
 
 It is also possible for _Doc-Holiday_ to produce a stub file that is not handled well by the JSDoc rendering engine.
 
-And, as noted in [Render Differences](Render%20differences), the actual output of the rendering engines may have systemic issues
+And, as noted in [Render Differences](Render_differences), the actual output of the rendering engines may have systemic issues
 that originate from these engines and/or templates.
 
 If you encounter any issues in your own use of _Doc-Holiday_ that you 

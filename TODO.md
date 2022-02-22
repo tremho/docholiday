@@ -2,32 +2,32 @@
 #### Primary todo items
 See the Github issues list for the official open-source project list of open items
 
-But as we prep:
+###### Post-first-publish review
 
-- [X] review docs. SourceReader class looks bunged up.
+- [ ] d.ts file needed ◊
+- [X] doc examples c&p errors from Foo.compute example -- is this a rendering issue or a stub problem? (if former, update rendering errata docs, if latter, fix)
 
-It is.  findBracketBoundaries has a mess of brackets in the declaration and I can't seem to figure out what the 
-parse is doing with it.  Problem is with the ad-hoc return dec (I believe) so it becomes a false body boundary.
+- [-] also in typedef examples... looks like rendering, but the LocObject and LLTuples examples are particularly irksome.  
+_this turns out to be artifacts introduced by GitHub pages._
 
-
-- [X] get rid of Not-JSDOC form 'errors'
-- [X] put a title at the top of the API.md output and remove the DocJS TOC.
+- [ ] linkage to filenames with spaces is broken.
+- [ ] jsdoc tag example does not show a jsdoc tag (and I'm not sure the example is proven, either)
+- [ ] the triple curly bracket seems to disappear. It is missing in extensions.md too.  backtick these puppies. also customRender api doc.
+- [ ] plantUML should have a next link to publishing, and _that_ should have the next link to TOC.
+- [ ] publishing: _index.hd_ should say _index.md_
+- [ ] note the caveat about spaces in names in publishing edit while you are at it.
+- [ ] module.md color coding on cli code is whack.
+- [ ] cli doc needs updated help output (since we've added title)
+- [ ] --title doc needs the prefix dashes.  others _appear_ to have only one dash.
+- [ ] using jsdoc templates has no document
+- [ ] nor does strategies for CI deployment (I think this can be removed)
+- [ ] SourceReader constructor 'ext' parameter reveals a bug where markup is being parsed as a constraint.
+- [ ] SourceReader repeats its documentation.  Is this a docJS thing?
+- [ ] what's up with Typecheck ValueType See references?
+- [ ] TypeCheck TypeContraint describe and toString are undocumented
+- [ ] TypeCheck parseConstraintsToMap has odd-looking comment (indent?)
+- [ ] types module doc collides with first comments
 - 
-- [X] verify that unrecognized constraint keyword results in error
-- [X] verify use of <list> with comma delimeters in contraints (e.g. object hasProperties)
-- [X] verify array processing, especially 'each' -- define what this is better.
-- [X] fix the rendering of an each constraint
-
-Yeah, there's some fubar going on here.  Gonna refactor TypeCheck:
-- [X] note the badName on an unrecognized expr and report it accordingly
-- [X] change the forEach loops to for of
-- [X] make sure we handle note in each type group
-- [X] protect list delimiters inside quotes
-
-- [X] first, last, and firstThenLast added
-- [X] document these. Also - conflicts only throw at runtime.  Constraint docs may state contradictory values.
-- [X] test() for Object and Array types
-
 ##### Readiness for first publish
 
 - [X] Finish docs and organize doc suite, API, readmes, etc.
