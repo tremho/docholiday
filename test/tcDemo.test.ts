@@ -13,7 +13,7 @@ test6 =  "Constraint Error: Number 100 exceeds range maximum of 100"
 
 testA =  okay
 testB =  "Constraint Error: Failed hasProperties: name" "Constraint Error: Failed empty: object contains 1 props" 
-testC =  "Constraint Error: String Length 1 is less than range minimum of 3"  
+testC =  "Constraint Error: Number -1 is less than range minimum of 0"  
 `
 
 function runTcDemo() {
@@ -22,8 +22,13 @@ function runTcDemo() {
             if(rt.retcode) {
                 t.ok(false, 'return code '+rt.retcode+' received from tcDemo')
             } else {
-                let resp = rt.stdStr.trim()
-                t.ok(resp === comp.trim(), 'response is as expected')
+                let resp = rt.stdStr
+                let ok = resp.trim() === comp.trim()
+                if(ok) {
+                    t.ok(ok, 'response is as expected')
+                } else {
+                    t.ok(ok, "unexpected response. got '"+resp+"'  expected '"+comp+"'")
+                }
             }
             t.end()
         })
