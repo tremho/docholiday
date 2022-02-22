@@ -41,6 +41,13 @@ export function addedFoobar() {
 ```
 Will introduce the jsdoc @since tag to denote the version of this API change.
 
+
+_note the extension line above should appear like this:_  
+// &#123;&#123;&#123;jsdoc tag="since"&#125;&#125;&#125; 7.3  
+_but GitHub Pages may have incorrectly rendered it._
+
+
+
 Documentation authors may decide if they prefer to note such things
 by using JSDoc tags or by their own markdown or html convention (see next section).
 Using JSDoc tags potentially allows for theme-consistent treatment of these special 
